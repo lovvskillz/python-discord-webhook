@@ -39,6 +39,13 @@ class DiscordWebhook:
         """
         self.embeds.pop(index)
 
+    def get_embeds(self):
+        """
+        get all `self.embeds` as list
+        @return: `self.embeds`
+        """
+        return self.embeds
+
     @property
     def json(self):
         """
@@ -233,3 +240,10 @@ class DiscordEmbed:
         @param index: index of field in `self.fields`
         """
         self.fields.pop(index)
+
+    def get_embed_fields(self):
+        """
+        get all `self.fields` as list
+        @return: `self.fields`
+        """
+        return self.fields
