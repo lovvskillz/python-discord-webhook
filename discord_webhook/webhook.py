@@ -8,15 +8,18 @@ logger = logging.getLogger(__name__)
 
 
 class DiscordWebhook:
+    """
+    Webhook for Discord
+    """
     def __init__(self, url, **kwargs):
         """
         Init Webhook for Discord
-        @param url: discord_webhook webhook url
-        @keyword content: the message contents
-        @keyword username: override the default username of the webhook
-        @keyword avatar_url: ooverride the default avatar of the webhook
-        @keyword tts: true if this is a TTS message
-        @keyword embeds: list of embedded rich content
+        :param url: discord_webhook webhook url
+        :keyword content: the message contents
+        :keyword username: override the default username of the webhook
+        :keyword avatar_url: ooverride the default avatar of the webhook
+        :keyword tts: true if this is a TTS message
+        :keyword embeds: list of embedded rich content
         """
         self.url = url
         self.content = kwargs.get('content')
@@ -28,21 +31,21 @@ class DiscordWebhook:
     def add_embed(self, embed):
         """
         add embedded rich content
-        @param embed: embed object or dict
+        :param embed: embed object or dict
         """
         self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
     def remove_embed(self, index):
         """
         remove embedded rich content from `self.embeds`
-        @param index: index of embed in `self.embeds`
+        :param index: index of embed in `self.embeds`
         """
         self.embeds.pop(index)
 
     def get_embeds(self):
         """
         get all `self.embeds` as list
-        @return: `self.embeds`
+        :return: `self.embeds`
         """
         return self.embeds
 
@@ -50,7 +53,7 @@ class DiscordWebhook:
     def json(self):
         """
         convert webhook data to json
-        @return webhook data as json:
+        :return webhook data as json:
         """
         data = dict()
         for key, value in self.__dict__.items():
@@ -64,7 +67,7 @@ class DiscordWebhook:
     def execute(self):
         """
         execute Webhook
-        @return:
+        :return:
         """
         headers = {'Content-Type': 'application/json'}
         result = requests.post(self.url, data=self.json, headers=headers)
@@ -75,21 +78,24 @@ class DiscordWebhook:
 
 
 class DiscordEmbed:
+    """
+    Discord Embed
+    """
     def __init__(self, **kwargs):
         """
-        Discord Embed
-        @keyword title: title of embed
-        @keyword description: description of embed
-        @keyword url: url of embed
-        @keyword timestamp: timestamp of embed content
-        @keyword color: color code of the embed as int
-        @keyword footer: footer information
-        @keyword image: image information
-        @keyword thumbnail: thumbnail information
-        @keyword video: video information
-        @keyword provider: provider information
-        @keyword author: author information
-        @keyword fields: fields information
+        Init Discord Embed
+        :keyword title: title of embed
+        :keyword description: description of embed
+        :keyword url: url of embed
+        :keyword timestamp: timestamp of embed content
+        :keyword color: color code of the embed as int
+        :keyword footer: footer information
+        :keyword image: image information
+        :keyword thumbnail: thumbnail information
+        :keyword video: video information
+        :keyword provider: provider information
+        :keyword author: author information
+        :keyword fields: fields information
         """
         self.title = kwargs.get('title')
         self.description = kwargs.get('description')
@@ -107,44 +113,44 @@ class DiscordEmbed:
     def set_title(self, title):
         """
         set title of embed
-        @param title: title of embed
+        :param title: title of embed
         """
         self.title = title
 
     def set_description(self, description):
         """
         set description of embed
-        @param description: description of embed
+        :param description: description of embed
         """
         self.description = description
 
     def set_url(self, url):
         """
         set url of embed
-        @param url: url of embed
+        :param url: url of embed
         """
         self.url = url
 
     def set_timestamp(self, timestamp=str(datetime.datetime.utcfromtimestamp(time.time()))):
         """
         set timestamp of embed content
-        @param timestamp: (optional) timestamp of embed content
+        :param timestamp: (optional) timestamp of embed content
         """
         self.timestamp = timestamp
 
     def set_color(self, color):
         """
         set color code of the embed as int
-        @param color: color code of the embed as int
+        :param color: color code of the embed as int
         """
         self.color = color
 
     def set_footer(self, **kwargs):
         """
         set footer information of embed
-        @keyword text: footer text
-        @keyword icon_url: url of footer icon (only supports http(s) and attachments)
-        @keyword proxy_icon_url: a proxied url of footer icon
+        :keyword text: footer text
+        :keyword icon_url: url of footer icon (only supports http(s) and attachments)
+        :keyword proxy_icon_url: a proxied url of footer icon
         """
         self.footer = {
             'text': kwargs.get('text'),
@@ -155,10 +161,10 @@ class DiscordEmbed:
     def set_image(self, **kwargs):
         """
         set image of embed
-        @keyword url: source url of image (only supports http(s) and attachments)
-        @keyword proxy_url: a proxied url of the image
-        @keyword height: height of image
-        @keyword width: width of image
+        :keyword url: source url of image (only supports http(s) and attachments)
+        :keyword proxy_url: a proxied url of the image
+        :keyword height: height of image
+        :keyword width: width of image
         """
         self.image = {
             'url': kwargs.get('url'),
@@ -170,10 +176,10 @@ class DiscordEmbed:
     def set_thumbnail(self, **kwargs):
         """
         set thumbnail of embed
-        @keyword url: source url of thumbnail (only supports http(s) and attachments)
-        @keyword proxy_url: a proxied thumbnail of the image
-        @keyword height: height of thumbnail
-        @keyword width: width of thumbnail
+        :keyword url: source url of thumbnail (only supports http(s) and attachments)
+        :keyword proxy_url: a proxied thumbnail of the image
+        :keyword height: height of thumbnail
+        :keyword width: width of thumbnail
         """
         self.thumbnail = {
             'url': kwargs.get('url'),
@@ -185,9 +191,9 @@ class DiscordEmbed:
     def set_video(self, **kwargs):
         """
         set video of embed
-        @keyword url: source url of video
-        @keyword height: height of video
-        @keyword width: width of video
+        :keyword url: source url of video
+        :keyword height: height of video
+        :keyword width: width of video
         """
         self.video = {
             'url': kwargs.get('url'),
@@ -198,8 +204,8 @@ class DiscordEmbed:
     def set_provider(self, **kwargs):
         """
         set provider of embed
-        @keyword name: name of provider
-        @keyword url: url of provider
+        :keyword name: name of provider
+        :keyword url: url of provider
         """
         self.provider = {
             'name': kwargs.get('name'),
@@ -209,10 +215,10 @@ class DiscordEmbed:
     def set_author(self, **kwargs):
         """
         set author of embed
-        @keyword name: name of author
-        @keyword url: url of author
-        @keyword icon_url: url of author icon (only supports http(s) and attachments)
-        @keyword proxy_icon_url: a proxied url of author icon
+        :keyword name: name of author
+        :keyword url: url of author
+        :keyword icon_url: url of author icon (only supports http(s) and attachments)
+        :keyword proxy_icon_url: a proxied url of author icon
         """
         self.author = {
             'name': kwargs.get('name'),
@@ -224,9 +230,9 @@ class DiscordEmbed:
     def add_embed_field(self, **kwargs):
         """
         set field of embed
-        @keyword name: name of the field
-        @keyword value: value of the field
-        @keyword inline: (optional) whether or not this field should display inline
+        :keyword name: name of the field
+        :keyword value: value of the field
+        :keyword inline: (optional) whether or not this field should display inline
         """
         self.fields.append({
             'name': kwargs.get('name'),
@@ -237,13 +243,13 @@ class DiscordEmbed:
     def del_embed_field(self, index):
         """
         remove field from `self.fields`
-        @param index: index of field in `self.fields`
+        :param index: index of field in `self.fields`
         """
         self.fields.pop(index)
 
     def get_embed_fields(self):
         """
         get all `self.fields` as list
-        @return: `self.fields`
+        :return: `self.fields`
         """
         return self.fields
