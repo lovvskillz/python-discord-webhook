@@ -1,5 +1,4 @@
 import requests
-import json
 import time
 import datetime
 import logging
@@ -19,6 +18,8 @@ class DiscordWebhook:
         :keyword username: override the default username of the webhook
         :keyword avatar_url: ooverride the default avatar of the webhook
         :keyword tts: true if this is a TTS message
+        :keyword file: file contents
+        :keyword filename: file name
         :keyword embeds: list of embedded rich content
         """
         self.url = url
@@ -26,7 +27,13 @@ class DiscordWebhook:
         self.username = kwargs.get('username')
         self.avatar_url = kwargs.get('avatar_url')
         self.tts = kwargs.get('tts', False)
+        self.file = kwargs.get('file')
+        self.filename = kwargs.get('filename')
         self.embeds = kwargs.get('embeds', [])
+
+    def add_file(self, file, filename):
+        self.file = file
+        self.filename = filename
 
     def add_embed(self, embed):
         """
@@ -57,24 +64,26 @@ class DiscordWebhook:
         """
         data = dict()
         for key, value in self.__dict__.items():
-            if value:
+            if value and key not in ['url', 'file', 'filename']:
                 data[key] = value
         embeds_empty = all(not embed for embed in data["embeds"]) if 'embeds' in data else True
         if embeds_empty and 'content' not in data:
             logger.error('webhook message is empty! set content or embed data')
-        return json.dumps(data, indent=4)
+        return data
 
     def execute(self):
         """
         execute Webhook
         :return:
         """
-        headers = {'Content-Type': 'application/json'}
-        result = requests.post(self.url, data=self.json, headers=headers)
-        if result.status_code == 204:
+        if self.file is None:
+            response = requests.post(self.url, json=self.json)
+        else:
+            response = requests.post(self.url, files={(self.filename, self.file)})
+        if response.status_code in [200, 204]:
             logger.debug("Webhook executed")
         else:
-            logger.error(result.content.decode("utf-8"))
+            logger.error('status code %s: %s' % (response.status_code, response.content.decode("utf-8")))
 
 
 class DiscordEmbed:
