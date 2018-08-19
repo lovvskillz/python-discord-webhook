@@ -5,6 +5,10 @@
 
 execute discord webhooks
 
+## Install
+
+install via pip: `pip install discord-webhook`
+
 ## Examples
 
 execute basic webhook
