@@ -11,7 +11,7 @@ class DiscordWebhook:
     def __init__(self, url, **kwargs):
         """
         Init Webhook for Discord
-        @param url: discord webhook url
+        @param url: discord_webhook webhook url
         @keyword content: the message contents
         @keyword username: override the default username of the webhook
         @keyword avatar_url: ooverride the default avatar of the webhook
@@ -49,7 +49,7 @@ class DiscordWebhook:
         for key, value in self.__dict__.items():
             if value:
                 data[key] = value
-        embeds_empty = all(not d for d in data["embeds"]) if 'embeds' in data else True
+        embeds_empty = all(not embed for embed in data["embeds"]) if 'embeds' in data else True
         if embeds_empty and 'content' not in data:
             logger.error('webhook message is empty! set content or embed data')
         return json.dumps(data, indent=4)

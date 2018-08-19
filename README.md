@@ -6,7 +6,7 @@ execute discord webhooks
 
 execute basic webhook
 ```python
-from discord.webhook import DiscordWebhook
+from discord_webhook.webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 webhook.execute()
@@ -14,7 +14,7 @@ webhook.execute()
 
 execute webhook with embedded content
 ```python
-from discord.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url')
 
@@ -29,7 +29,7 @@ webhook.execute()
 
 add some data to embedded content
 ```python
-from discord.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url')
 
@@ -63,7 +63,7 @@ webhook.execute()
 
 This is another example with the result as a screenshot
 ```python
-from discord.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
 
 url = "https://discordapp.com/api/webhooks/480440103915880451/RF96yIqrbp10HZRJEYRdjwn4iQYhlk1eNtsKB-FGTFMPg09fcoPqGIBwSI_kzXqzi9GY"
 webhook = DiscordWebhook(url=url, username="New Webhook Username")
