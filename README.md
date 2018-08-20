@@ -36,7 +36,7 @@ webhook.add_embed(embed)
 webhook.execute()
 ```
 
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/481044061428514816/unknown.png "Basic Embed Example Result")
+![Image](https://cdn.discordapp.com/attachments/480439896478187550/481043398703185920/unknown.png "Basic Embed Example Result")
 
 ```python
 from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
@@ -70,7 +70,7 @@ webhook.add_embed(embed)
 
 webhook.execute()
 ```
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/480751239806582785/unknown.png "Example Embed Result")
+![Image](https://cdn.discordapp.com/attachments/480439896478187550/481044061428514816/unknown.png "Basic Embed Example Result")
 
 This is another example with embedded content
 ```python
