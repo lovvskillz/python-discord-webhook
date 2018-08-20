@@ -2,6 +2,8 @@ import requests
 import time
 import datetime
 import logging
+import json
+from urllib.parse import urlencode, quote_plus, quote
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +29,17 @@ class DiscordWebhook:
         self.username = kwargs.get('username')
         self.avatar_url = kwargs.get('avatar_url')
         self.tts = kwargs.get('tts', False)
-        self.file = kwargs.get('file')
-        self.filename = kwargs.get('filename')
+        self.files = kwargs.get('files', dict())
         self.embeds = kwargs.get('embeds', [])
 
     def add_file(self, file, filename):
-        self.file = file
-        self.filename = filename
+        """
+        add file to webhook
+        :param file: file content
+        :param filename: filename
+        :return:
+        """
+        self.files[filename] = file
 
     def add_embed(self, embed):
         """
@@ -76,10 +82,10 @@ class DiscordWebhook:
         execute Webhook
         :return:
         """
-        if self.file is None:
+        if bool(self.files) is False:
             response = requests.post(self.url, json=self.json)
         else:
-            response = requests.post(self.url, files={(self.filename, self.file)})
+            response = requests.post(self.url, files=self.files)
         if response.status_code in [200, 204]:
             logger.debug("Webhook executed")
         else:
