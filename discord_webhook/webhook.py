@@ -2,6 +2,7 @@ import requests
 import time
 import datetime
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class DiscordWebhook:
         :param filename: filename
         :return:
         """
-        self.files[filename] = file
+        self.files['_{}'.format(filename)] = (filename, file)
 
     def add_embed(self, embed):
         """
@@ -77,10 +78,10 @@ class DiscordWebhook:
         """
         data = dict()
         for key, value in self.__dict__.items():
-            if value and key not in ['url', 'file', 'filename']:
+            if value and key not in ['url', 'files', 'filename']:
                 data[key] = value
         embeds_empty = all(not embed for embed in data["embeds"]) if 'embeds' in data else True
-        if embeds_empty and 'content' not in data:
+        if embeds_empty and 'content' not in data and bool(self.files) is False:
             logger.error('webhook message is empty! set content or embed data')
         return data
 
@@ -92,6 +93,7 @@ class DiscordWebhook:
         if bool(self.files) is False:
             response = requests.post(self.url, json=self.json, proxies=self.proxies)
         else:
+            self.files['payload_json'] = (None, json.dumps(self.json))
             response = requests.post(self.url, files=self.files, proxies=self.proxies)
         if response.status_code in [200, 204]:
             logger.debug("Webhook executed")
