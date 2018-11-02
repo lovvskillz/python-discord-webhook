@@ -23,6 +23,7 @@ class DiscordWebhook:
         :keyword file: file contents
         :keyword filename: file name
         :keyword embeds: list of embedded rich content
+        :keyword proxies: dict of proxies
         """
         self.url = url
         self.content = kwargs.get('content')
@@ -31,6 +32,7 @@ class DiscordWebhook:
         self.tts = kwargs.get('tts', False)
         self.files = kwargs.get('files', dict())
         self.embeds = kwargs.get('embeds', [])
+        self.proxies = kwargs.get('proxies', None)
 
     def add_file(self, file, filename):
         """
@@ -62,6 +64,13 @@ class DiscordWebhook:
         """
         return self.embeds
 
+    def set_proxies(self, proxies):
+        """
+        set proxies
+        :param proxies: dict of proxies
+        """
+        self.proxies = proxies
+
     @property
     def json(self):
         """
@@ -83,9 +92,9 @@ class DiscordWebhook:
         :return:
         """
         if bool(self.files) is False:
-            response = requests.post(self.url, json=self.json)
+            response = requests.post(self.url, json=self.json, proxies=self.proxies)
         else:
-            response = requests.post(self.url, files=self.files)
+            response = requests.post(self.url, files=self.files, proxies=self.proxies)
         if response.status_code in [200, 204]:
             logger.debug("Webhook executed")
         else:
