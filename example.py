@@ -1,6 +1,6 @@
 from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
 
-url = "https://discordapp.com/api/webhooks/481039345244045312/7dyFoOcdbJcAUfscBp58fCWnNJxdb0JmlSuIoCU_iI_yuQgVsJ0avST2sbg7fHv-BwDD"
+url = "Webhook URL"
 webhook = DiscordWebhook(url=url)
 
 embed = DiscordEmbed()
@@ -22,7 +22,6 @@ embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', co
 webhook.add_embed(embed)
 
 # webhook.add_embed(embed)
-with open("C:/Users/vadim/Pictures/gitti.jpg", "rb") as f:
-    pass
-    # webhook.add_file(file=f.read(), filename='example.jpg')
+with open("/path/to/image.jpg", "rb") as f:
+    webhook.add_file(file=f.read(), filename='example.jpg')
 webhook.execute()
