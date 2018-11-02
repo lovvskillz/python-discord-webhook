@@ -3,7 +3,6 @@ import time
 import datetime
 import logging
 import json
-from urllib.parse import urlencode, quote_plus, quote
 
 logger = logging.getLogger(__name__)
 
