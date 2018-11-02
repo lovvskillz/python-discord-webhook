@@ -1,5 +1,12 @@
 # python-discord-webhook Changes
 
+## 2018-11-02 0.4.0
+
+- import from package instead of sumbodule
+
+### Features
+- send files and message/embed simultaneously
+
 ## 2018-11-02 0.3.0
 
 ### Features
