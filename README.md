@@ -13,7 +13,7 @@ install via pip: `pip install discord-webhook`
 
 ### basic webhook
 ```python
-from discord_webhook.webhook import DiscordWebhook
+from discord_webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 webhook.execute()
@@ -23,7 +23,7 @@ webhook.execute()
 
 ### webhook with embedded content
 ```python
-from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url')
 
@@ -39,7 +39,7 @@ webhook.execute()
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481043398703185920/unknown.png "Basic Embed Example Result")
 
 ```python
-from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url')
 
@@ -74,7 +74,7 @@ webhook.execute()
 
 This is another example with embedded content
 ```python
-from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url', username="New Webhook Username")
 
@@ -96,7 +96,7 @@ webhook.execute()
 ### send files
 
 ```python
-from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url', username="Webhook with files")
 
@@ -113,7 +113,7 @@ webhook.execute()
 ### use proxies
 
 ```python
-from discord_webhook.webhook import DiscordWebhook
+from discord_webhook import DiscordWebhook
 
 proxies = {
   'http': 'http://10.10.1.10:3128',
@@ -124,7 +124,7 @@ webhook.execute()
 ```
 or
 ```python
-from discord_webhook.webhook import DiscordWebhook
+from discord_webhook import DiscordWebhook
 
 proxies = {
   'http': 'http://10.10.1.10:3128',
