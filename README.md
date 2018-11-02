@@ -110,6 +110,22 @@ webhook.execute()
 ```
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481041687020306432/unknown.png "Example Files Result")
 
+You can use uploaded attachments in embeds:
+```python
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
+webhook = DiscordWebhook(url='your webhook url')
+
+with open("path/to/image.jpg", "rb") as f:
+    webhook.add_file(file=f.read(), filename='example.jpg')
+
+embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color=242424)
+embed.set_thumbnail(url='attachment://example.jpg')
+
+webhook.add_embed(embed)
+webhook.execute()
+```
+
 ### use proxies
 
 ```python
