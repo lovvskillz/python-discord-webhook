@@ -11,6 +11,11 @@ install via pip: `pip install discord-webhook`
 
 ## Examples
 
+* [Basic Webhook](#basic-webhook)
+* [Embedded Content](#webhook-with-embedded-content)
+* [Send Files](#send-files)
+* [Use Proxies](#use-proxies)
+
 ### basic webhook
 ```python
 from discord_webhook import DiscordWebhook
