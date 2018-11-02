@@ -109,3 +109,28 @@ with open("path/to/second/image.jpg", "rb") as f:
 webhook.execute()
 ```
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481041687020306432/unknown.png "Example Files Result")
+
+### use proxies
+
+```python
+from discord_webhook.webhook import DiscordWebhook
+
+proxies = {
+  'http': 'http://10.10.1.10:3128',
+  'https': 'http://10.10.1.10:1080',
+}
+webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
+webhook.execute()
+```
+or
+```python
+from discord_webhook.webhook import DiscordWebhook
+
+proxies = {
+  'http': 'http://10.10.1.10:3128',
+  'https': 'http://10.10.1.10:1080',
+}
+webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
+webhook.set_proxies(proxies)
+webhook.execute()
+```
