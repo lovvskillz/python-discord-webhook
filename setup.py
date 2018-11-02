@@ -15,6 +15,7 @@ setup(
     license='MIT License',
     description='execute discord webhooks',
     long_description=README,
+    long_description_content_type='text/markdown',
     url='https://github.com/lovvskillz/python-discord-webhook',
     install_requires=[
             'requests>=2.19.1',
