@@ -1,4 +1,4 @@
-from discord_webhook.webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 url = "Webhook URL"
 webhook = DiscordWebhook(url=url)
