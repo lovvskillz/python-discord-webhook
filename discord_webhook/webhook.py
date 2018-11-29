@@ -77,6 +77,11 @@ class DiscordWebhook:
         :return webhook data as json:
         """
         data = dict()
+        embeds = self.embeds
+        self.embeds = list()
+        # convert DiscordEmbed to dict
+        for embed in embeds:
+            self.add_embed(embed)
         for key, value in self.__dict__.items():
             if value and key not in ['url', 'files', 'filename']:
                 data[key] = value
