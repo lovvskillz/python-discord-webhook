@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2018-11-29 0.4.1
+
+### Fixes
+- convert `DiscordEmbed` to `dict` because `DiscordEmbed` is not JSON serializable
+
 ## 2018-11-02 0.4.0
 
 - import from package instead of sumbodule
