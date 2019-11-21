@@ -1,5 +1,9 @@
 # python-discord-webhook Changes
 
+## 2019-11-21 0.5.0
+
+- `.execute()` now returns the webhook response
+
 ## 2018-11-29 0.4.1
 
 ### Fixes

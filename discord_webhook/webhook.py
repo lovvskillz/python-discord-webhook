@@ -93,7 +93,7 @@ class DiscordWebhook:
     def execute(self):
         """
         execute Webhook
-        :return:
+        :return: Webhook response
         """
         if bool(self.files) is False:
             response = requests.post(self.url, json=self.json, proxies=self.proxies)
@@ -104,6 +104,7 @@ class DiscordWebhook:
             logger.debug("Webhook executed")
         else:
             logger.error('status code %s: %s' % (response.status_code, response.content.decode("utf-8")))
+        return response
 
 
 class DiscordEmbed:

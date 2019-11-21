@@ -9,4 +9,4 @@ embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', 
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
-webhook.execute()
+response = webhook.execute()

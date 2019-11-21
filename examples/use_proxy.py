@@ -5,4 +5,4 @@ proxies = {
   'https': 'http://10.10.1.10:1080',
 }
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
-webhook.execute()
+response = webhook.execute()

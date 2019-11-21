@@ -27,4 +27,4 @@ embed.add_embed_field(name='Field 2', value='dolor sit')
 # add embed object to webhook
 webhook.add_embed(embed)
 
-webhook.execute()
+response = webhook.execute()

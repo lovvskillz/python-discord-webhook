@@ -8,4 +8,4 @@ with open("path/to/first/image.jpg", "rb") as f:
 with open("path/to/second/image.jpg", "rb") as f:
     webhook.add_file(file=f.read(), filename='example2.jpg')
 
-webhook.execute()
+response = webhook.execute()

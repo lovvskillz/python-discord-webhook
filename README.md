@@ -22,7 +22,7 @@ install via pip: `pip install discord-webhook`
 from discord_webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
-webhook.execute()
+response = webhook.execute()
 ```
 
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481042601307537409/unknown.png "Basic Example Result")
@@ -39,7 +39,7 @@ embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', co
 # add embed object to webhook
 webhook.add_embed(embed)
 
-webhook.execute()
+response = webhook.execute()
 ```
 
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481043398703185920/unknown.png "Basic Embed Example Result")
@@ -74,7 +74,7 @@ embed.add_embed_field(name='Field 2', value='dolor sit')
 # add embed object to webhook
 webhook.add_embed(embed)
 
-webhook.execute()
+response = webhook.execute()
 ```
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481044061428514816/unknown.png "Basic Embed Example Result")
 
@@ -94,7 +94,7 @@ embed.add_embed_field(name='Field 3', value='amet consetetur')
 embed.add_embed_field(name='Field 4', value='sadipscing elitr')
 
 webhook.add_embed(embed)
-webhook.execute()
+response = webhook.execute()
 ```
 
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/480751239806582785/unknown.png "Example Embed Result")
@@ -112,7 +112,7 @@ with open("path/to/first/image.jpg", "rb") as f:
 with open("path/to/second/image.jpg", "rb") as f:
     webhook.add_file(file=f.read(), filename='example2.jpg')
 
-webhook.execute()
+response = webhook.execute()
 ```
 ![Image](https://cdn.discordapp.com/attachments/480439896478187550/481041687020306432/unknown.png "Example Files Result")
 
@@ -129,7 +129,7 @@ embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', 
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
-webhook.execute()
+response = webhook.execute()
 ```
 
 ### use proxies
@@ -142,7 +142,7 @@ proxies = {
   'https': 'http://10.10.1.10:1080',
 }
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
-webhook.execute()
+response = webhook.execute()
 ```
 or
 ```python
@@ -154,5 +154,5 @@ proxies = {
 }
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 webhook.set_proxies(proxies)
-webhook.execute()
+response = webhook.execute()
 ```
