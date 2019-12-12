@@ -15,6 +15,7 @@ class DiscordWebhook:
         """
         Init Webhook for Discord
         :param url: discord_webhook webhook url
+        :type url: str, list
         :keyword content: the message contents
         :keyword username: override the default username of the webhook
         :keyword avatar_url: ooverride the default avatar of the webhook
@@ -35,7 +36,7 @@ class DiscordWebhook:
 
     def add_file(self, file, filename):
         """
-        add file to webhook
+        adds a file to the webhook
         :param file: file content
         :param filename: filename
         :return:
@@ -44,29 +45,30 @@ class DiscordWebhook:
 
     def add_embed(self, embed):
         """
-        add embedded rich content
+        adds an embedded rich content
         :param embed: embed object or dict
         """
         self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
     def remove_embed(self, index):
         """
-        remove embedded rich content from `self.embeds`
+        removes embedded rich content from `self.embeds`
         :param index: index of embed in `self.embeds`
         """
         self.embeds.pop(index)
 
     def get_embeds(self):
         """
-        get all `self.embeds` as list
-        :return: `self.embeds`
+        gets all self.embeds as list
+        :return: self.embeds
         """
         return self.embeds
 
     def set_proxies(self, proxies):
         """
-        set proxies
+        sets proxies
         :param proxies: dict of proxies
+        :type proxies: dict
         """
         self.proxies = proxies
 
@@ -92,19 +94,25 @@ class DiscordWebhook:
 
     def execute(self):
         """
-        execute Webhook
+        executes the Webhook
         :return: Webhook response
         """
-        if bool(self.files) is False:
-            response = requests.post(self.url, json=self.json, proxies=self.proxies)
-        else:
-            self.files['payload_json'] = (None, json.dumps(self.json))
-            response = requests.post(self.url, files=self.files, proxies=self.proxies)
-        if response.status_code in [200, 204]:
-            logger.debug("Webhook executed")
-        else:
-            logger.error('status code %s: %s' % (response.status_code, response.content.decode("utf-8")))
-        return response
+        webhook_urls = self.url if isinstance(self.url, list) else [self.url]
+        urls_len = len(webhook_urls)
+        responses = []
+        for i, url in enumerate(webhook_urls):
+            if bool(self.files) is False:
+                response = requests.post(url, json=self.json, proxies=self.proxies)
+            else:
+                self.files['payload_json'] = (None, json.dumps(self.json))
+                response = requests.post(url, files=self.files, proxies=self.proxies)
+            if response.status_code in [200, 204]:
+                logger.debug("[{index}/{length}] Webhook executed".format(index=i, length=urls_len))
+            else:
+                logger.error('[{index}/{length}] Webhook status code {status_code}: {content}'.format(
+                    index=i, length=urls_len, status_code=response.status_code, content=response.content.decode("utf-8")))
+            responses.append(response)
+        return responses[0] if len(responses) == 1 else responses
 
 
 class DiscordEmbed:
