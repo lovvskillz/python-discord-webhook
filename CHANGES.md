@@ -2,7 +2,7 @@
 
 ## 2019-12-13 0.6.0
 
-- execute webhook with multiple urls if urls are provided as `list`
+- send webhook to multiple urls if urls are provided as `list`
 
 ## 2019-11-21 0.5.0
 
