@@ -13,6 +13,7 @@ install via pip: `pip install discord-webhook`
 ## Examples
 
 * [Basic Webhook](#basic-webhook)
+* [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Send Files](#send-files)
 * [Use Proxies](#use-proxies)
@@ -25,7 +26,19 @@ webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 response = webhook.execute()
 ```
 
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/481042601307537409/unknown.png "Basic Example Result")
+![Image](img/basic_webhook.png "Basic Example Result")
+
+### multiple webhook urls
+```python
+from discord_webhook import DiscordWebhook
+
+webhook_urls = ['webhook url 1', 'webhook url 2']
+webhook = DiscordWebhook(url=webhook_urls, content='Webhook Message')
+response = webhook.execute()
+```
+
+![Image](img/multiple_urls.png "Multiple Urls Result")
+
 
 ### webhook with embedded content
 ```python
@@ -42,7 +55,7 @@ webhook.add_embed(embed)
 response = webhook.execute()
 ```
 
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/481043398703185920/unknown.png "Basic Embed Example Result")
+![Image](img/simple_embed.png "Basic Embed Example Result")
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -76,7 +89,7 @@ webhook.add_embed(embed)
 
 response = webhook.execute()
 ```
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/481044061428514816/unknown.png "Basic Embed Example Result")
+![Image](img/extended_embed.png "Basic Embed Example Result")
 
 This is another example with embedded content
 ```python
@@ -97,7 +110,7 @@ webhook.add_embed(embed)
 response = webhook.execute()
 ```
 
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/480751239806582785/unknown.png "Example Embed Result")
+![Image](img/extended_embed2.png "Example Embed Result")
 
 ### send files
 
@@ -114,7 +127,7 @@ with open("path/to/second/image.jpg", "rb") as f:
 
 response = webhook.execute()
 ```
-![Image](https://cdn.discordapp.com/attachments/480439896478187550/481041687020306432/unknown.png "Example Files Result")
+![Image](img/webhook_files.png "Example Files Result")
 
 You can use uploaded attachments in embeds:
 ```python
