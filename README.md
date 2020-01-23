@@ -169,3 +169,21 @@ webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 webhook.set_proxies(proxies)
 response = webhook.execute()
 ```
+
+### use cli
+
+```
+usage: discord_webhook [-h] -u URL [URL ...] -c CONTENT [--username USERNAME]
+                       [--avatar_url AVATAR_URL]
+
+Trigger discord webhook(s).
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u URL [URL ...], --url URL [URL ...]
+                        Webhook(s) url(s)
+  -c CONTENT, --content CONTENT
+                        Message content
+  --username USERNAME
+  --avatar_url AVATAR_URL
+```

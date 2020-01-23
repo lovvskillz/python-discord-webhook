@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='discord-webhook',
-    version='0.6.0',
+    version='0.7.0',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
@@ -34,4 +34,9 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    entry_points={  # Optional
+        'console_scripts': [
+            'discord_webhook=discord_webhook.__main__:main',
+        ],
+    },
 )
