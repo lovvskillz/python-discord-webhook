@@ -184,6 +184,7 @@ optional arguments:
                         Webhook(s) url(s)
   -c CONTENT, --content CONTENT
                         Message content
-  --username USERNAME
+  --username USERNAME   override the default username of the webhook
   --avatar_url AVATAR_URL
+                        override the default avatar of the webhook
 ```

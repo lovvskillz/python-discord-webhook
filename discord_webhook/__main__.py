@@ -1,6 +1,6 @@
 """ Entry point to trigger webhook(s). """
 import argparse
-from .webhook import DiscordWebhook
+from discord_webhook import DiscordWebhook
 
 
 def main():
@@ -23,11 +23,13 @@ def main():
     )
     parser.add_argument(
         "--username",
-        default=None
+        default=None,
+        help="override the default username of the webhook"
     )
     parser.add_argument(
         "--avatar_url",
-        default=None
+        default=None,
+        help="override the default avatar of the webhook"
     )
     args = parser.parse_args()
     webhook = DiscordWebhook(

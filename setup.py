@@ -34,7 +34,7 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    entry_points={  # Optional
+    entry_points={
         'console_scripts': [
             'discord_webhook=discord_webhook.__main__:main',
         ],

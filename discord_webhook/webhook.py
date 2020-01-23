@@ -18,7 +18,7 @@ class DiscordWebhook:
         :type url: str, list
         :keyword content: the message contents
         :keyword username: override the default username of the webhook
-        :keyword avatar_url: ooverride the default avatar of the webhook
+        :keyword avatar_url: override the default avatar of the webhook
         :keyword tts: true if this is a TTS message
         :keyword file: file contents
         :keyword filename: file name
