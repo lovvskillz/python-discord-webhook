@@ -1,6 +1,6 @@
 # python-discord-webhook Changes
 
-## 2020-01-23 0.7.0
+## 2020-01-24 0.7.0
 
 - add an entry point for a minimal cli
 
