@@ -19,7 +19,7 @@
 
 ## 2018-11-02 0.4.0
 
-- import from package instead of sumbodule
+- import from package instead of submodule
 
 ### Features
 - send files and message/embed simultaneously
