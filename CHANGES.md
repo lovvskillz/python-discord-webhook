@@ -1,5 +1,9 @@
 # python-discord-webhook Changes
 
+## 2020-01-23 0.7.0
+
+- add an entry point for a minimal cli
+
 ## 2019-12-13 0.6.0
 
 - send webhook to multiple urls if urls are provided as `list`
