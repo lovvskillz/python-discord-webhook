@@ -169,12 +169,14 @@ class DiscordEmbed:
         """
         self.url = url
 
-    def set_timestamp(self, timestamp=str(datetime.datetime.utcfromtimestamp(time.time()))):
+    def set_timestamp(self, timestamp=None):
         """
         set timestamp of embed content
         :param timestamp: (optional) timestamp of embed content
         """
-        self.timestamp = timestamp
+        if timestamp is None:
+            timestamp = time.time()
+        self.timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
 
     def set_color(self, color):
         """
