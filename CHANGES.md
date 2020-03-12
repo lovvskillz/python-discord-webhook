@@ -1,15 +1,23 @@
 # python-discord-webhook Changes
 
+## 2020-03-12 0.7.1
+
+### Fixes
+- fixed an issue where the default timestamp was not updated
+
 ## 2020-01-24 0.7.0
 
+### Features
 - add an entry point for a minimal cli
 
 ## 2019-12-13 0.6.0
 
+### Features
 - send webhook to multiple urls if urls are provided as `list`
 
 ## 2019-11-21 0.5.0
 
+### Features
 - `.execute()` now returns the webhook response
 
 ## 2018-11-29 0.4.1
