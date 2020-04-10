@@ -107,10 +107,10 @@ class DiscordWebhook:
                 self.files['payload_json'] = (None, json.dumps(self.json))
                 response = requests.post(url, files=self.files, proxies=self.proxies)
             if response.status_code in [200, 204]:
-                logger.debug("[{index}/{length}] Webhook executed".format(index=i, length=urls_len))
+                logger.debug("[{index}/{length}] Webhook executed".format(index=i+1, length=urls_len))
             else:
                 logger.error('[{index}/{length}] Webhook status code {status_code}: {content}'.format(
-                    index=i, length=urls_len, status_code=response.status_code, content=response.content.decode("utf-8")))
+                    index=i+1, length=urls_len, status_code=response.status_code, content=response.content.decode("utf-8")))
             responses.append(response)
         return responses[0] if len(responses) == 1 else responses
 
