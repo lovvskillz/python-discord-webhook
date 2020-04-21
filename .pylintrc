@@ -1,0 +1,9 @@
+[MESSAGES CONTROL]
+disable=bad-continuation,
+        missing-module-docstring,
+        missing-function-docstring,
+        missing-class-docstring,
+
+
+max-module-lines=1070
+max-line-length = 88
