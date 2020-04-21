@@ -1,5 +1,7 @@
 PACKAGE_NAME=discord_webhook
 
+.PHONY: tests
+
 help:
 	@echo 'Usage: make COMMAND'
 	@echo

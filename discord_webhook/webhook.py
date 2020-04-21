@@ -1,8 +1,9 @@
-import requests
-import time
-import datetime
 import logging
 import json
+import time
+import datetime
+import requests
+
 
 logger = logging.getLogger(__name__)
 
