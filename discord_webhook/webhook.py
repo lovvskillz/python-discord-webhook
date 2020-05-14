@@ -121,13 +121,13 @@ class DiscordWebhook:
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook executed".format(
-                        index=i, length=urls_len
+                        index=i+1, length=urls_len
                     )
                 )
             else:
                 logger.error(
                     "[{index}/{length}] Webhook status code {status_code}: {content}".format(
-                        index=i,
+                        index=i+1,
                         length=urls_len,
                         status_code=response.status_code,
                         content=response.content.decode("utf-8"),
