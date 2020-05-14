@@ -1,5 +1,8 @@
 # python-discord-webhook Changes
 
+## 2020-05-14 0.8.0
+- add `set_content()` function
+
 ## 2020-03-12 0.7.1
 
 ### Fixes
