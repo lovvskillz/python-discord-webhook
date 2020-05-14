@@ -1,0 +1,13 @@
+[MESSAGES CONTROL]
+disable=bad-continuation,
+        missing-module-docstring,
+        missing-function-docstring,
+        missing-class-docstring,
+        too-many-instance-attributes,
+        line-too-long,
+        invalid-name,
+        logging-format-interpolation
+
+
+max-module-lines=1070
+max-line-length = 88
