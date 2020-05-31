@@ -112,6 +112,34 @@ response = webhook.execute()
 
 ![Image](img/extended_embed2.png "Example Embed Result")
 
+By default, the embed fields are placed side by side. We can arrangee them in a new line by setting `inline=False` as follows
+```python
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
+webhook = DiscordWebhook(url="your webhook url", username="New Webhook Username")
+
+embed = DiscordEmbed(
+    title="Embed Title", description="Your Embed Description", color=242424
+)
+embed.set_author(
+    name="Author Name",
+    url="https://github.com/lovvskillz",
+    icon_url="https://avatars0.githubusercontent.com/u/14542790",
+)
+embed.set_footer(text="Embed Footer Text")
+embed.set_timestamp()
+# Set `inline=False` for the embed field to occupy the whole line
+embed.add_embed_field(name="Field 1", value="Lorem ipsum", inline=False)
+embed.add_embed_field(name="Field 2", value="dolor sit", inline=False)
+embed.add_embed_field(name="Field 3", value="amet consetetur")
+embed.add_embed_field(name="Field 4", value="sadipscing elitr")
+
+webhook.add_embed(embed)
+response = webhook.execute()
+```
+
+![Image](img/extended_embed3.png "Example Non-Inline Embed Result")
+
 ### send files
 
 ```python
