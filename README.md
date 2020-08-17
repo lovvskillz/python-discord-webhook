@@ -16,6 +16,7 @@ install via pip: `pip install discord-webhook`
 * [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Send Files](#send-files)
+* [Allowed Mentions](#allowed-mentions)
 * [Use Proxies](#use-proxies)
 
 ### basic webhook
@@ -170,6 +171,24 @@ embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', 
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
+response = webhook.execute()
+```
+
+### allowed mentions
+
+Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and an explanation
+
+This example would only ping user `123` and `124` but not everyone else.
+
+```python
+from discord_webhook import DiscordWebhook
+
+content = "@everyone say hello to our new friends <@123> and <@124>"
+allowed_mentions = {
+    "users": ["123", "124"]
+}
+
+webhook = DiscordWebhook(url='your webhook url', content=content, allowed_mentions=allowed_mentions)
 response = webhook.execute()
 ```
 

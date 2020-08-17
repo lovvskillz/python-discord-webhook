@@ -25,6 +25,7 @@ class DiscordWebhook:
         :keyword file: file contents
         :keyword filename: file name
         :keyword embeds: list of embedded rich content
+        :keyword allowed_mentions: allowed mentions for the message
         :keyword proxies: dict of proxies
         """
         self.url = url
@@ -34,7 +35,8 @@ class DiscordWebhook:
         self.tts = kwargs.get("tts", False)
         self.files = kwargs.get("files", dict())
         self.embeds = kwargs.get("embeds", [])
-        self.proxies = kwargs.get("proxies", None)
+        self.proxies = kwargs.get("proxies")
+        self.allowed_mentions = kwargs.get("allowed_mentions")
 
     def add_file(self, file, filename):
         """
