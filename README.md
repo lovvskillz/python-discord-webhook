@@ -151,7 +151,7 @@ webhook = DiscordWebhook(url='your webhook url', content='Webhook content before
 sent_webhook = webhook.execute()
 webhook.content = 'After Edit'
 sleep(10)
-sent_webhook = webhook.edit_sent_webhook(sent_webhook)
+sent_webhook = webhook.edit(sent_webhook)
 ```
 
 ### delete webhook messages
@@ -163,7 +163,7 @@ from time import sleep
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
 sent_webhook = webhook.execute()
 sleep(10)
-webhook.delete_sent_webhook(sent_webhook)
+webhook.delete(sent_webhook)
 ```
 
 ### send files
