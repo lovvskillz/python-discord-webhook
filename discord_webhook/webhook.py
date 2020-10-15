@@ -116,7 +116,7 @@ class DiscordWebhook:
         responses = []
         for i, url in enumerate(webhook_urls):
             if bool(self.files) is False:
-                response = requests.post(url, json=self.json, proxies=self.proxies)
+                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait':True})
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
                 response = requests.post(url, files=self.files, proxies=self.proxies)
@@ -136,8 +136,38 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
+        self.sent_message_id = json.loads((responses[0] if len(responses) == 1 else responses).content.decode('utf-8'))['id']
         return responses[0] if len(responses) == 1 else responses
 
+    def edit_sent_webhook(self, sent_webhook):
+        """
+        edits the webhook passed as a response
+        only supports one webhook at a time
+        :return: Another webhook response
+        """
+        url = self.url
+        previous_sent_message_id = json.loads(sent_webhook.content.decode('utf-8'))['id']
+        if bool(self.files) is False:
+            response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait':True})
+        else:
+            self.files["payload_json"] = (None, json.dumps(self.json))
+            response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies)
+        if response.status_code in [200, 204]:
+            logger.debug(
+                "[{index}/{length}] Webhook executed".format(
+                    index=1, length=len(url)
+                )
+            )
+        else:
+            logger.error(
+                "[{index}/{length}] Webhook status code {status_code}: {content}".format(
+                    index=1,
+                    length=len(url),
+                    status_code=response.status_code,
+                    content=response.content.decode("utf-8"),
+                )
+            )
+        return response
 
 class DiscordEmbed:
     """
@@ -320,3 +350,4 @@ class DiscordEmbed:
         :return: `self.fields`
         """
         return self.fields
+    
