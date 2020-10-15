@@ -145,10 +145,12 @@ response = webhook.execute()
 
 ```python
 from discord_webhook import DiscordWebhook
+from time import sleep
 
-webhook = DiscordWebhook(url='https://canary.discord.com/api/webhooks/<channel id>/<webhook token>', content='Before Edit')
+webhook = DiscordWebhook(url='your webhook url', content='Webhook content before edit')
 sent_webhook = webhook.execute()
 webhook.content = 'After Edit'
+sleep(10)
 sent_webhook = webhook.edit_sent_webhook(sent_webhook)
 ```
 
@@ -158,7 +160,7 @@ sent_webhook = webhook.edit_sent_webhook(sent_webhook)
 from discord_webhook import DiscordWebhook
 from time import sleep
 
-webhook = DiscordWebhook(url='https://canary.discord.com/api/webhooks/<channel id>/<webhook token>', content='Before Edit')
+webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
 sent_webhook = webhook.execute()
 sleep(10)
 webhook.delete_sent_webhook(sent_webhook)
