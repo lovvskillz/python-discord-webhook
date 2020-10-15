@@ -143,6 +143,7 @@ class DiscordWebhook:
         """
         edits the webhook passed as a response
         only supports one webhook at a time
+        :param sent_webhook: webhook.execute() response
         :return: Another webhook response
         """
         url = self.url
@@ -173,7 +174,8 @@ class DiscordWebhook:
         """
         deletes the webhook passed as a response
         only supports one webhook at a time
-        :return: response
+        :param sent_webhook: webhook.execute() response
+        :return: Response
         """
         url = self.url
         previous_sent_message_id = json.loads(sent_webhook.content.decode('utf-8'))['id']
