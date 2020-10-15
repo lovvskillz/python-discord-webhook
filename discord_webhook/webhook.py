@@ -139,7 +139,7 @@ class DiscordWebhook:
         self.sent_message_id = json.loads((responses[0] if len(responses) == 1 else responses).content.decode('utf-8'))['id']
         return responses[0] if len(responses) == 1 else responses
 
-    def edit_sent_webhook(self, sent_webhook):
+    def edit(self, sent_webhook):
         """
         edits the webhook passed as a response
         only supports one webhook at a time
@@ -170,7 +170,7 @@ class DiscordWebhook:
             )
         return response
 
-    def delete_sent_webhook(self, sent_webhook):
+    def delete(self, sent_webhook):
         """
         deletes the webhook passed as a response
         only supports one webhook at a time
