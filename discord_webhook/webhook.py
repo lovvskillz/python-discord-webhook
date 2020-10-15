@@ -169,6 +169,17 @@ class DiscordWebhook:
             )
         return response
 
+    def delete_sent_webhook(self, sent_webhook):
+        """
+        deletes the webhook passed as a response
+        only supports one webhook at a time
+        :return: response
+        """
+        url = self.url
+        previous_sent_message_id = json.loads(sent_webhook.content.decode('utf-8'))['id']
+        response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies)
+        return response
+
 class DiscordEmbed:
     """
     Discord Embed
@@ -350,4 +361,3 @@ class DiscordEmbed:
         :return: `self.fields`
         """
         return self.fields
-    
