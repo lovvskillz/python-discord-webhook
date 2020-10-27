@@ -141,6 +141,31 @@ response = webhook.execute()
 
 ![Image](img/extended_embed3.png "Example Non-Inline Embed Result")
 
+### edit webhook messages
+
+```python
+from discord_webhook import DiscordWebhook
+from time import sleep
+
+webhook = DiscordWebhook(url='your webhook url', content='Webhook content before edit')
+sent_webhook = webhook.execute()
+webhook.content = 'After Edit'
+sleep(10)
+sent_webhook = webhook.edit(sent_webhook)
+```
+
+### delete webhook messages
+
+```python
+from discord_webhook import DiscordWebhook
+from time import sleep
+
+webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
+sent_webhook = webhook.execute()
+sleep(10)
+webhook.delete(sent_webhook)
+```
+
 ### send files
 
 ```python
