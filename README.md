@@ -15,6 +15,8 @@ install via pip: `pip install discord-webhook`
 * [Basic Webhook](#basic-webhook)
 * [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
+* [Edit Webhook Message](#edit-webhook-messages)
+* [Delete Webhook Message](#delete-webhook-messages)
 * [Send Files](#send-files)
 * [Allowed Mentions](#allowed-mentions)
 * [Use Proxies](#use-proxies)
