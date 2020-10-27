@@ -1,5 +1,8 @@
 # python-discord-webhook Changes
 
+## 2020-10-27 0.10.0
+- add `edit()` and `delete()` methods to `DiscordWebhook` class
+
 ## 2020-08-17 0.9.0
 - add `allowed_mentions` property to webhooks. see [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object)
 
