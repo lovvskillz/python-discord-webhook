@@ -136,51 +136,74 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
-        self.sent_message_id = json.loads((responses[0] if len(responses) == 1 else responses).content.decode('utf-8'))['id']
-        return responses[0] if len(responses) == 1 else responses
+        return responses
 
     def edit(self, sent_webhook):
         """
         edits the webhook passed as a response
-        only supports one webhook at a time
         :param sent_webhook: webhook.execute() response
         :return: Another webhook response
         """
-        url = self.url
-        previous_sent_message_id = json.loads(sent_webhook.content.decode('utf-8'))['id']
-        if bool(self.files) is False:
-            response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait':True})
-        else:
-            self.files["payload_json"] = (None, json.dumps(self.json))
-            response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies)
-        if response.status_code in [200, 204]:
-            logger.debug(
-                "[{index}/{length}] Webhook executed".format(
-                    index=1, length=len(url)
+        webhook_len = len(sent_webhook)
+        responses = []
+        for i, webhook in enumerate(sent_webhook):
+            url = webhook.url.split('?')[0]  # removes any query params
+            previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
+            if bool(self.files) is False:
+                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait': True})
+            else:
+                self.files["payload_json"] = (None, json.dumps(self.json))
+                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies)
+            if response.status_code in [200, 204]:
+                logger.debug(
+                    "[{index}/{length}] Webhook edited".format(
+                        index=i + 1,
+                        length=webhook_len,
+                    )
                 )
-            )
-        else:
-            logger.error(
-                "[{index}/{length}] Webhook status code {status_code}: {content}".format(
-                    index=1,
-                    length=len(url),
-                    status_code=response.status_code,
-                    content=response.content.decode("utf-8"),
+            else:
+                logger.error(
+                    "[{index}/{length}] Webhook status code {status_code}: {content}".format(
+                        index=i + 1,
+                        length=webhook_len,
+                        status_code=response.status_code,
+                        content=response.content.decode("utf-8"),
+                    )
                 )
-            )
-        return response
+            responses.append(response)
+        return responses
 
     def delete(self, sent_webhook):
         """
         deletes the webhook passed as a response
-        only supports one webhook at a time
         :param sent_webhook: webhook.execute() response
         :return: Response
         """
-        url = self.url
-        previous_sent_message_id = json.loads(sent_webhook.content.decode('utf-8'))['id']
-        response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies)
-        return response
+        webhook_len = len(sent_webhook)
+        responses = []
+        for i, webhook in enumerate(sent_webhook):
+            url = webhook.url.split('?')[0]  # removes any query params
+            previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
+            response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies)
+            if response.status_code in [200, 204]:
+                logger.debug(
+                    "[{index}/{length}] Webhook deleted".format(
+                        index=i + 1,
+                        length=webhook_len,
+                    )
+                )
+            else:
+                logger.error(
+                    "[{index}/{length}] Webhook status code {status_code}: {content}".format(
+                        index=i + 1,
+                        length=webhook_len,
+                        status_code=response.status_code,
+                        content=response.content.decode("utf-8"),
+                    )
+                )
+            responses.append(response)
+        return responses
+
 
 class DiscordEmbed:
     """
