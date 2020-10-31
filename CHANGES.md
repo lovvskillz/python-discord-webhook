@@ -6,6 +6,9 @@
 ### Features
 - `edit()` and `delete()` methods are now supporting multiple webhooks
 
+### Fixes
+- fixed an issue where multiple webhook urls would throw an error after `.execute()` has been called
+
 ## 2020-10-27 0.10.0
 
 ### Features
