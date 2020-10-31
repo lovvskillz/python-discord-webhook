@@ -1,6 +1,14 @@
 # python-discord-webhook Changes
 
+## 2020-10-31 0.11.0
+- webhook responses are always returned as a list
+
+### Features
+- `edit()` and `delete()` methods are now supporting multiple webhooks
+
 ## 2020-10-27 0.10.0
+
+### Features
 - add `edit()` and `delete()` methods to `DiscordWebhook` class
 
 ## 2020-08-17 0.9.0
