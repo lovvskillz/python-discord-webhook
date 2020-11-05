@@ -4,6 +4,11 @@ from discord_webhook import DiscordWebhook
 
 
 def main():
+    """
+    Entry point.
+
+    Args:
+    """
     parser = argparse.ArgumentParser(
         prog="discord_webhook", description="Trigger discord webhook(s)."
     )
