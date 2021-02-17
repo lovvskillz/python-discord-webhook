@@ -78,7 +78,7 @@ embed.set_image(url='your image url')
 embed.set_thumbnail(url='your thumbnail url')
 
 # set footer
-embed.set_footer(text='Embed Footer Text')
+embed.set_footer(text='Embed Footer Text', icon_url='URL of icon')
 
 # set timestamp (default is now)
 embed.set_timestamp()
