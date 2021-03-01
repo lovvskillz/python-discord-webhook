@@ -218,6 +218,7 @@ class DiscordEmbed:
         :keyword url: url of embed
         :keyword timestamp: timestamp of embed content
         :keyword color: color code of the embed as int
+        :keyword hex_color: color code of the embed as a hex string
         :keyword footer: footer information
         :keyword image: image information
         :keyword thumbnail: thumbnail information
@@ -231,6 +232,7 @@ class DiscordEmbed:
         self.url = kwargs.get("url")
         self.timestamp = kwargs.get("timestamp")
         self.color = kwargs.get("color")
+        self.hex_color = kwargs.get("hex_color")
         self.footer = kwargs.get("footer")
         self.image = kwargs.get("image")
         self.thumbnail = kwargs.get("thumbnail")
@@ -269,12 +271,17 @@ class DiscordEmbed:
             timestamp = time.time()
         self.timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
 
-    def set_color(self, color):
+    def set_color(self, color, hex_color):
         """
         set color code of the embed as int
+        :param hex_color: color code of the embed as a hex string
         :param color: color code of the embed as int
         """
-        self.color = color
+
+        if hex_color is not None and color is None:
+            self.color = int(hex_color, 16)
+        else:
+            self.color = color
 
     def set_footer(self, **kwargs):
         """
