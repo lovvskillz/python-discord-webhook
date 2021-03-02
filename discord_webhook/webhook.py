@@ -61,6 +61,14 @@ class DiscordWebhook:
         """
         self.embeds.pop(index)
 
+    def remove_file(self, filename):
+        """
+        removes file from `self.files` using specified `filename` if it exists
+        :param filename: filename
+        """
+        if filename in self.files:
+            del self.files[filename]
+
     def get_embeds(self):
         """
         gets all self.embeds as list
@@ -106,9 +114,23 @@ class DiscordWebhook:
             logger.error("webhook message is empty! set content or embed data")
         return data
 
-    def execute(self):
+    def remove_embeds(self):
+        """
+        Sets `self.embeds` to empty `list`.
+        """
+        self.embeds = []
+
+    def remove_files(self):
+        """
+        Sets `self.files` to empty `dict`.
+        """
+        self.files = {}
+
+    def execute(self, remove_embeds=False, remove_files=False):
         """
         executes the Webhook
+        :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
+        :param remove_files: if set to True, calls `self.remove_files()` to empty `self.files` after webhook is executed
         :return: Webhook response
         """
         webhook_urls = self.url if isinstance(self.url, list) else [self.url]
@@ -136,6 +158,15 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
+
+        # Clear embeds
+        if remove_embeds:
+            self.remove_embeds()
+        
+        # Clear files
+        if remove_files:
+            self.remove_files()
+
         return responses
 
     def edit(self, sent_webhook):
