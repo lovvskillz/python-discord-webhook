@@ -263,6 +263,8 @@ class DiscordEmbed:
         self.url = kwargs.get("url")
         self.timestamp = kwargs.get("timestamp")
         self.color = kwargs.get("color")
+        if self.color:
+            self.set_color(self.color)
         self.hex_color = kwargs.get("hex_color")
         self.footer = kwargs.get("footer")
         self.image = kwargs.get("image")
@@ -302,15 +304,14 @@ class DiscordEmbed:
             timestamp = time.time()
         self.timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
 
-    def set_color(self, color, hex_color):
+    def set_color(self, color):
         """
         set color code of the embed as int
-        :param hex_color: color code of the embed as a hex string
         :param color: color code of the embed as int
         """
 
-        if hex_color is not None and color is None:
-            self.color = int(hex_color, 16)
+        if isinstance(color, str):
+            self.color = int(color, 16)
         else:
             self.color = color
 
