@@ -1,5 +1,14 @@
 # python-discord-webhook Changes
 
+## 2021-03-02 0.12.0
+
+### Features
+- convert embed color to decimal if it's given as hex
+- return webhook responses only as a list if multiple urls are given. Otherwise, just return the response object
+- add `remove_embeds()`, `remove_files()` functions in order to clear `embeds` and `files` properties of webhook object
+- add optional `remove_embeds` and `remove_files` args to `execute()` in order to automatically clear `embeds` and `files` properties
+- add `remove_file()` function in order to remove a file in `files` given by filename
+
 ## 2020-10-31 0.11.0
 - webhook responses are always returned as a list
 

@@ -66,6 +66,7 @@ class DiscordWebhook:
         removes file from `self.files` using specified `filename` if it exists
         :param filename: filename
         """
+        filename = "_{}".format(filename)
         if filename in self.files:
             del self.files[filename]
 
@@ -138,7 +139,7 @@ class DiscordWebhook:
         responses = []
         for i, url in enumerate(webhook_urls):
             if bool(self.files) is False:
-                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait':True})
+                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait': True})
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
                 response = requests.post(url, files=self.files, proxies=self.proxies)
@@ -158,16 +159,11 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
-
-        # Clear embeds
         if remove_embeds:
             self.remove_embeds()
-        
-        # Clear files
         if remove_files:
             self.remove_files()
-
-        return responses
+        return responses[0] if len(responses) == 1 else responses
 
     def edit(self, sent_webhook):
         """
@@ -175,6 +171,7 @@ class DiscordWebhook:
         :param sent_webhook: webhook.execute() response
         :return: Another webhook response
         """
+        sent_webhook = sent_webhook if isinstance(sent_webhook, list) else [sent_webhook]
         webhook_len = len(sent_webhook)
         responses = []
         for i, webhook in enumerate(sent_webhook):
@@ -202,7 +199,7 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
-        return responses
+        return responses[0] if len(responses) == 1 else responses
 
     def delete(self, sent_webhook):
         """
@@ -210,6 +207,7 @@ class DiscordWebhook:
         :param sent_webhook: webhook.execute() response
         :return: Response
         """
+        sent_webhook = sent_webhook if isinstance(sent_webhook, list) else [sent_webhook]
         webhook_len = len(sent_webhook)
         responses = []
         for i, webhook in enumerate(sent_webhook):
@@ -233,7 +231,7 @@ class DiscordWebhook:
                     )
                 )
             responses.append(response)
-        return responses
+        return responses[0] if len(responses) == 1 else responses
 
 
 class DiscordEmbed:
