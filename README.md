@@ -18,6 +18,7 @@ install via pip: `pip install discord-webhook`
 * [Edit Webhook Message](#edit-webhook-messages)
 * [Delete Webhook Message](#delete-webhook-messages)
 * [Send Files](#send-files)
+* [Remove Embeds and Files](#remove-embeds-and-files)
 * [Allowed Mentions](#allowed-mentions)
 * [Use Proxies](#use-proxies)
 
@@ -172,7 +173,7 @@ webhook.delete(sent_webhook)
 ### send files
 
 ```python
-from discord_webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', username="Webhook with files")
 
@@ -199,6 +200,41 @@ embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', 
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
+response = webhook.execute()
+```
+
+### remove embeds and files
+```python
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
+webhook = DiscordWebhook(url='your webhook url')
+
+with open("path/to/image.jpg", "rb") as f:
+    webhook.add_file(file=f.read(), filename='example.jpg')
+
+embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
+embed.set_thumbnail(url='attachment://example.jpg')
+
+webhook.add_embed(embed)
+response = webhook.execute(remove_embeds=True, remove_files=True)
+# webhook.files and webhook.embeds will be empty after webhook is executed
+# You could also manually call the functions webhook.remove_files() and webhook.remove_embeds()
+```
+
+`.remove_file()` removes the given file
+```python
+from discord_webhook import DiscordWebhook
+
+webhook = DiscordWebhook(url='your webhook url', username="Webhook with files")
+
+# send two images
+with open("path/to/first/image.jpg", "rb") as f:
+    webhook.add_file(file=f.read(), filename='example.jpg')
+with open("path/to/second/image.jpg", "rb") as f:
+    webhook.add_file(file=f.read(), filename='example2.jpg')
+# remove 'example.jpg'
+webhook.remove_file('example.jpg')
+# only 'example2.jpg' is sent to the webhook
 response = webhook.execute()
 ```
 
