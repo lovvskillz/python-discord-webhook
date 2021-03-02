@@ -129,8 +129,8 @@ class DiscordWebhook:
     def execute(self, remove_embeds=False, remove_files=False):
         """
         executes the Webhook
-        :param remove_embeds: calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
-        :param remove_files: calls `self.remove_files()` to empty `self.files` after webhook is executed
+        :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
+        :param remove_files: if set to True, calls `self.remove_files()` to empty `self.files` after webhook is executed
         :return: Webhook response
         """
         webhook_urls = self.url if isinstance(self.url, list) else [self.url]
