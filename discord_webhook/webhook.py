@@ -306,8 +306,8 @@ class DiscordEmbed:
 
     def set_color(self, color):
         """
-        set color code of the embed as int
-        :param color: color code of the embed as int
+        set color code of the embed as decimal(int) or hex(string)
+        :param color: color code of the embed as decimal(int) or hex(string)
         """
 
         if isinstance(color, str):

@@ -50,7 +50,8 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 webhook = DiscordWebhook(url='your webhook url')
 
 # create embed object for webhook
-embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color=242424)
+# you can set the color as a decimal (color=242424) or hex (color='03b2f8') number
+embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color='03b2f8')
 
 # add embed object to webhook
 webhook.add_embed(embed)
@@ -66,7 +67,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 webhook = DiscordWebhook(url='your webhook url')
 
 # create embed object for webhook
-embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color=242424)
+embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color='03b2f8')
 
 # set author
 embed.set_author(name='Author Name', url='author url', icon_url='author icon url')
@@ -100,7 +101,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook = DiscordWebhook(url='your webhook url', username="New Webhook Username")
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color=242424)
+embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
 embed.set_author(name='Author Name', url='https://github.com/lovvskillz', icon_url='https://avatars0.githubusercontent.com/u/14542790')
 embed.set_footer(text='Embed Footer Text')
 embed.set_timestamp()
@@ -122,7 +123,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 webhook = DiscordWebhook(url="your webhook url", username="New Webhook Username")
 
 embed = DiscordEmbed(
-    title="Embed Title", description="Your Embed Description", color=242424
+    title="Embed Title", description="Your Embed Description", color='03b2f8'
 )
 embed.set_author(
     name="Author Name",
@@ -194,7 +195,7 @@ webhook = DiscordWebhook(url='your webhook url')
 with open("path/to/image.jpg", "rb") as f:
     webhook.add_file(file=f.read(), filename='example.jpg')
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color=242424)
+embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
