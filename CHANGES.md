@@ -9,6 +9,9 @@
 - add optional `remove_embeds` and `remove_files` args to `execute()` in order to automatically clear `embeds` and `files` properties
 - add `remove_file()` function in order to remove a file in `files` given by filename
 
+#### Breaking Changes
+- return webhook responses only as a list if multiple urls are given. Otherwise, just return the response object
+
 ## 2020-10-31 0.11.0
 - webhook responses are always returned as a list
 
