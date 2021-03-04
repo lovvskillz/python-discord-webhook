@@ -27,6 +27,7 @@ class DiscordWebhook:
         :keyword embeds: list of embedded rich content
         :keyword allowed_mentions: allowed mentions for the message
         :keyword proxies: dict of proxies
+        :keyword timeout: (optional) amount of seconds to wait for a response from Discord
         """
         self.url = url
         self.content = kwargs.get("content")
@@ -37,6 +38,7 @@ class DiscordWebhook:
         self.embeds = kwargs.get("embeds", [])
         self.proxies = kwargs.get("proxies")
         self.allowed_mentions = kwargs.get("allowed_mentions")
+        self.timeout = kwargs.get("timeout")
 
     def add_file(self, file, filename):
         """
@@ -139,10 +141,10 @@ class DiscordWebhook:
         responses = []
         for i, url in enumerate(webhook_urls):
             if bool(self.files) is False:
-                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait': True})
+                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait': True}, timeout=self.timeout)
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
-                response = requests.post(url, files=self.files, proxies=self.proxies)
+                response = requests.post(url, files=self.files, proxies=self.proxies, timeout=self.timeout)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook executed".format(
@@ -178,10 +180,10 @@ class DiscordWebhook:
             url = webhook.url.split('?')[0]  # removes any query params
             previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
             if bool(self.files) is False:
-                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait': True})
+                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait': True}, timeout=self.timeout)
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
-                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies)
+                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies, timeout=self.timeout)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook edited".format(
@@ -213,7 +215,7 @@ class DiscordWebhook:
         for i, webhook in enumerate(sent_webhook):
             url = webhook.url.split('?')[0]  # removes any query params
             previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
-            response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies)
+            response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies, timeout=self.timeout)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook deleted".format(
