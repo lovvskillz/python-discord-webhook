@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2021-04-01 0.13.0
+
+### Features
+- add `timeout` param to webhooks
+
 ## 2021-03-02 0.12.0
 
 ### Features
