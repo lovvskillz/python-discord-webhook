@@ -3,8 +3,7 @@ from discord_webhook.webhook import DiscordWebhook
 
 
 class TestHermesApi(unittest.TestCase):
-    """Tests to exercise webhooks
-    """
+    """Tests to exercise webhooks"""
 
     def test_discordwebhook_constructor(self):
         webhook = DiscordWebhook("testurl")
