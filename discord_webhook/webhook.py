@@ -167,7 +167,7 @@ class DiscordWebhook:
                         response.content.decode('utf-8'))
                     wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
                     time.sleep(wh_sleep)
-                    logger.debug(
+                    logger.error(
                         "Webhook rate limited: sleeping for {wh_sleep} "
                         "seconds...".format(
                             wh_sleep=wh_sleep
