@@ -13,6 +13,7 @@ install via pip: `pip install discord-webhook`
 ## Examples
 
 * [Basic Webhook](#basic-webhook)
+* [manage being rate limited](#manage-being-rate-limited)
 * [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
@@ -27,6 +28,18 @@ install via pip: `pip install discord-webhook`
 from discord_webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
+response = webhook.execute()
+```
+
+### manage being rate limited
+```python
+from discord_webhook import DiscordWebhook
+
+# if rate_limit_retry is True then in the event that you are being rate 
+# limited by Discord your webhook will automatically be sent once the 
+# rate limit has been lifted
+webhook = DiscordWebhook(url='your webhook url', rate_limit_retry=True,
+                         content='Webhook Message')
 response = webhook.execute()
 ```
 
