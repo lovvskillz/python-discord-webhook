@@ -13,7 +13,7 @@ install via pip: `pip install discord-webhook`
 ## Examples
 
 * [Basic Webhook](#basic-webhook)
-* [manage being rate limited](#manage-being-rate-limited)
+* [Manage Being Rate Limited](#manage-being-rate-limited)
 * [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
