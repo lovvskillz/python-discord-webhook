@@ -3,6 +3,7 @@ import json
 import time
 import datetime
 import requests
+from webhook_exceptions import *
 
 
 logger = logging.getLogger(__name__)
@@ -344,6 +345,9 @@ class DiscordEmbed:
             self.color = int(color, 16)
         else:
             self.color = color
+
+        if self.color not in range(0, 16777216):
+            raise ColourNotInRangeException(color)
 
     def set_footer(self, **kwargs):
         """
