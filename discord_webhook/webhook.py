@@ -39,6 +39,7 @@ class DiscordWebhook:
         self.proxies = kwargs.get("proxies")
         self.allowed_mentions = kwargs.get("allowed_mentions")
         self.timeout = kwargs.get("timeout")
+        self.rate_limit_retry = kwargs.get("rate_limit_retry")
 
     def add_file(self, file, filename):
         """
@@ -129,6 +130,19 @@ class DiscordWebhook:
         """
         self.files = {}
 
+    def api_post_request(self, url):
+        if bool(self.files) is False:
+            response = requests.post(url, json=self.json, proxies=self.proxies,
+                                     params={'wait': True},
+                                     timeout=self.timeout)
+        else:
+            self.files["payload_json"] = (None, json.dumps(self.json))
+            response = requests.post(url, files=self.files,
+                                     proxies=self.proxies,
+                                     timeout=self.timeout)
+
+        return response
+
     def execute(self, remove_embeds=False, remove_files=False):
         """
         executes the Webhook
@@ -140,17 +154,33 @@ class DiscordWebhook:
         urls_len = len(webhook_urls)
         responses = []
         for i, url in enumerate(webhook_urls):
-            if bool(self.files) is False:
-                response = requests.post(url, json=self.json, proxies=self.proxies, params={'wait': True}, timeout=self.timeout)
-            else:
-                self.files["payload_json"] = (None, json.dumps(self.json))
-                response = requests.post(url, files=self.files, proxies=self.proxies, timeout=self.timeout)
+            response = self.api_post_request(url)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook executed".format(
                         index=i+1, length=urls_len
                     )
                 )
+            elif response.status_code == 429 and self.rate_limit_retry:
+                while response.status_code == 429:
+                    errors = json.loads(
+                        response.content.decode('utf-8'))
+                    wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
+                    time.sleep(wh_sleep)
+                    logger.error(
+                        "Webhook rate limited: sleeping for {wh_sleep} "
+                        "seconds...".format(
+                            wh_sleep=wh_sleep
+                        )
+                    )
+                    response = self.api_post_request(url)
+                    if response.status_code in [200, 204]:
+                        logger.debug(
+                            "[{index}/{length}] Webhook executed".format(
+                                index=i + 1, length=urls_len
+                            )
+                        )
+                        break
             else:
                 logger.error(
                     "[{index}/{length}] Webhook status code {status_code}: {content}".format(
