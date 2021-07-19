@@ -103,18 +103,17 @@ class DiscordWebhook:
         convert webhook data to json
         :return webhook data as json:
         """
-        data = dict()
         embeds = self.embeds
-        self.embeds = list()
+        self.embeds = []
         # convert DiscordEmbed to dict
         for embed in embeds:
             self.add_embed(embed)
-        for key, value in self.__dict__.items():
-            if value and key not in ["url", "files", "filename"]:
-                data[key] = value
-        embeds_empty = (
-            all(not embed for embed in data["embeds"]) if "embeds" in data else True
-        )
+        data = {
+            key: value
+            for key, value in self.__dict__.items()
+            if value and key not in {"url", "files", "filename"}
+        }
+        embeds_empty = not any(data["embeds"]) if "embeds" in data else True
         if embeds_empty and "content" not in data and bool(self.files) is False:
             logger.error("webhook message is empty! set content or embed data")
         return data
@@ -340,13 +339,8 @@ class DiscordEmbed:
         set color code of the embed as decimal(int) or hex(string)
         :param color: color code of the embed as decimal(int) or hex(string)
         """
-
-        if isinstance(color, str):
-            self.color = int(color, 16)
-        else:
-            self.color = color
-
-        if self.color not in range(0, 16777216):
+        self.color = int(color, 16) if isinstance(color, str) else color
+        if self.color not in range(16777216):
             raise ColourNotInRangeException(color)
 
     def set_footer(self, **kwargs):
