@@ -22,6 +22,7 @@ install via pip: `pip install discord-webhook`
 * [Remove Embeds and Files](#remove-embeds-and-files)
 * [Allowed Mentions](#allowed-mentions)
 * [Use Proxies](#use-proxies)
+* [Timeout](#timeout)
 
 ### basic webhook
 ```python
@@ -311,4 +312,27 @@ optional arguments:
   --username USERNAME   override the default username of the webhook
   --avatar_url AVATAR_URL
                         override the default avatar of the webhook
+```
+
+### timeout
+
+```python
+from requests.exceptions import Timeout
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
+# We will set ridiculously low timeout threshold for testing purposes
+webhook = DiscordWebhook(url='your webhook url', timeout=0.1)
+
+# You can also set timeout later using
+# webhook.timeout = 0.1
+
+embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
+
+webhook.add_embed(embed)
+
+# Handle timeout exception
+try:
+    response = webhook.execute()
+except Timeout as err:
+    print(f'Oops! Connection to Discord timed out: {err}')
 ```
