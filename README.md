@@ -131,7 +131,7 @@ response = webhook.execute()
 
 ![Image](img/extended_embed2.png "Example Embed Result")
 
-By default, the embed fields are placed side by side. We can arrangee them in a new line by setting `inline=False` as follows
+By default, the embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
