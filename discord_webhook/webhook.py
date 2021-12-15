@@ -14,26 +14,27 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    def __init__(self, url, **kwargs):
+    def __init__(self, url=None, content=None, username=None, avatar_url=None, **kwargs):
         """
         Init Webhook for Discord
-        :param url: discord_webhook webhook url
-        :type url: str, list
-        :keyword content: the message contents
-        :keyword username: override the default username of the webhook
-        :keyword avatar_url: override the default avatar of the webhook
-        :keyword tts: true if this is a TTS message
-        :keyword file: file contents
-        :keyword filename: file name
-        :keyword embeds: list of embedded rich content
-        :keyword allowed_mentions: allowed mentions for the message
-        :keyword proxies: dict of proxies
-        :keyword timeout: (optional) amount of seconds to wait for a response from Discord
+        ---------
+        :param ``url``: your discord webhook url (type: str, list)\n
+        :keyword ``content:`` the message contents (type: str)\n
+        :keyword ``username:`` override the default username of the webhook\n
+        :keyword ``avatar_url:`` override the default avatar of the webhook\n
+        :keyword ``tts:`` true if this is a TTS message\n
+        :keyword ``file``: to apply file(s) with message 
+        (For example: file=f.read() (here, f = variable that contain attachement path as "rb" mode))\n
+        :keyword ``filename:`` apply custom file name on attached file content(s)\n
+        :keyword ``embeds:`` list of embedded rich content\n
+        :keyword ``allowed_mentions:`` allowed mentions for the message\n
+        :keyword ``proxies:`` dict of proxies\n
+        :keyword ``timeout:`` (optional) amount of seconds to wait for a response from Discord
         """
         self.url = url
-        self.content = kwargs.get("content")
-        self.username = kwargs.get("username")
-        self.avatar_url = kwargs.get("avatar_url")
+        self.content = content
+        self.username = username
+        self.avatar_url = avatar_url
         self.tts = kwargs.get("tts", False)
         self.files = kwargs.get("files", dict())
         self.embeds = kwargs.get("embeds", [])
@@ -271,31 +272,32 @@ class DiscordEmbed:
     Discord Embed
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, title=None, description=None, hex_color='33ccff', **kwargs):
         """
         Init Discord Embed
-        :keyword title: title of embed
-        :keyword description: description of embed
-        :keyword url: url of embed
-        :keyword timestamp: timestamp of embed content
-        :keyword color: color code of the embed as int
-        :keyword hex_color: color code of the embed as a hex string
-        :keyword footer: footer information
-        :keyword image: image information
-        :keyword thumbnail: thumbnail information
-        :keyword video: video information
-        :keyword provider: provider information
-        :keyword author: author information
-        :keyword fields: fields information
+        -----------
+        :keyword ``title:`` title of embed\n
+        :keyword ``description:`` description body of embed\n
+        :keyword ``url:`` add an url to make your embeded title a clickable link\n
+        :keyword ``timestamp:`` timestamp of embed content\n
+        :keyword ``color:`` color code of the embed as int\n
+        :keyword ``hex_color:`` color code of the embed as a hex string\n
+        :keyword ``footer:`` footer texts\n
+        :keyword ``image:`` your image url here\n
+        :keyword ``thumbnail:`` your thumbnail url here\n
+        :keyword ``video:``  to apply video with embeded, your video source url here\n
+        :keyword ``provider:`` provider information\n
+        :keyword ``author:`` author information\n
+        :keyword ``fields:`` fields information
         """
-        self.title = kwargs.get("title")
-        self.description = kwargs.get("description")
+        self.title = title
+        self.description = description
         self.url = kwargs.get("url")
         self.timestamp = kwargs.get("timestamp")
         self.color = kwargs.get("color")
         if self.color:
             self.set_color(self.color)
-        self.hex_color = kwargs.get("hex_color")
+        self.hex_color = hex_color
         self.footer = kwargs.get("footer")
         self.image = kwargs.get("image")
         self.thumbnail = kwargs.get("thumbnail")
