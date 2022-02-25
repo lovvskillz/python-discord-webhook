@@ -5,7 +5,6 @@ import datetime
 import requests
 from webhook_exceptions import *
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -159,7 +158,7 @@ class DiscordWebhook:
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook executed".format(
-                        index=i+1, length=urls_len
+                        index=i + 1, length=urls_len
                     )
                 )
             elif response.status_code == 429 and self.rate_limit_retry:
@@ -185,7 +184,7 @@ class DiscordWebhook:
             else:
                 logger.error(
                     "[{index}/{length}] Webhook status code {status_code}: {content}".format(
-                        index=i+1,
+                        index=i + 1,
                         length=urls_len,
                         status_code=response.status_code,
                         content=response.content.decode("utf-8"),
@@ -208,13 +207,14 @@ class DiscordWebhook:
         webhook_len = len(sent_webhook)
         responses = []
         for i, webhook in enumerate(sent_webhook):
-            url = webhook.url.split('?')[0]  # removes any query params
             previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
+            url = webhook.url.split('?')[0] + '/messages/' + str(previous_sent_message_id)  # removes any query params
             if bool(self.files) is False:
-                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), json=self.json, proxies=self.proxies, params={'wait': True}, timeout=self.timeout)
+                patch_kwargs = {'json': self.json, 'proxies': self.proxies, 'params': {'wait': True}, 'timeout': self.timeout}
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
-                response = requests.patch(url+'/messages/'+str(previous_sent_message_id), files=self.files, proxies=self.proxies, timeout=self.timeout)
+                patch_kwargs = {'files': self.files, 'proxies': self.proxies, 'timeout': self.timeout}
+            response = requests.patch(url, **patch_kwargs)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook edited".format(
@@ -222,6 +222,26 @@ class DiscordWebhook:
                         length=webhook_len,
                     )
                 )
+            elif response.status_code == 429 and self.rate_limit_retry:
+                while response.status_code == 429:
+                    errors = json.loads(response.content.decode('utf-8'))
+                    wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
+                    time.sleep(wh_sleep)
+                    logger.error(
+                        "Webhook rate limited: sleeping for {wh_sleep} "
+                        "seconds...".format(
+                            wh_sleep=wh_sleep
+                        )
+                    )
+                    response = requests.patch(url, **patch_kwargs)
+                    if response.status_code in [200, 204]:
+                        logger.debug(
+                            "[{index}/{length}] Webhook edited".format(
+                                index=i + 1,
+                                length=webhook_len,
+                            )
+                        )
+                        break
             else:
                 logger.error(
                     "[{index}/{length}] Webhook status code {status_code}: {content}".format(
@@ -246,7 +266,8 @@ class DiscordWebhook:
         for i, webhook in enumerate(sent_webhook):
             url = webhook.url.split('?')[0]  # removes any query params
             previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
-            response = requests.delete(url+'/messages/'+str(previous_sent_message_id), proxies=self.proxies, timeout=self.timeout)
+            response = requests.delete(url + '/messages/' + str(previous_sent_message_id), proxies=self.proxies,
+                                       timeout=self.timeout)
             if response.status_code in [200, 204]:
                 logger.debug(
                     "[{index}/{length}] Webhook deleted".format(
