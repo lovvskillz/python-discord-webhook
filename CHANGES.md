@@ -1,5 +1,11 @@
 # python-discord-webhook Changes
 
+## 2022-03-02 0.15.0
+
+### Features
+- enable `rate_limit_retry` in webhook `edit()` function
+- add optional kwargs to `edit` function to specify fields that will be added or override existing fields in the webhook edit request. e.g. attachments 
+
 ## 2021-06-08 0.14.0
 
 ### Features
