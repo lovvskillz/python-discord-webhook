@@ -3,7 +3,7 @@ import json
 import time
 import datetime
 import requests
-from webhook_exceptions import *
+from discord_webhook.webhook_exceptions import *
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +100,8 @@ class DiscordWebhook:
     @property
     def json(self):
         """
-        convert webhook data to json
-        :return webhook data as json:
+        convert webhook data to json serializable object
+        :return webhook data as json serializable object:
         """
         embeds = self.embeds
         self.embeds = []
@@ -197,29 +197,37 @@ class DiscordWebhook:
             self.remove_files()
         return responses[0] if len(responses) == 1 else responses
 
-    def edit(self, sent_webhook):
+    def edit(self, sent_webhook, **custom_data):
         """
         edits the webhook passed as a response
         :param sent_webhook: webhook.execute() response
+        :param custom_data: optional fields that will be added or override existing fields. e.g. author, attachments
         :return: Another webhook response
         """
         sent_webhook = sent_webhook if isinstance(sent_webhook, list) else [sent_webhook]
         webhook_len = len(sent_webhook)
         responses = []
         for i, webhook in enumerate(sent_webhook):
-            previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
-            url = webhook.url.split('?')[0] + '/messages/' + str(previous_sent_message_id)  # removes any query params
+            webhook_response_content = json.loads(webhook.content.decode('utf-8'))
+            webhook_message_id = webhook_response_content['id']
+            url = webhook.url.split('?')[0]  # removes any query params
+            if '/messages/' not in url:
+                url = f'{url}/messages/{webhook_message_id}'
+            json_data = self.json
+            for key, value in custom_data.items():  # override or add fields that will be sent in the webhook edit request
+                json_data[key] = value
             if bool(self.files) is False:
-                patch_kwargs = {'json': self.json, 'proxies': self.proxies, 'params': {'wait': True}, 'timeout': self.timeout}
+                patch_kwargs = {'json': json_data, 'proxies': self.proxies, 'params': {'wait': True}, 'timeout': self.timeout}
             else:
-                self.files["payload_json"] = (None, json.dumps(self.json))
+                self.files["payload_json"] = (None, json.dumps(json_data))
                 patch_kwargs = {'files': self.files, 'proxies': self.proxies, 'timeout': self.timeout}
             response = requests.patch(url, **patch_kwargs)
             if response.status_code in [200, 204]:
                 logger.debug(
-                    "[{index}/{length}] Webhook edited".format(
+                    "[{index}/{length}] Webhook edited with message id {message_id}".format(
                         index=i + 1,
                         length=webhook_len,
+                        message_id=webhook_message_id
                     )
                 )
             elif response.status_code == 429 and self.rate_limit_retry:
@@ -228,17 +236,19 @@ class DiscordWebhook:
                     wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
                     time.sleep(wh_sleep)
                     logger.error(
-                        "Webhook rate limited: sleeping for {wh_sleep} "
+                        "Webhook rate limited for message with id {message_id}: sleeping for {wh_sleep} "
                         "seconds...".format(
-                            wh_sleep=wh_sleep
+                            wh_sleep=wh_sleep,
+                            message_id=errors['id']
                         )
                     )
                     response = requests.patch(url, **patch_kwargs)
                     if response.status_code in [200, 204]:
                         logger.debug(
-                            "[{index}/{length}] Webhook edited".format(
+                            "[{index}/{length}] Webhook edited with message id {message_id}".format(
                                 index=i + 1,
                                 length=webhook_len,
+                                message_id=webhook_message_id
                             )
                         )
                         break
@@ -265,8 +275,10 @@ class DiscordWebhook:
         responses = []
         for i, webhook in enumerate(sent_webhook):
             url = webhook.url.split('?')[0]  # removes any query params
-            previous_sent_message_id = json.loads(webhook.content.decode('utf-8'))['id']
-            response = requests.delete(url + '/messages/' + str(previous_sent_message_id), proxies=self.proxies,
+            webhook_message_id = json.loads(webhook.content.decode('utf-8'))['id']
+            if '/messages/' not in url:
+                url = f'{url}/messages/{webhook_message_id}'
+            response = requests.delete(url, proxies=self.proxies,
                                        timeout=self.timeout)
             if response.status_code in [200, 204]:
                 logger.debug(
@@ -364,7 +376,7 @@ class DiscordEmbed:
         """
         self.color = int(color, 16) if isinstance(color, str) else color
         if self.color not in range(16777216):
-            raise ColourNotInRangeException(color)
+            raise ColorNotInRangeException(color)
 
     def set_footer(self, **kwargs):
         """
