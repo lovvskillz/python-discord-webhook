@@ -20,6 +20,11 @@ setup(
     install_requires=[
             'requests>=2.19.1',
     ],
+    extras_require={
+        'async': [
+            'httpx>=0.20.0'
+        ]
+    },
     author='Vadim Zifra',
     author_email='vadim@minehub.de',
     classifiers=[
