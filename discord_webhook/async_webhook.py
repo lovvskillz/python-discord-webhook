@@ -1,9 +1,9 @@
 import asyncio
 import json
 import logging
-from contextlib import contextmanager, asynccontextmanager
+from contextlib import asynccontextmanager
 
-from discord_webhook import DiscordWebhook
+from . import DiscordWebhook
 
 logger = logging.getLogger(__name__)
 

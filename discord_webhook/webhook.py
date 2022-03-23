@@ -3,7 +3,7 @@ import json
 import time
 import datetime
 import requests
-from webhook_exceptions import *
+from .webhook_exceptions import *
 
 logger = logging.getLogger(__name__)
 
