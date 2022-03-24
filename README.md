@@ -25,6 +25,7 @@ install via pip: `pip install discord-webhook`
 * [Timeout](#timeout)
 
 ### basic webhook
+
 ```python
 from discord_webhook import DiscordWebhook
 
@@ -33,6 +34,7 @@ response = webhook.execute()
 ```
 
 ### manage being rate limited
+
 ```python
 from discord_webhook import DiscordWebhook
 
@@ -47,6 +49,7 @@ response = webhook.execute()
 ![Image](img/basic_webhook.png "Basic Example Result")
 
 ### multiple webhook urls
+
 ```python
 from discord_webhook import DiscordWebhook
 
@@ -57,8 +60,8 @@ response = webhook.execute()
 
 ![Image](img/multiple_urls.png "Multiple Urls Result")
 
-
 ### webhook with embedded content
+
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -108,9 +111,11 @@ webhook.add_embed(embed)
 
 response = webhook.execute()
 ```
+
 ![Image](img/extended_embed.png "Basic Embed Example Result")
 
 This is another example with embedded content
+
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -132,6 +137,7 @@ response = webhook.execute()
 ![Image](img/extended_embed2.png "Example Embed Result")
 
 By default, the embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows
+
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -199,9 +205,11 @@ with open("path/to/second/image.jpg", "rb") as f:
 
 response = webhook.execute()
 ```
+
 ![Image](img/webhook_files.png "Example Files Result")
 
 You can use uploaded attachments in embeds:
+
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -218,6 +226,7 @@ response = webhook.execute()
 ```
 
 ### remove embeds and files
+
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
@@ -236,6 +245,7 @@ response = webhook.execute(remove_embeds=True, remove_files=True)
 ```
 
 `.remove_file()` removes the given file
+
 ```python
 from discord_webhook import DiscordWebhook
 
@@ -282,7 +292,9 @@ proxies = {
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
 response = webhook.execute()
 ```
+
 or
+
 ```python
 from discord_webhook import DiscordWebhook
 

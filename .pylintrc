@@ -6,7 +6,7 @@ disable=bad-continuation,
         too-many-instance-attributes,
         line-too-long,
         invalid-name,
-        logging-format-interpolation
+        logging-fstring-interpolation
 
 
 max-module-lines=1070
