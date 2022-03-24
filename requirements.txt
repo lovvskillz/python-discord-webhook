@@ -7,3 +7,4 @@ requests==2.25.1
 mypy==0.931
 types-requests==2.27.11
 isort==5.10.1
+httpx>=0.20.0

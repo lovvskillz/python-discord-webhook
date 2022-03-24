@@ -23,6 +23,11 @@ setup(
     ],
     author="Vadim Zifra",
     author_email="vadim@minehub.de",
+    extras_require={
+        'async': [
+            'httpx>=0.20.0'
+        ]
+    },
     classifiers=[
         "Environment :: Web Environment",
         "Intended Audience :: Developers",

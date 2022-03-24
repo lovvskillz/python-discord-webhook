@@ -6,7 +6,6 @@ from functools import partial
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
-
 from .webhook_exceptions import ColourNotInRangeException
 
 logger = logging.getLogger(__name__)
