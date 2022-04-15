@@ -11,6 +11,213 @@ from .webhook_exceptions import ColourNotInRangeException
 logger = logging.getLogger(__name__)
 
 
+class DiscordEmbed:
+    """
+    Discord Embed
+    """
+
+    title: Optional[str]
+    description: Optional[str]
+    url: Optional[str]
+    timestamp: Optional[str]
+    color: Optional[int]
+    hex_color: Optional[str]
+    footer: Optional[Dict[str, Optional[str]]]
+    image: Optional[Dict[str, Optional[Union[str, int]]]]
+    thumbnail: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
+    video: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
+    provider: Optional[Dict[str, Any]]
+    author: Optional[Dict[str, Optional[str]]]
+    fields: List[Dict[str, Optional[Any]]]
+
+    def __init__(
+        self,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        hex_color: str = "33ccff",
+        **kwargs: Any,
+    ) -> None:
+        """
+        Init Discord Embed
+        -----------
+        :keyword ``title:`` title of embed\n
+        :keyword ``description:`` description body of embed\n
+        :keyword ``url:`` add an url to make your embeded title a clickable link\n
+        :keyword ``timestamp:`` timestamp of embed content\n
+        :keyword ``color:`` color code of the embed as int\n
+        :keyword ``hex_color:`` color code of the embed as a hex string\n
+        :keyword ``footer:`` footer texts\n
+        :keyword ``image:`` your image url here\n
+        :keyword ``thumbnail:`` your thumbnail url here\n
+        :keyword ``video:``  to apply video with embeded, your video source url here\n
+        :keyword ``provider:`` provider information\n
+        :keyword ``author:`` author information\n
+        :keyword ``fields:`` fields information
+        """
+        self.title = title
+        self.description = description
+        self.url = cast(str, kwargs.get("url"))
+        self.timestamp = cast(str, kwargs.get("timestamp"))
+        self.hex_color = hex_color
+        self.footer = kwargs.get("footer")
+        self.image = kwargs.get("image")
+        self.thumbnail = kwargs.get("thumbnail")
+        self.video = kwargs.get("video")
+        self.provider = kwargs.get("provider")
+        self.author = kwargs.get("author")
+        self.fields = kwargs.get("fields", [])
+        self.color = cast(Optional[int], kwargs.get("color"))
+
+    def set_title(self, title: str) -> None:
+        """
+        set title of embed
+        :param title: title of embed
+        """
+        self.title = title
+
+    def set_description(self, description: str) -> None:
+        """
+        set description of embed
+        :param description: description of embed
+        """
+        self.description = description
+
+    def set_url(self, url: str) -> None:
+        """
+        set url of embed
+        :param url: url of embed
+        """
+        self.url = url
+
+    def set_timestamp(self, timestamp: Optional[float] = None) -> None:
+        """
+        set timestamp of embed content
+        :param timestamp: (optional) timestamp of embed content
+        """
+        if timestamp is None:
+            timestamp = time.time()
+        self.timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
+
+    def set_color(self, color: Union[str, int]) -> None:
+        """
+        set color code of the embed as decimal(int) or hex(string)
+        :param color: color code of the embed as decimal(int) or hex(string)
+        """
+        self.color = int(color, 16) if isinstance(color, str) else color
+        if self.color not in range(16777216):
+            raise ColourNotInRangeException(color)
+
+    def set_footer(self, **kwargs: str) -> None:
+        """
+        set footer information of embed
+        :keyword text: footer text
+        :keyword icon_url: url of footer icon (only supports http(s) and attachments)
+        :keyword proxy_icon_url: a proxied url of footer icon
+        """
+        self.footer = {
+            "text": kwargs.get("text"),
+            "icon_url": kwargs.get("icon_url"),
+            "proxy_icon_url": kwargs.get("proxy_icon_url"),
+        }
+
+    def set_image(self, **kwargs: Union[str, int]) -> None:
+        """
+        set image of embed
+        :keyword url: source url of image (only supports http(s) and attachments)
+        :keyword proxy_url: a proxied url of the image
+        :keyword height: height of image
+        :keyword width: width of image
+        """
+        self.image = {
+            "url": cast(Optional[str], kwargs.get("url")),
+            "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
+            "height": cast(Optional[int], kwargs.get("height")),
+            "width": cast(Optional[int], kwargs.get("width")),
+        }
+
+    def set_thumbnail(self, **kwargs: Union[str, int]) -> None:
+        """
+        set thumbnail of embed
+        :keyword url: source url of thumbnail (only supports http(s) and attachments)
+        :keyword proxy_url: a proxied thumbnail of the image
+        :keyword height: height of thumbnail
+        :keyword width: width of thumbnail
+        """
+        self.thumbnail = {
+            "url": cast(Optional[str], kwargs.get("url")),
+            "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
+            "height": cast(Optional[int], kwargs.get("height")),
+            "width": cast(Optional[str], kwargs.get("width")),
+        }
+
+    def set_video(self, **kwargs: Union[str, int]) -> None:
+        """
+        set video of embed
+        :keyword url: source url of video
+        :keyword height: height of video
+        :keyword width: width of video
+        """
+        self.video = {
+            "url": cast(Optional[str], kwargs.get("url")),
+            "height": cast(Optional[int], kwargs.get("height")),
+            "width": cast(Optional[int], kwargs.get("width")),
+        }
+
+    def set_provider(self, **kwargs: str) -> None:
+        """
+        set provider of embed
+        :keyword name: name of provider
+        :keyword url: url of provider
+        """
+        self.provider = {
+            "name": kwargs.get("name"),
+            "url": kwargs.get("url"),
+        }
+
+    def set_author(self, **kwargs: str) -> None:
+        """
+        set author of embed
+        :keyword name: name of author
+        :keyword url: url of author
+        :keyword icon_url: url of author icon (only supports http(s) and attachments)
+        :keyword proxy_icon_url: a proxied url of author icon
+        """
+        self.author = {
+            "name": kwargs.get("name"),
+            "url": kwargs.get("url"),
+            "icon_url": kwargs.get("icon_url"),
+            "proxy_icon_url": kwargs.get("proxy_icon_url"),
+        }
+
+    def add_embed_field(self, **kwargs: Union[str, bool]) -> None:
+        """
+        set field of embed
+        :keyword name: name of the field
+        :keyword value: value of the field
+        :keyword inline: (optional) whether or not this field should display inline
+        """
+        self.fields.append(
+            {
+                "name": kwargs.get("name"),
+                "value": kwargs.get("value"),
+                "inline": kwargs.get("inline", True),
+            }
+        )
+
+    def del_embed_field(self, index: int) -> None:
+        """
+        remove field from `self.fields`
+        :param index: index of field in `self.fields`
+        """
+        self.fields.pop(index)
+
+    def get_embed_fields(self) -> List[Dict[str, Optional[Any]]]:
+        """
+        get all `self.fields` as list
+        :return: `self.fields`
+        """
+        return self.fields
+
 class DiscordWebhook:
     """
     Webhook for Discord
@@ -315,211 +522,3 @@ class DiscordWebhook:
                 )
             responses.append(response)
         return responses[0] if len(responses) == 1 else responses
-
-
-class DiscordEmbed:
-    """
-    Discord Embed
-    """
-
-    title: Optional[str]
-    description: Optional[str]
-    url: Optional[str]
-    timestamp: Optional[str]
-    color: Optional[int]
-    hex_color: Optional[str]
-    footer: Optional[Dict[str, Optional[str]]]
-    image: Optional[Dict[str, Optional[Union[str, int]]]]
-    thumbnail: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
-    video: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
-    provider: Optional[Dict[str, Any]]
-    author: Optional[Dict[str, Optional[str]]]
-    fields: List[Dict[str, Optional[Any]]]
-
-    def __init__(
-        self,
-        title: Optional[str] = None,
-        description: Optional[str] = None,
-        hex_color: str = "33ccff",
-        **kwargs: Any,
-    ) -> None:
-        """
-        Init Discord Embed
-        -----------
-        :keyword ``title:`` title of embed\n
-        :keyword ``description:`` description body of embed\n
-        :keyword ``url:`` add an url to make your embeded title a clickable link\n
-        :keyword ``timestamp:`` timestamp of embed content\n
-        :keyword ``color:`` color code of the embed as int\n
-        :keyword ``hex_color:`` color code of the embed as a hex string\n
-        :keyword ``footer:`` footer texts\n
-        :keyword ``image:`` your image url here\n
-        :keyword ``thumbnail:`` your thumbnail url here\n
-        :keyword ``video:``  to apply video with embeded, your video source url here\n
-        :keyword ``provider:`` provider information\n
-        :keyword ``author:`` author information\n
-        :keyword ``fields:`` fields information
-        """
-        self.title = title
-        self.description = description
-        self.url = cast(str, kwargs.get("url"))
-        self.timestamp = cast(str, kwargs.get("timestamp"))
-        self.hex_color = hex_color
-        self.footer = kwargs.get("footer")
-        self.image = kwargs.get("image")
-        self.thumbnail = kwargs.get("thumbnail")
-        self.video = kwargs.get("video")
-        self.provider = kwargs.get("provider")
-        self.author = kwargs.get("author")
-        self.fields = kwargs.get("fields", [])
-        self.color = cast(Optional[int], kwargs.get("color"))
-
-    def set_title(self, title: str) -> None:
-        """
-        set title of embed
-        :param title: title of embed
-        """
-        self.title = title
-
-    def set_description(self, description: str) -> None:
-        """
-        set description of embed
-        :param description: description of embed
-        """
-        self.description = description
-
-    def set_url(self, url: str) -> None:
-        """
-        set url of embed
-        :param url: url of embed
-        """
-        self.url = url
-
-    def set_timestamp(self, timestamp: Optional[float] = None) -> None:
-        """
-        set timestamp of embed content
-        :param timestamp: (optional) timestamp of embed content
-        """
-        if timestamp is None:
-            timestamp = time.time()
-        self.timestamp = str(datetime.datetime.utcfromtimestamp(timestamp))
-
-    def set_color(self, color: Union[str, int]) -> None:
-        """
-        set color code of the embed as decimal(int) or hex(string)
-        :param color: color code of the embed as decimal(int) or hex(string)
-        """
-        self.color = int(color, 16) if isinstance(color, str) else color
-        if self.color not in range(16777216):
-            raise ColourNotInRangeException(color)
-
-    def set_footer(self, **kwargs: str) -> None:
-        """
-        set footer information of embed
-        :keyword text: footer text
-        :keyword icon_url: url of footer icon (only supports http(s) and attachments)
-        :keyword proxy_icon_url: a proxied url of footer icon
-        """
-        self.footer = {
-            "text": kwargs.get("text"),
-            "icon_url": kwargs.get("icon_url"),
-            "proxy_icon_url": kwargs.get("proxy_icon_url"),
-        }
-
-    def set_image(self, **kwargs: Union[str, int]) -> None:
-        """
-        set image of embed
-        :keyword url: source url of image (only supports http(s) and attachments)
-        :keyword proxy_url: a proxied url of the image
-        :keyword height: height of image
-        :keyword width: width of image
-        """
-        self.image = {
-            "url": cast(Optional[str], kwargs.get("url")),
-            "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
-            "height": cast(Optional[int], kwargs.get("height")),
-            "width": cast(Optional[int], kwargs.get("width")),
-        }
-
-    def set_thumbnail(self, **kwargs: Union[str, int]) -> None:
-        """
-        set thumbnail of embed
-        :keyword url: source url of thumbnail (only supports http(s) and attachments)
-        :keyword proxy_url: a proxied thumbnail of the image
-        :keyword height: height of thumbnail
-        :keyword width: width of thumbnail
-        """
-        self.thumbnail = {
-            "url": cast(Optional[str], kwargs.get("url")),
-            "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
-            "height": cast(Optional[int], kwargs.get("height")),
-            "width": cast(Optional[str], kwargs.get("width")),
-        }
-
-    def set_video(self, **kwargs: Union[str, int]) -> None:
-        """
-        set video of embed
-        :keyword url: source url of video
-        :keyword height: height of video
-        :keyword width: width of video
-        """
-        self.video = {
-            "url": cast(Optional[str], kwargs.get("url")),
-            "height": cast(Optional[int], kwargs.get("height")),
-            "width": cast(Optional[int], kwargs.get("width")),
-        }
-
-    def set_provider(self, **kwargs: str) -> None:
-        """
-        set provider of embed
-        :keyword name: name of provider
-        :keyword url: url of provider
-        """
-        self.provider = {
-            "name": kwargs.get("name"),
-            "url": kwargs.get("url"),
-        }
-
-    def set_author(self, **kwargs: str) -> None:
-        """
-        set author of embed
-        :keyword name: name of author
-        :keyword url: url of author
-        :keyword icon_url: url of author icon (only supports http(s) and attachments)
-        :keyword proxy_icon_url: a proxied url of author icon
-        """
-        self.author = {
-            "name": kwargs.get("name"),
-            "url": kwargs.get("url"),
-            "icon_url": kwargs.get("icon_url"),
-            "proxy_icon_url": kwargs.get("proxy_icon_url"),
-        }
-
-    def add_embed_field(self, **kwargs: Union[str, bool]) -> None:
-        """
-        set field of embed
-        :keyword name: name of the field
-        :keyword value: value of the field
-        :keyword inline: (optional) whether or not this field should display inline
-        """
-        self.fields.append(
-            {
-                "name": kwargs.get("name"),
-                "value": kwargs.get("value"),
-                "inline": kwargs.get("inline", True),
-            }
-        )
-
-    def del_embed_field(self, index: int) -> None:
-        """
-        remove field from `self.fields`
-        :param index: index of field in `self.fields`
-        """
-        self.fields.pop(index)
-
-    def get_embed_fields(self) -> List[Dict[str, Optional[Any]]]:
-        """
-        get all `self.fields` as list
-        :return: `self.fields`
-        """
-        return self.fields

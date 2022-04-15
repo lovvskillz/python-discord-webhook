@@ -4,11 +4,14 @@
 [![PyPI version](https://badge.fury.io/py/discord-webhook.svg)](https://badge.fury.io/py/discord-webhook)
 [![Downloads](https://pepy.tech/badge/discord-webhook)](https://pepy.tech/project/discord-webhook)
 
-execute discord webhooks
+Execute Discord Webhooks (also has [async support](#async-support))
 
 ## Install
 
-install via pip: `pip install discord-webhook`
+Install via pip:
+```
+pip install discord-webhook
+```
 
 ## Examples
 
@@ -23,8 +26,9 @@ install via pip: `pip install discord-webhook`
 * [Allowed Mentions](#allowed-mentions)
 * [Use Proxies](#use-proxies)
 * [Timeout](#timeout)
+* [Async Support](#async-support)
 
-### basic webhook
+### Basic Webhook
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -33,7 +37,7 @@ webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 response = webhook.execute()
 ```
 
-### manage being rate limited
+### Manage being Rate Limited
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -48,7 +52,7 @@ response = webhook.execute()
 
 ![Image](img/basic_webhook.png "Basic Example Result")
 
-### multiple webhook urls
+### Multiple Webhook URLs
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -60,7 +64,7 @@ response = webhook.execute()
 
 ![Image](img/multiple_urls.png "Multiple Urls Result")
 
-### webhook with embedded content
+### Webhook with Embedded Content
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -136,7 +140,7 @@ response = webhook.execute()
 
 ![Image](img/extended_embed2.png "Example Embed Result")
 
-By default, the embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows
+By Default, The Embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows:
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -165,7 +169,7 @@ response = webhook.execute()
 
 ![Image](img/extended_embed3.png "Example Non-Inline Embed Result")
 
-### edit webhook messages
+### Edit Webhook Messages
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -178,7 +182,7 @@ sleep(10)
 sent_webhook = webhook.edit(sent_webhook)
 ```
 
-### delete webhook messages
+### Delete Webhook Messages
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -190,7 +194,7 @@ sleep(10)
 webhook.delete(sent_webhook)
 ```
 
-### send files
+### Send Files
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -208,7 +212,7 @@ response = webhook.execute()
 
 ![Image](img/webhook_files.png "Example Files Result")
 
-You can use uploaded attachments in embeds:
+You can use uploaded attachments in Embeds:
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -225,7 +229,7 @@ webhook.add_embed(embed)
 response = webhook.execute()
 ```
 
-### remove embeds and files
+### Remove Embeds and Files
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -262,9 +266,9 @@ webhook.remove_file('example.jpg')
 response = webhook.execute()
 ```
 
-### allowed mentions
+### Allowed Mentions
 
-Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and an explanation
+Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and for more explanation
 
 This example would only ping user `123` and `124` but not everyone else.
 
@@ -280,7 +284,7 @@ webhook = DiscordWebhook(url='your webhook url', content=content, allowed_mentio
 response = webhook.execute()
 ```
 
-### use proxies
+### Use Proxies
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -292,9 +296,7 @@ proxies = {
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
 response = webhook.execute()
 ```
-
 or
-
 ```python
 from discord_webhook import DiscordWebhook
 
@@ -307,7 +309,7 @@ webhook.set_proxies(proxies)
 response = webhook.execute()
 ```
 
-### use cli
+### Use CLI
 
 ```
 usage: discord_webhook [-h] -u URL [URL ...] -c CONTENT [--username USERNAME]
@@ -326,7 +328,7 @@ optional arguments:
                         override the default avatar of the webhook
 ```
 
-### timeout
+### Timeout
 
 ```python
 from requests.exceptions import Timeout
@@ -349,8 +351,7 @@ except Timeout as err:
     print(f'Oops! Connection to Discord timed out: {err}')
 ```
 
-
-### async support
+### Async support
 In order to use the async version, you need to install the package using:
 ```
 pip install discord-webhook[async]
