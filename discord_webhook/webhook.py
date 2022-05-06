@@ -218,6 +218,7 @@ class DiscordEmbed:
         """
         return self.fields
 
+
 class DiscordWebhook:
     """
     Webhook for Discord
