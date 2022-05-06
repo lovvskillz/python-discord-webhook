@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2022-05-06 0.16.0
+
+### Features
+- add async support
+
 ## 2022-03-02 0.15.0
 
 ### Features
