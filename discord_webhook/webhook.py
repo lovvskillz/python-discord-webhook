@@ -399,6 +399,7 @@ class DiscordWebhook:
         :param remove_files: if set to True, calls `self.remove_files()` to empty `self.files` after webhook is executed
         :return: Webhook response
         """
+        webhook_urls = self.url
         if isinstance(self.url, str):
             webhook_urls = [self.url]
         urls_len = len(webhook_urls)
