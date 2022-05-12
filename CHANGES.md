@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2022-05-12 0.16.1
+
+### Fixes
+- fix hex to int color conversion
+
 ## 2022-05-06 0.16.0
 
 ### Features

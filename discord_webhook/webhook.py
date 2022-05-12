@@ -21,7 +21,6 @@ class DiscordEmbed:
     url: Optional[str]
     timestamp: Optional[str]
     color: Optional[int]
-    hex_color: Optional[str]
     footer: Optional[Dict[str, Optional[str]]]
     image: Optional[Dict[str, Optional[Union[str, int]]]]
     thumbnail: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
@@ -34,7 +33,6 @@ class DiscordEmbed:
         self,
         title: Optional[str] = None,
         description: Optional[str] = None,
-        hex_color: str = "33ccff",
         **kwargs: Any,
     ) -> None:
         """
@@ -45,7 +43,6 @@ class DiscordEmbed:
         :keyword ``url:`` add an url to make your embeded title a clickable link\n
         :keyword ``timestamp:`` timestamp of embed content\n
         :keyword ``color:`` color code of the embed as int\n
-        :keyword ``hex_color:`` color code of the embed as a hex string\n
         :keyword ``footer:`` footer texts\n
         :keyword ``image:`` your image url here\n
         :keyword ``thumbnail:`` your thumbnail url here\n
@@ -58,7 +55,6 @@ class DiscordEmbed:
         self.description = description
         self.url = cast(str, kwargs.get("url"))
         self.timestamp = cast(str, kwargs.get("timestamp"))
-        self.hex_color = hex_color
         self.footer = kwargs.get("footer")
         self.image = kwargs.get("image")
         self.thumbnail = kwargs.get("thumbnail")
@@ -66,7 +62,7 @@ class DiscordEmbed:
         self.provider = kwargs.get("provider")
         self.author = kwargs.get("author")
         self.fields = kwargs.get("fields", [])
-        self.color = cast(Optional[int], kwargs.get("color"))
+        self.set_color(kwargs.get("color"))
 
     def set_title(self, title: str) -> None:
         """
