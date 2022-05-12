@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2022-05-12 0.16.2
+
+### Fixes
+- fix support for using a list of webhook URLs
+
 ## 2022-05-12 0.16.1
 
 ### Fixes
