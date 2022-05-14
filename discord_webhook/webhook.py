@@ -100,7 +100,7 @@ class DiscordEmbed:
         :param color: color code of the embed as decimal(int) or hex(string)
         """
         self.color = int(color, 16) if isinstance(color, str) else color
-        if self.color not in range(16777216):
+        if self.color is not None and self.color not in range(16777216):
             raise ColourNotInRangeException(color)
 
     def set_footer(self, **kwargs: str) -> None:
@@ -445,7 +445,6 @@ class DiscordWebhook:
         responses: List[requests.Response] = []
         for i, webhook in enumerate(sent_webhook):
             assert isinstance(webhook.content, bytes)
-            assert isinstance(webhook.url, str)
             previous_sent_message_id = json.loads(webhook.content.decode("utf-8"))["id"]
             url = (
                 webhook.url.split("?")[0] + "/messages/" + str(previous_sent_message_id)
@@ -504,7 +503,6 @@ class DiscordWebhook:
         responses: List[requests.Response] = []
         for i, webhook in enumerate(sent_webhook):
             assert isinstance(webhook.content, bytes)
-            assert isinstance(webhook.content, str)
             url = webhook.url.split("?")[0]  # removes any query params
             previous_sent_message_id = json.loads(webhook.content.decode("utf-8"))["id"]
             response = requests.delete(

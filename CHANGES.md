@@ -1,5 +1,10 @@
 # python-discord-webhook Changes
 
+## 2022-05-14 0.16.3
+
+### Fixes
+- only check if color is in range if color was set
+
 ## 2022-05-12 0.16.2
 
 ### Fixes
