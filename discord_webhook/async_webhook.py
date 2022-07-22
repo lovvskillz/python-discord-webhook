@@ -52,7 +52,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                                              params={'wait': True},
                                              timeout=self.timeout)
             else:
-                self.files["payload_json"] = (None, json.dumps(self.json))
+                self.files["payload_json"] = (None, json.dumps(self.json).encode('utf-8'))
                 response = await client.post(url, files=self.files,
                                              timeout=self.timeout)
         return response
