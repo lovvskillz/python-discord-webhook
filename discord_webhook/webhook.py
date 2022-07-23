@@ -116,31 +116,31 @@ class DiscordEmbed:
             "proxy_icon_url": kwargs.get("proxy_icon_url"),
         }
 
-    def set_image(self, **kwargs: Union[str, int]) -> None:
+    def set_image(self, url: str, **kwargs: Union[str, int]) -> None:
         """
         set image of embed
-        :keyword url: source url of image (only supports http(s) and attachments)
+        :param url: source url of image (only supports http(s) and attachments)
         :keyword proxy_url: a proxied url of the image
         :keyword height: height of image
         :keyword width: width of image
         """
         self.image = {
-            "url": cast(Optional[str], kwargs.get("url")),
+            "url": url,
             "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
             "height": cast(Optional[int], kwargs.get("height")),
             "width": cast(Optional[int], kwargs.get("width")),
         }
 
-    def set_thumbnail(self, **kwargs: Union[str, int]) -> None:
+    def set_thumbnail(self, url: str, **kwargs: Union[str, int]) -> None:
         """
         set thumbnail of embed
-        :keyword url: source url of thumbnail (only supports http(s) and attachments)
+        :param url: source url of thumbnail (only supports http(s) and attachments)
         :keyword proxy_url: a proxied thumbnail of the image
         :keyword height: height of thumbnail
         :keyword width: width of thumbnail
         """
         self.thumbnail = {
-            "url": cast(Optional[str], kwargs.get("url")),
+            "url": url,
             "proxy_url": cast(Optional[str], kwargs.get("proxy_url")),
             "height": cast(Optional[int], kwargs.get("height")),
             "width": cast(Optional[str], kwargs.get("width")),
@@ -170,33 +170,34 @@ class DiscordEmbed:
             "url": kwargs.get("url"),
         }
 
-    def set_author(self, **kwargs: str) -> None:
+    def set_author(self, name: str, **kwargs: str) -> None:
         """
         set author of embed
-        :keyword name: name of author
+        :param name: name of author
         :keyword url: url of author
         :keyword icon_url: url of author icon (only supports http(s) and attachments)
         :keyword proxy_icon_url: a proxied url of author icon
         """
         self.author = {
-            "name": kwargs.get("name"),
+            "name": name,
             "url": kwargs.get("url"),
             "icon_url": kwargs.get("icon_url"),
             "proxy_icon_url": kwargs.get("proxy_icon_url"),
         }
 
-    def add_embed_field(self, **kwargs: Union[str, bool]) -> None:
+    def add_embed_field(self, name: str, value: str,
+                        inline: bool = True) -> None:
         """
         set field of embed
-        :keyword name: name of the field
-        :keyword value: value of the field
-        :keyword inline: (optional) whether this field should display inline
+        :param name: name of the field
+        :param value: value of the field
+        :param inline: (optional) whether this field should display inline
         """
         self.fields.append(
             {
-                "name": kwargs.get("name"),
-                "value": kwargs.get("value"),
-                "inline": kwargs.get("inline", True),
+                "name": name,
+                "value": value,
+                "inline": inline,
             }
         )
 
