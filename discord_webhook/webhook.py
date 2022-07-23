@@ -6,7 +6,7 @@ from functools import partial
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
-from .webhook_exceptions import ColourNotInRangeException
+from .webhook_exceptions import ColorNotInRangeException
 
 logger = logging.getLogger(__name__)
 
@@ -40,13 +40,13 @@ class DiscordEmbed:
         -----------
         :keyword ``title:`` title of embed\n
         :keyword ``description:`` description body of embed\n
-        :keyword ``url:`` add an url to make your embeded title a clickable link\n
+        :keyword ``url:`` add an url to make your embedded title a clickable link\n
         :keyword ``timestamp:`` timestamp of embed content\n
         :keyword ``color:`` color code of the embed as int\n
         :keyword ``footer:`` footer texts\n
         :keyword ``image:`` your image url here\n
         :keyword ``thumbnail:`` your thumbnail url here\n
-        :keyword ``video:``  to apply video with embeded, your video source url here\n
+        :keyword ``video:``  to apply video with embedded, your video source url here\n
         :keyword ``provider:`` provider information\n
         :keyword ``author:`` author information\n
         :keyword ``fields:`` fields information
@@ -101,7 +101,7 @@ class DiscordEmbed:
         """
         self.color = int(color, 16) if isinstance(color, str) else color
         if self.color is not None and self.color not in range(16777216):
-            raise ColourNotInRangeException(color)
+            raise ColorNotInRangeException(color)
 
     def set_footer(self, **kwargs: str) -> None:
         """
@@ -190,7 +190,7 @@ class DiscordEmbed:
         set field of embed
         :keyword name: name of the field
         :keyword value: value of the field
-        :keyword inline: (optional) whether or not this field should display inline
+        :keyword inline: (optional) whether this field should display inline
         """
         self.fields.append(
             {
