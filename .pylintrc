@@ -10,4 +10,4 @@ disable=bad-continuation,
 
 
 max-module-lines=1070
-max-line-length = 88
+max-line-length = 79
