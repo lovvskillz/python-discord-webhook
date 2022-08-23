@@ -30,23 +30,25 @@ class DiscordEmbed:
     fields: List[Dict[str, Optional[Any]]]
 
     def __init__(
-        self,
-        title: Optional[str] = None,
-        description: Optional[str] = None,
-        **kwargs: Any,
+            self,
+            title: Optional[str] = None,
+            description: Optional[str] = None,
+            **kwargs: Any,
     ) -> None:
         """
         Init Discord Embed
         -----------
         :keyword ``title:`` title of embed\n
         :keyword ``description:`` description body of embed\n
-        :keyword ``url:`` add an url to make your embedded title a clickable link\n
+        :keyword ``url:`` add an url to make your embedded title a clickable
+        link\n
         :keyword ``timestamp:`` timestamp of embed content\n
         :keyword ``color:`` color code of the embed as int\n
         :keyword ``footer:`` footer texts\n
         :keyword ``image:`` your image url here\n
         :keyword ``thumbnail:`` your thumbnail url here\n
-        :keyword ``video:``  to apply video with embedded, your video source url here\n
+        :keyword ``video:``  to apply video with embedded, your video source
+        url here\n
         :keyword ``provider:`` provider information\n
         :keyword ``author:`` author information\n
         :keyword ``fields:`` fields information
@@ -107,7 +109,8 @@ class DiscordEmbed:
         """
         set footer information of embed
         :keyword text: footer text
-        :keyword icon_url: url of footer icon (only supports http(s) and attachments)
+        :keyword icon_url: url of footer icon (only supports http(s) and
+        attachments)
         :keyword proxy_icon_url: a proxied url of footer icon
         """
         self.footer = {
@@ -134,7 +137,8 @@ class DiscordEmbed:
     def set_thumbnail(self, url: str, **kwargs: Union[str, int]) -> None:
         """
         set thumbnail of embed
-        :param url: source url of thumbnail (only supports http(s) and attachments)
+        :param url: source url of thumbnail (only supports http(s) and
+        attachments)
         :keyword proxy_url: a proxied thumbnail of the image
         :keyword height: height of thumbnail
         :keyword width: width of thumbnail
@@ -175,7 +179,8 @@ class DiscordEmbed:
         set author of embed
         :param name: name of author
         :keyword url: url of author
-        :keyword icon_url: url of author icon (only supports http(s) and attachments)
+        :keyword icon_url: url of author icon (only supports http(s) and
+        attachments)
         :keyword proxy_icon_url: a proxied url of author icon
         """
         self.author = {
@@ -234,19 +239,20 @@ class DiscordWebhook:
     rate_limit_retry: bool = False
 
     def __init__(
-        self,
-        url: Optional[Union[str, List[str]]] = None,
-        *,
-        content: Optional[str] = None,
-        username: Optional[str] = None,
-        avatar_url: Optional[str] = None,
-        tts: bool = False,
-        files: Optional[Dict[str, Tuple[Optional[str], Union[bytes, str]]]] = None,
-        embeds: Optional[List[Dict[str, Any]]] = None,
-        proxies: Optional[Dict[str, str]] = None,
-        timeout: Optional[float] = None,
-        rate_limit_retry: bool = False,
-        allowed_mentions: Optional[List[str]] = None,
+            self,
+            url: Optional[Union[str, List[str]]] = None,
+            *,
+            content: Optional[str] = None,
+            username: Optional[str] = None,
+            avatar_url: Optional[str] = None,
+            tts: bool = False,
+            files: Optional[
+                Dict[str, Tuple[Optional[str], Union[bytes, str]]]] = None,
+            embeds: Optional[List[Dict[str, Any]]] = None,
+            proxies: Optional[Dict[str, str]] = None,
+            timeout: Optional[float] = None,
+            rate_limit_retry: bool = False,
+            allowed_mentions: Optional[List[str]] = None,
     ) -> None:
         """
         Init Webhook for Discord
@@ -257,12 +263,15 @@ class DiscordWebhook:
         :keyword ``avatar_url:`` override the default avatar of the webhook\n
         :keyword ``tts:`` true if this is a TTS message\n
         :keyword ``file``: to apply file(s) with message
-        (For example: file=f.read() (here, f = variable that contain attachement path as "rb" mode))\n
-        :keyword ``filename:`` apply custom file name on attached file content(s)\n
+        (For example: file=f.read() (here, f = variable that contain
+        attachement path as "rb" mode))\n
+        :keyword ``filename:`` apply custom file name on attached file
+        content(s)\n
         :keyword ``embeds:`` list of embedded rich content\n
         :keyword ``allowed_mentions:`` allowed mentions for the message\n
         :keyword ``proxies:`` dict of proxies\n
-        :keyword ``timeout:`` (optional) amount of seconds to wait for a response from Discord
+        :keyword ``timeout:`` (optional) amount of seconds to wait for a
+        response from Discord
         """
         if embeds is None:
             embeds = []
@@ -296,7 +305,8 @@ class DiscordWebhook:
         adds an embedded rich content
         :param embed: embed object or dict
         """
-        self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
+        self.embeds.append(
+            embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
     def remove_embed(self, index: int) -> None:
         """
@@ -390,14 +400,16 @@ class DiscordWebhook:
         return response
 
     def execute(
-        self,
-        remove_embeds: bool = False,
-        remove_files: bool = False,
+            self,
+            remove_embeds: bool = False,
+            remove_files: bool = False,
     ) -> Union[List[requests.Response], requests.Response]:
         """
         executes the Webhook
-        :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
-        :param remove_files: if set to True, calls `self.remove_files()` to empty `self.files` after webhook is executed
+        :param remove_embeds: if set to True, calls `self.remove_embeds()`
+        to empty `self.embeds` after webhook is executed
+        :param remove_files: if set to True, calls `self.remove_files()`
+        to empty `self.files` after webhook is executed
         :return: Webhook response
         """
         webhook_urls = self.url
@@ -408,22 +420,25 @@ class DiscordWebhook:
         for i, url in enumerate(webhook_urls):
             response = self.api_post_request(url)
             if response.status_code in [200, 204]:
-                logger.debug(f"[{i+1}/{urls_len}] Webhook executed")
+                logger.debug(f"[{i + 1}/{urls_len}] Webhook executed")
             elif response.status_code == 429 and self.rate_limit_retry:
                 while response.status_code == 429:
                     errors = json.loads(response.content.decode("utf-8"))
                     wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
                     time.sleep(wh_sleep)
                     logger.error(
-                        f"Webhook rate limited: sleeping for {wh_sleep} " "seconds..."
+                        f"Webhook rate limited: sleeping for {wh_sleep} " 
+                        "seconds..."
                     )
                     response = self.api_post_request(url)
                     if response.status_code in [200, 204]:
-                        logger.debug(f"[{i+1}/{urls_len}] Webhook executed")
+                        logger.debug(f"[{i + 1}/{urls_len}] Webhook executed")
                         break
             else:
                 logger.error(
-                    f"[{i+1}/{urls_len}] Webhook status code {response.status_code}: {response.content.decode('utf-8')}"
+                    f"[{i + 1}/{urls_len}] Webhook status code "
+                    f"{response.status_code}: "
+                    f"{response.content.decode('utf-8')}"
                 )
             responses.append(response)
         if remove_embeds:
@@ -433,8 +448,8 @@ class DiscordWebhook:
         return responses[0] if len(responses) == 1 else responses
 
     def edit(
-        self,
-        sent_webhook: Union[List[requests.Response], requests.Response],
+            self,
+            sent_webhook: Union[List[requests.Response], requests.Response],
     ) -> Union[List[requests.Response], requests.Response]:
         """
         edits the webhook passed as a response
@@ -446,9 +461,12 @@ class DiscordWebhook:
         responses: List[requests.Response] = []
         for i, webhook in enumerate(sent_webhook):
             assert isinstance(webhook.content, bytes)
-            previous_sent_message_id = json.loads(webhook.content.decode("utf-8"))["id"]
+            previous_sent_message_id = json.loads(
+                webhook.content.decode("utf-8")
+            )["id"]
             url = (
-                webhook.url.split("?")[0] + "/messages/" + str(previous_sent_message_id)
+                    webhook.url.split("?")[0] + "/messages/" + str(
+                previous_sent_message_id)
             )
             # removes any query params
             if bool(self.files) is False:
@@ -471,28 +489,32 @@ class DiscordWebhook:
                 )
             response = request()
             if response.status_code in [200, 204]:
-                logger.debug(f"[{i+1}/{len(sent_webhook)}] Webhook edited")
+                logger.debug(f"[{i + 1}/{len(sent_webhook)}] Webhook edited")
             elif response.status_code == 429 and self.rate_limit_retry:
                 while response.status_code == 429:
                     errors = json.loads(response.content.decode("utf-8"))
                     wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
                     time.sleep(wh_sleep)
                     logger.error(
-                        f"Webhook rate limited: sleeping for {wh_sleep} seconds..."
+                        f"Webhook rate limited: sleeping for {wh_sleep} "
+                        f"seconds..."
                     )
                     response = request()
                     if response.status_code in [200, 204]:
-                        logger.debug(f"[{i + 1}/{len(sent_webhook)}] Webhook edited")
+                        logger.debug(
+                            f"[{i + 1}/{len(sent_webhook)}] Webhook edited")
                         break
             else:
                 logger.error(
-                    f"[{i+1}/{len(sent_webhook)}] Webhook status code {response.status_code}: {response.content.decode('utf-8')}"
+                    f"[{i + 1}/{len(sent_webhook)}] Webhook status code "
+                    f"{response.status_code}: "
+                    f"{response.content.decode('utf-8')}"
                 )
             responses.append(response)
         return responses[0] if len(responses) == 1 else responses
 
     def delete(
-        self, sent_webhook: Union[List["DiscordWebhook"], "DiscordWebhook"]
+            self, sent_webhook: Union[List["DiscordWebhook"], "DiscordWebhook"]
     ) -> Union[List[requests.Response], requests.Response]:
         """
         deletes the webhook passed as a response
@@ -505,17 +527,20 @@ class DiscordWebhook:
         for i, webhook in enumerate(sent_webhook):
             assert isinstance(webhook.content, bytes)
             url = webhook.url.split("?")[0]  # removes any query params
-            previous_sent_message_id = json.loads(webhook.content.decode("utf-8"))["id"]
+            previous_sent_message_id = json.loads(
+                webhook.content.decode("utf-8")
+            )["id"]
             response = requests.delete(
                 url + "/messages/" + str(previous_sent_message_id),
                 proxies=self.proxies,
                 timeout=self.timeout,
             )
             if response.status_code in [200, 204]:
-                logger.debug(f"[{i+1}/{len(sent_webhook)}] Webhook deleted")
+                logger.debug(f"[{i + 1}/{len(sent_webhook)}] Webhook deleted")
             else:
                 logger.error(
-                    f"[{i+1}/{len(sent_webhook)}] Webhook status code {response.status_code}: {response.content.decode('utf-8')}"
+                    f"[{i + 1}/{len(sent_webhook)}] Webhook status code "
+                    f"{response.status_code}: {response.content.decode('utf-8')}"
                 )
             responses.append(response)
         return responses[0] if len(responses) == 1 else responses
