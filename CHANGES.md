@@ -1,5 +1,13 @@
 # python-discord-webhook Changes
 
+## 2022-08-23 0.17.0
+
+### Breaking Changes
+- `ColourNotInRangeException` was renamed to `ColorNotInRangeException`
+
+### Fixes
+- fix async file attachments
+
 ## 2022-05-14 0.16.3
 
 ### Fixes
