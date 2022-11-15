@@ -6,6 +6,7 @@ from functools import partial
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
+
 from .webhook_exceptions import ColorNotInRangeException
 
 logger = logging.getLogger(__name__)
@@ -30,10 +31,10 @@ class DiscordEmbed:
     fields: List[Dict[str, Optional[Any]]]
 
     def __init__(
-            self,
-            title: Optional[str] = None,
-            description: Optional[str] = None,
-            **kwargs: Any,
+        self,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        **kwargs: Any,
     ) -> None:
         """
         Init Discord Embed
@@ -190,8 +191,7 @@ class DiscordEmbed:
             "proxy_icon_url": kwargs.get("proxy_icon_url"),
         }
 
-    def add_embed_field(self, name: str, value: str,
-                        inline: bool = True) -> None:
+    def add_embed_field(self, name: str, value: str, inline: bool = True) -> None:
         """
         set field of embed
         :param name: name of the field
@@ -226,7 +226,8 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    url: Optional[Union[str, List[str]]]
+    url: str
+    id: Optional[str]
     content: Optional[Union[str, bytes]]
     username: Optional[str]
     avatar_url: Optional[str]
@@ -239,25 +240,26 @@ class DiscordWebhook:
     rate_limit_retry: bool = False
 
     def __init__(
-            self,
-            url: Optional[Union[str, List[str]]] = None,
-            *,
-            content: Optional[str] = None,
-            username: Optional[str] = None,
-            avatar_url: Optional[str] = None,
-            tts: bool = False,
-            files: Optional[
-                Dict[str, Tuple[Optional[str], Union[bytes, str]]]] = None,
-            embeds: Optional[List[Dict[str, Any]]] = None,
-            proxies: Optional[Dict[str, str]] = None,
-            timeout: Optional[float] = None,
-            rate_limit_retry: bool = False,
-            allowed_mentions: Optional[List[str]] = None,
+        self,
+        url: str,
+        *,
+        id: Optional[str] = None,
+        content: Optional[str] = None,
+        username: Optional[str] = None,
+        avatar_url: Optional[str] = None,
+        tts: bool = False,
+        files: Optional[Dict[str, Tuple[Optional[str], Union[bytes, str]]]] = None,
+        embeds: Optional[List[Dict[str, Any]]] = None,
+        proxies: Optional[Dict[str, str]] = None,
+        timeout: Optional[float] = None,
+        rate_limit_retry: bool = False,
+        allowed_mentions: Optional[List[str]] = None,
     ) -> None:
         """
-        Init Webhook for Discord
+        Init Webhook for Discord.
         ---------
-        :param ``url``: your discord webhook url (type: str, list)\n
+        :param ``url``: your discord webhook url (type: str)\n
+        :keyword ``id:`` webhook id (type: str)\n
         :keyword ``content:`` the message contents (type: str)\n
         :keyword ``username:`` override the default username of the webhook\n
         :keyword ``avatar_url:`` override the default avatar of the webhook\n
@@ -280,6 +282,7 @@ class DiscordWebhook:
         if allowed_mentions is None:
             allowed_mentions = []
         self.url = url
+        self.id = id
         self.content = content
         self.username = username
         self.avatar_url = avatar_url
@@ -293,7 +296,7 @@ class DiscordWebhook:
 
     def add_file(self, file: bytes, filename: str) -> None:
         """
-        adds a file to the webhook
+        Add a file to the webhook.
         :param file: file content
         :param filename: filename
         :return:
@@ -302,22 +305,21 @@ class DiscordWebhook:
 
     def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
         """
-        adds an embedded rich content
+        Add an embedded rich content.
         :param embed: embed object or dict
         """
-        self.embeds.append(
-            embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
+        self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
     def remove_embed(self, index: int) -> None:
         """
-        removes embedded rich content from `self.embeds`
+        Remove embedded rich content from `self.embeds`.
         :param index: index of embed in `self.embeds`
         """
         self.embeds.pop(index)
 
     def remove_file(self, filename: str) -> None:
         """
-        removes file from `self.files` using specified `filename` if it exists
+        Remove file from `self.files` using specified `filename` if it exists.
         :param filename: filename
         """
         filename = f"_{filename}"
@@ -326,14 +328,14 @@ class DiscordWebhook:
 
     def get_embeds(self) -> List[Dict[str, Any]]:
         """
-        gets all self.embeds as list
+        Get all self.embeds as list.
         :return: self.embeds
         """
         return self.embeds
 
     def set_proxies(self, proxies: Dict[str, str]) -> None:
         """
-        sets proxies
+        Set proxies.
         :param proxies: dict of proxies
         :type proxies: dict
         """
@@ -341,7 +343,7 @@ class DiscordWebhook:
 
     def set_content(self, content: str) -> None:
         """
-        sets content
+        Set content.
         :param content: content string
         :type content: string
         """
@@ -350,7 +352,7 @@ class DiscordWebhook:
     @property
     def json(self) -> Dict[str, Any]:
         """
-        convert webhook data to json
+        Convert webhook data to json.
         :return webhook data as json:
         """
         embeds = self.embeds
@@ -370,19 +372,99 @@ class DiscordWebhook:
 
     def remove_embeds(self) -> None:
         """
-        Sets `self.embeds` to empty `list`.
+        Set `self.embeds` to empty `list`.
         """
         self.embeds = []
 
     def remove_files(self) -> None:
         """
-        Sets `self.files` to empty `dict`.
+        Set `self.files` to empty `dict`.
         """
         self.files = {}
 
-    def api_post_request(self, url: str) -> requests.Response:
+    def api_post_request(self) -> requests.post:
         if bool(self.files) is False:
-            response = requests.post(
+            return requests.post(
+                self.url,
+                json=self.json,
+                proxies=self.proxies,
+                params={"wait": True},
+                timeout=self.timeout,
+            )
+
+        self.files["payload_json"] = (None, json.dumps(self.json))
+        return requests.post(
+            self.url,
+            files=self.files,
+            proxies=self.proxies,
+            timeout=self.timeout,
+        )
+
+    def handle_rate_limit(self, response, request):
+        """
+        Handle the rate limit.
+        :param response: Response
+        :param request: request function
+        :return: Response
+        """
+        while response.status_code == 429:
+            errors = json.loads(response.content.decode("utf-8"))
+            wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
+            logger.error(f"Webhook rate limited: sleeping for {wh_sleep} seconds...")
+            time.sleep(wh_sleep)
+            response = request()
+            if response.status_code in [200, 204]:
+                return response
+
+    def execute(
+        self,
+        remove_embeds: bool = False,
+        remove_files: bool = False,
+    ) -> requests.Response:
+        """
+        Execute the Webhook.
+        :param remove_embeds: if set to True, calls `self.remove_embeds()`
+        to empty `self.embeds` after webhook is executed
+        :param remove_files: if set to True, calls `self.remove_files()`
+        to empty `self.files` after webhook is executed
+        :return: Webhook response
+        """
+        response = self.api_post_request()
+        if response.status_code in [200, 204]:
+            logger.debug("Webhook executed")
+        elif response.status_code == 429 and self.rate_limit_retry:
+            response = self.handle_rate_limit(response, self.api_post_request)
+            logger.debug("Webhook executed")
+        else:
+            logger.error(
+                "Webhook status code {status_code}: {content}".format(
+                    status_code=response.status_code,
+                    content=response.content.decode('utf-8'),
+                )
+            )
+        if remove_embeds:
+            self.remove_embeds()
+        if remove_files:
+            self.remove_files()
+        if webhook_id := json.loads(response.content.decode("utf-8")).get('id'):
+            self.id = webhook_id
+        return response
+
+    def edit(self) -> requests.Response:
+        """
+        Edit the given webhook.
+        :return: webhook response
+        """
+        assert isinstance(
+            self.id, str
+        ), "Webhook ID needs to be set in order to edit the webhook."
+        assert isinstance(
+            self.url, str
+        ), "Webhook URL needs to be set in order to edit the webhook."
+        url = f"{self.url}/messages/{self.id}"
+        if bool(self.files) is False:
+            request = partial(
+                requests.patch,
                 url,
                 json=self.json,
                 proxies=self.proxies,
@@ -391,156 +473,47 @@ class DiscordWebhook:
             )
         else:
             self.files["payload_json"] = (None, json.dumps(self.json))
-            response = requests.post(
+            request = partial(
+                requests.patch,
                 url,
                 files=self.files,
                 proxies=self.proxies,
                 timeout=self.timeout,
             )
+        response = request()
+        if response.status_code in [200, 204]:
+            logger.debug("Webhook with id {id} edited".format(id=self.id))
+        elif response.status_code == 429 and self.rate_limit_retry:
+            response = self.handle_rate_limit(response, request)
+            logger.debug("Webhook edited")
+        else:
+            logger.error(
+                "Webhook status code {status_code}: {content}".format(
+                    status_code=response.status_code,
+                    content=response.content.decode("utf-8"),
+                )
+            )
         return response
 
-    def execute(
-            self,
-            remove_embeds: bool = False,
-            remove_files: bool = False,
-    ) -> Union[List[requests.Response], requests.Response]:
+    def delete(self) -> requests.Response:
         """
-        executes the Webhook
-        :param remove_embeds: if set to True, calls `self.remove_embeds()`
-        to empty `self.embeds` after webhook is executed
-        :param remove_files: if set to True, calls `self.remove_files()`
-        to empty `self.files` after webhook is executed
-        :return: Webhook response
+        Delete the given webhook.
+        :return: webhook response
         """
-        webhook_urls = self.url
-        if isinstance(self.url, str):
-            webhook_urls = [self.url]
-        urls_len = len(webhook_urls)
-        responses = []
-        for i, url in enumerate(webhook_urls):
-            response = self.api_post_request(url)
-            if response.status_code in [200, 204]:
-                logger.debug(f"[{i + 1}/{urls_len}] Webhook executed")
-            elif response.status_code == 429 and self.rate_limit_retry:
-                while response.status_code == 429:
-                    errors = json.loads(response.content.decode("utf-8"))
-                    wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
-                    time.sleep(wh_sleep)
-                    logger.error(
-                        f"Webhook rate limited: sleeping for {wh_sleep} " 
-                        "seconds..."
-                    )
-                    response = self.api_post_request(url)
-                    if response.status_code in [200, 204]:
-                        logger.debug(f"[{i + 1}/{urls_len}] Webhook executed")
-                        break
-            else:
-                logger.error(
-                    f"[{i + 1}/{urls_len}] Webhook status code "
-                    f"{response.status_code}: "
-                    f"{response.content.decode('utf-8')}"
-                )
-            responses.append(response)
-        if remove_embeds:
-            self.remove_embeds()
-        if remove_files:
-            self.remove_files()
-        return responses[0] if len(responses) == 1 else responses
-
-    def edit(
-            self,
-            sent_webhook: Union[List[requests.Response], requests.Response],
-    ) -> Union[List[requests.Response], requests.Response]:
-        """
-        edits the webhook passed as a response
-        :param sent_webhook: webhook.execute() response
-        :return: Another webhook response
-        """
-        if not isinstance(sent_webhook, list):
-            sent_webhook = cast(List[requests.Response], [sent_webhook])
-        responses: List[requests.Response] = []
-        for i, webhook in enumerate(sent_webhook):
-            assert isinstance(webhook.content, bytes)
-            previous_sent_message_id = json.loads(
-                webhook.content.decode("utf-8")
-            )["id"]
-            url = (
-                    webhook.url.split("?")[0] + "/messages/" + str(
-                previous_sent_message_id)
-            )
-            # removes any query params
-            if bool(self.files) is False:
-                request = partial(
-                    requests.patch,
-                    url,
-                    json=self.json,
-                    proxies=self.proxies,
-                    params={"wait": True},
-                    timeout=self.timeout,
-                )
-            else:
-                self.files["payload_json"] = (None, json.dumps(self.json))
-                request = partial(
-                    requests.patch,
-                    url,
-                    files=self.files,
-                    proxies=self.proxies,
-                    timeout=self.timeout,
-                )
-            response = request()
-            if response.status_code in [200, 204]:
-                logger.debug(f"[{i + 1}/{len(sent_webhook)}] Webhook edited")
-            elif response.status_code == 429 and self.rate_limit_retry:
-                while response.status_code == 429:
-                    errors = json.loads(response.content.decode("utf-8"))
-                    wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
-                    time.sleep(wh_sleep)
-                    logger.error(
-                        f"Webhook rate limited: sleeping for {wh_sleep} "
-                        f"seconds..."
-                    )
-                    response = request()
-                    if response.status_code in [200, 204]:
-                        logger.debug(
-                            f"[{i + 1}/{len(sent_webhook)}] Webhook edited")
-                        break
-            else:
-                logger.error(
-                    f"[{i + 1}/{len(sent_webhook)}] Webhook status code "
-                    f"{response.status_code}: "
-                    f"{response.content.decode('utf-8')}"
-                )
-            responses.append(response)
-        return responses[0] if len(responses) == 1 else responses
-
-    def delete(
-            self, sent_webhook: Union[List["DiscordWebhook"], "DiscordWebhook"]
-    ) -> Union[List[requests.Response], requests.Response]:
-        """
-        deletes the webhook passed as a response
-        :param sent_webhook: webhook.execute() response
-        :return: Response
-        """
-        if not isinstance(sent_webhook, list):
-            sent_webhook = cast(List[DiscordWebhook], [sent_webhook])
-        responses: List[requests.Response] = []
-        for i, webhook in enumerate(sent_webhook):
-            assert isinstance(webhook.content, bytes)
-            url = webhook.url.split("?")[0]  # removes any query params
-            previous_sent_message_id = json.loads(
-                webhook.content.decode("utf-8")
-            )["id"]
-            response = requests.delete(
-                url + "/messages/" + str(previous_sent_message_id),
-                proxies=self.proxies,
-                timeout=self.timeout,
-            )
-            if response.status_code in [200, 204]:
-                logger.debug(f"[{i + 1}/{len(sent_webhook)}] Webhook deleted")
-            else:
-                logger.error(
-                    f"[{i + 1}/{len(sent_webhook)}] Webhook status code "
-                    f"{response.status_code}: {response.content.decode('utf-8')}"
-                )
-            responses.append(response)
-        return responses[0] if len(responses) == 1 else responses
+        assert isinstance(
+            self.id, str
+        ), "Webhook ID needs to be set in order to delete the webhook."
+        assert isinstance(
+            self.url, str
+        ), "Webhook URL needs to be set in order to delete the webhook."
+        url = f"{self.url}/messages/{self.id}"
+        request = partial(
+            requests.delete, url, proxies=self.proxies, timeout=self.timeout
+        )
+        response = request()
+        if response.status_code in [200, 204]:
+            logger.debug("Webhook deleted")
+        elif response.status_code == 429 and self.rate_limit_retry:
+            response = self.handle_rate_limit(response, request)
+            logger.debug("Webhook edited")
+        return response

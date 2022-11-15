@@ -176,10 +176,10 @@ from discord_webhook import DiscordWebhook
 from time import sleep
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook content before edit')
-sent_webhook = webhook.execute()
+webhook.execute()
 webhook.content = 'After Edit'
 sleep(10)
-sent_webhook = webhook.edit(sent_webhook)
+webhook.edit()
 ```
 
 ### Delete Webhook Messages
@@ -189,9 +189,9 @@ from discord_webhook import DiscordWebhook
 from time import sleep
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
-sent_webhook = webhook.execute()
+webhook.execute()
 sleep(10)
-webhook.delete(sent_webhook)
+webhook.delete()
 ```
 
 ### Send Files
@@ -363,8 +363,7 @@ from discord_webhook import AsyncDiscordWebhook
 
 
 async def send_webhook(message):
-    webhook = AsyncDiscordWebhook(url='your webhook url',
-                                  content=message)
+    webhook = AsyncDiscordWebhook(url='your webhook url', content=message)
     await webhook.execute()
 
 
