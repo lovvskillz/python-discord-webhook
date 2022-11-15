@@ -1,0 +1,42 @@
+fail_fast: true
+
+repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: Sorting import statements
+        entry: bash -c 'isort "$@"; git add -u' --
+        language: python
+        args: [ "--filter-files" ]
+        files: \.py$
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        language_version: python3.10
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v1.5.3
+    hooks:
+      - id: autoflake
+        name: Remove unused variables and imports
+        entry: bash -c 'autoflake "$@"; git add -u' --
+        language: python
+        args:
+          [
+            "--in-place",
+            "--remove-all-unused-imports",
+            "--remove-unused-variables",
+            "--expand-star-imports",
+            "--ignore-init-module-imports",
+          ]
+        files: \.py$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1024']

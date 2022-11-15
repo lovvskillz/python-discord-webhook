@@ -377,3 +377,24 @@ async def main():
 
 asyncio.run(main())
 ```
+
+## Development
+
+### Dev Setup
+This project uses [Poetry](https://python-poetry.org/docs/) for dependency management and packaging.
+
+Install Poetry and add Poetry to [Path](https://python-poetry.org/docs/#installation).
+
+**Debian / Ubuntu / Mac**
+
+`curl -sSL https://install.python-poetry.org | python3 -`
+
+**Windows**
+
+open powershell and run: `(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -`
+
+Install dependencies: `poetry install`
+
+Install the defined pre-commit hooks: `poetry run pre-commit install`
+
+Activate the virtualenv: `poetry shell`

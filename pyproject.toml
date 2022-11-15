@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "python-discord-webhook"
+version = "0.17.0"
+description = "execute discord webhooks"
+authors = ["lovvskillz <14542790+lovvskillz@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "discord_webhook"}]
+repository = "https://github.com/lovvskillz/python-discord-webhook"
+keywords = ["discord", "webhook"]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.19.1"
+httpx = { version = "^0.20.0", optional = true }
+
+[tool.poetry.extras]
+async = ["httpx"]
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+pre-commit = "^2.20.0"
+pylint = "^2.15.0"
+flake8 = "^5.0.4"
+types-requests = "^2.28.11.4"
+
+[tool.poetry.scripts]
+discord_webhook = "discord_webhook.__main__:main"
+
+[tool.black]
+line-length = 88
+skip-string-normalization=true
+experimental-string-processing = true
+target-version = ["py310"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | frontend
+)/
+'''
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
