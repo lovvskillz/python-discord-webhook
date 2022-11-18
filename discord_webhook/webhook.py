@@ -206,7 +206,7 @@ class DiscordEmbed:
             }
         )
 
-    def del_embed_field(self, index: int) -> None:
+    def delete_embed_field(self, index: int) -> None:
         """
         remove field from `self.fields`
         :param index: index of field in `self.fields`
