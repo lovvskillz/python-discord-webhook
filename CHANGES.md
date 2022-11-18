@@ -4,6 +4,7 @@
 
 ### 🎉 Features
 - `execute()` stores the webhook ID in the `.id` property
+- `DiscordWebhook.create_batch()` creates multiple instances
 
 ### 🛠 Breaking Changes
 - `DiscordWebhook` and `AsyncDiscordWebhook`
