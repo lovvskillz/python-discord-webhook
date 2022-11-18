@@ -16,6 +16,7 @@ pip install discord-webhook
 ## Examples
 
 * [Basic Webhook](#basic-webhook)
+* [Create Multiple Instances](#create-multiple-instances)
 * [Manage Being Rate Limited](#manage-being-rate-limited)
 * [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
@@ -35,6 +36,17 @@ from discord_webhook import DiscordWebhook
 
 webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
 response = webhook.execute()
+```
+
+### Create multiple instances
+
+```python
+from discord_webhook import DiscordWebhook
+
+# you can provide any kwargs except url
+webhook1, webhook2 = DiscordWebhook.create_batch(urls=['first url', 'second url'], content='Webhook Message')
+response1 = webhook1.execute()
+response2 = webhook2.execute()
 ```
 
 ### Manage being Rate Limited
@@ -140,7 +152,7 @@ response = webhook.execute()
 
 ![Image](img/extended_embed2.png "Example Embed Result")
 
-By Default, The Embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows:
+By Default, the Embed fields are placed side by side. We can arrange them in a new line by setting `inline=False` as follows:
 
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
