@@ -517,3 +517,14 @@ class DiscordWebhook:
             response = self.handle_rate_limit(response, request)
             logger.debug("Webhook edited")
         return response
+
+    @classmethod
+    def create_batch(cls, urls: List[str], **kwargs) -> Tuple['DiscordWebhook', ...]:
+        """
+        Create multiple instances of webhook.
+        :param urls: list of webhook URLs.
+        :return: tuple of webhook instances
+        """
+        if 'url' in kwargs:
+            raise TypeError("'url' can't be used as a keyword argument.")
+        return tuple([cls(url, **kwargs) for url in urls])
