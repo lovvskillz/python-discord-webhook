@@ -3,6 +3,7 @@ import json
 import logging
 from contextlib import asynccontextmanager
 from functools import partial
+from http.client import HTTPException
 
 from . import DiscordWebhook
 
@@ -74,6 +75,8 @@ class AsyncDiscordWebhook(DiscordWebhook):
         """
         while response.status_code == 429:
             errors = response.json()
+            if not response.headers.get('Via'):
+                raise HTTPException(errors)
             wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
             logger.error(
                 "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(

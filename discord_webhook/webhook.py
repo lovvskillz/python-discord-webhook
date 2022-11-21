@@ -3,6 +3,7 @@ import json
 import logging
 import time
 from functools import partial
+from http.client import HTTPException
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
@@ -409,6 +410,8 @@ class DiscordWebhook:
         """
         while response.status_code == 429:
             errors = json.loads(response.content.decode("utf-8"))
+            if not response.headers.get('Via'):
+                raise HTTPException(errors)
             wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
             logger.error(f"Webhook rate limited: sleeping for {wh_sleep} seconds...")
             time.sleep(wh_sleep)
