@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-discord-webhook"
+name = "discord-webhook"
 version = "1.0.0"
 description = "execute discord webhooks"
 authors = ["lovvskillz <14542790+lovvskillz@users.noreply.github.com>"]
