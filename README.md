@@ -206,6 +206,24 @@ sleep(10)
 webhook.delete()
 ```
 
+### Delete Webhook Messages after some period of time
+
+```python
+from discord_webhook import DiscordWebhook
+webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
+webhook.execute() 
+with open("saved_message_id.txt", "w") as f:
+  f.write(str(webhook.id))
+```
+After some period of time :
+```python
+from discord_webhook import DiscordWebhook
+with open("saved_message_id.txt", "r") as f:
+  saved_message_id = int(f.read())
+webhook = DiscordWebhook(url='your webhook url', id=saved_message_id)
+webhook.delete()
+```
+
 ### Send Files
 
 ```python
