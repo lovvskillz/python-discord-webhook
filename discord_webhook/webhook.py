@@ -239,6 +239,7 @@ class DiscordWebhook:
     allowed_mentions: List[str]
     timeout: Optional[float]
     rate_limit_retry: bool = False
+    thread_id = Optional[int]
 
     def __init__(
         self,
@@ -255,6 +256,7 @@ class DiscordWebhook:
         timeout: Optional[float] = None,
         rate_limit_retry: bool = False,
         allowed_mentions: Optional[List[str]] = None,
+        thread_id: Optional[int] = None,
     ) -> None:
         """
         Init Webhook for Discord.
@@ -273,8 +275,8 @@ class DiscordWebhook:
         :keyword ``embeds:`` list of embedded rich content\n
         :keyword ``allowed_mentions:`` allowed mentions for the message\n
         :keyword ``proxies:`` dict of proxies\n
-        :keyword ``timeout:`` (optional) amount of seconds to wait for a
-        response from Discord
+        :keyword ``timeout:`` (optional) amount of seconds to wait for a response from Discord\n
+        :keyword ``thread_id`` id of the thread to send the message in\n
         """
         if embeds is None:
             embeds = []
@@ -294,6 +296,7 @@ class DiscordWebhook:
         self.allowed_mentions = allowed_mentions
         self.timeout = timeout
         self.rate_limit_retry = rate_limit_retry
+        self.thread_id = thread_id
 
     def add_file(self, file: bytes, filename: str) -> None:
         """
@@ -389,7 +392,7 @@ class DiscordWebhook:
                 self.url,
                 json=self.json,
                 proxies=self.proxies,
-                params={"wait": True},
+                params={"wait": True, "thread_id": self.thread_id},
                 timeout=self.timeout,
             )
 
@@ -398,6 +401,7 @@ class DiscordWebhook:
             self.url,
             files=self.files,
             proxies=self.proxies,
+            params={"thread_id": self.thread_id},
             timeout=self.timeout,
         )
 
@@ -530,4 +534,6 @@ class DiscordWebhook:
         """
         if 'url' in kwargs:
             raise TypeError("'url' can't be used as a keyword argument.")
+        if 'thread_id' in kwargs:
+            raise TypeError("'thread_id' can't be used as a keyword argument.")
         return tuple([cls(url, **kwargs) for url in urls])
