@@ -16,9 +16,8 @@ pip install discord-webhook
 ## Examples
 
 * [Basic Webhook](#basic-webhook)
-* [Create Multiple Instances](#create-multiple-instances)
+* [Create Multiple Instances / Use multiple URLs](#create-multiple-instances)
 * [Manage Being Rate Limited](#manage-being-rate-limited)
-* [Multiple Webhook Urls](#multiple-webhook-urls)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
 * [Delete Webhook Message](#delete-webhook-messages)
@@ -39,6 +38,7 @@ response = webhook.execute()
 ```
 
 ### Create multiple instances
+If you want to use multiple URLs you need to create multiple instances.
 
 ```python
 from discord_webhook import DiscordWebhook
@@ -48,6 +48,7 @@ webhook1, webhook2 = DiscordWebhook.create_batch(urls=['first url', 'second url'
 response1 = webhook1.execute()
 response2 = webhook2.execute()
 ```
+![Image](img/multiple_urls.png "Multiple Urls Result")
 
 ### Manage being Rate Limited
 
@@ -63,18 +64,6 @@ response = webhook.execute()
 ```
 
 ![Image](img/basic_webhook.png "Basic Example Result")
-
-### Multiple Webhook URLs
-
-```python
-from discord_webhook import DiscordWebhook
-
-webhook_urls = ['webhook url 1', 'webhook url 2']
-webhook = DiscordWebhook(url=webhook_urls, content='Webhook Message')
-response = webhook.execute()
-```
-
-![Image](img/multiple_urls.png "Multiple Urls Result")
 
 ### Webhook with Embedded Content
 
