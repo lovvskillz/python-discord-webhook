@@ -1,5 +1,14 @@
 # python-discord-webhook Changes
 
+## 2023-02-15 1.1.0
+
+### 🛠 Breaking Changes
+- removed `remove_files` as an optional parameter in `.execute()`.
+`.files` are automatically cleared so that the files aren't uploaded twice when editing a webhook.
+
+### 🩹 Fixes
+- fix removing embeds and files when editing a webhook
+
 ## 2022-11-18 1.0.0
 
 ### 🎉 Features
