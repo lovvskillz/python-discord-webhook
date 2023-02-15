@@ -233,6 +233,7 @@ class DiscordWebhook:
     username: Optional[str]
     avatar_url: Optional[str]
     tts: bool
+    attachments: Optional[List[Dict[str, Any]]]
     files: Dict[str, Tuple[Optional[str], Union[bytes, str]]]
     embeds: List[Dict[str, Any]]
     proxies: Optional[Dict[str, str]]
@@ -249,6 +250,7 @@ class DiscordWebhook:
         username: Optional[str] = None,
         avatar_url: Optional[str] = None,
         tts: bool = False,
+        attachments: Optional[List[Dict[str, Any]]] = None,
         files: Optional[Dict[str, Tuple[Optional[str], Union[bytes, str]]]] = None,
         embeds: Optional[List[Dict[str, Any]]] = None,
         proxies: Optional[Dict[str, str]] = None,
@@ -265,11 +267,11 @@ class DiscordWebhook:
         :keyword ``username:`` override the default username of the webhook\n
         :keyword ``avatar_url:`` override the default avatar of the webhook\n
         :keyword ``tts:`` true if this is a TTS message\n
-        :keyword ``file``: to apply file(s) with message
-        (For example: file=f.read() (here, f = variable that contain
-        attachement path as "rb" mode))\n
-        :keyword ``filename:`` apply custom file name on attached file
-        content(s)\n
+        :keyword ``attachments`` optional dict of attachments.
+        Will be set after executing a webhook\n
+        :keyword ``files``: to apply file(s) with message
+        (For example: file=f.read() (here, f = variable that contains the
+        attachment path as "rb" mode))\n
         :keyword ``embeds:`` list of embedded rich content\n
         :keyword ``allowed_mentions:`` allowed mentions for the message\n
         :keyword ``proxies:`` dict of proxies\n
@@ -282,12 +284,15 @@ class DiscordWebhook:
             files = {}
         if allowed_mentions is None:
             allowed_mentions = []
+        if attachments is None:
+            attachments = []
         self.url = url
         self.id = id
         self.content = content
         self.username = username
         self.avatar_url = avatar_url
         self.tts = tts
+        self.attachments = attachments
         self.files = files
         self.embeds = embeds
         self.proxies = proxies
@@ -320,16 +325,50 @@ class DiscordWebhook:
 
     def remove_file(self, filename: str) -> None:
         """
-        Remove file from `self.files` using specified `filename` if it exists.
+        Remove file by given `filename` if it exists.
         :param filename: filename
         """
-        filename = f"_{filename}"
-        if filename in self.files:
-            del self.files[filename]
+        self.files.pop(f'_{filename}', None)
+        if self.attachments:
+            index = next(
+                (
+                    i
+                    for i, item in enumerate(self.attachments)
+                    if item.get('filename') == filename
+                ),
+                None,
+            )
+            if index is not None:
+                self.attachments.pop(index)
+
+    def remove_embeds(self) -> None:
+        """
+        Remove all embeds.
+        :return: None
+        """
+        self.embeds = []
+
+    def remove_files(self, clear_attachments: bool = True) -> None:
+        """
+        Remove all files and optionally clear the attachments.
+        :keyword clear_attachments: Clear the attachments.
+        :type clear_attachments: bool
+        :return: None
+        """
+        self.files = {}
+        if clear_attachments:
+            self.clear_attachments()
+
+    def clear_attachments(self) -> None:
+        """
+        Remove all attachments.
+        :return: None
+        """
+        self.attachments = []
 
     def get_embeds(self) -> List[Dict[str, Any]]:
         """
-        Get all self.embeds as list.
+        Get all embeds as a list.
         :return: self.embeds
         """
         return self.embeds
@@ -364,24 +403,12 @@ class DiscordWebhook:
         data = {
             key: value
             for key, value in self.__dict__.items()
-            if value and key not in {"url", "files", "filename"}
+            if value and key not in ['url', 'files'] or key in ['embeds', 'attachments']
         }
         embeds_empty = not any(data["embeds"]) if "embeds" in data else True
         if embeds_empty and "content" not in data and bool(self.files) is False:
             logger.error("webhook message is empty! set content or embed data")
         return data
-
-    def remove_embeds(self) -> None:
-        """
-        Set `self.embeds` to empty `list`.
-        """
-        self.embeds = []
-
-    def remove_files(self) -> None:
-        """
-        Set `self.files` to empty `dict`.
-        """
-        self.files = {}
 
     def api_post_request(self) -> requests.post:
         if bool(self.files) is False:
@@ -422,14 +449,11 @@ class DiscordWebhook:
     def execute(
         self,
         remove_embeds: bool = False,
-        remove_files: bool = False,
     ) -> requests.Response:
         """
         Execute the Webhook.
         :param remove_embeds: if set to True, calls `self.remove_embeds()`
         to empty `self.embeds` after webhook is executed
-        :param remove_files: if set to True, calls `self.remove_files()`
-        to empty `self.files` after webhook is executed
         :return: Webhook response
         """
         response = self.api_post_request()
@@ -447,10 +471,12 @@ class DiscordWebhook:
             )
         if remove_embeds:
             self.remove_embeds()
-        if remove_files:
-            self.remove_files()
-        if webhook_id := json.loads(response.content.decode("utf-8")).get('id'):
+        self.remove_files(clear_attachments=False)
+        response_content = json.loads(response.content.decode("utf-8"))
+        if webhook_id := response_content.get('id'):
             self.id = webhook_id
+        if attachments := response_content.get('attachments'):
+            self.attachments = attachments
         return response
 
     def edit(self) -> requests.Response:

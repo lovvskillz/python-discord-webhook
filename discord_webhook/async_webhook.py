@@ -88,11 +88,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if response.status_code in [200, 204]:
                 return response
 
-    async def execute(self, remove_embeds=False, remove_files=False):
+    async def execute(self, remove_embeds=False):
         """
         executes the Webhook
         :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
-        :param remove_files: if set to True, calls `self.remove_files()` to empty `self.files` after webhook is executed
         :return: Webhook response
         """
         response = await self.api_post_request()
@@ -109,8 +108,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
             )
         if remove_embeds:
             self.remove_embeds()
-        if remove_files:
-            self.remove_files()
+        self.remove_files(clear_attachments=False)
         if webhook_id := json.loads(response.content.decode("utf-8")).get('id'):
             self.id = webhook_id
         return response

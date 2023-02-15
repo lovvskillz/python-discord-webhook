@@ -244,9 +244,9 @@ embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', 
 embed.set_thumbnail(url='attachment://example.jpg')
 
 webhook.add_embed(embed)
-response = webhook.execute(remove_embeds=True, remove_files=True)
-# webhook.files and webhook.embeds will be empty after webhook is executed
-# You could also manually call the functions webhook.remove_files() and webhook.remove_embeds()
+response = webhook.execute(remove_embeds=True)
+# webhook.embeds will be empty after webhook is executed
+# You could also manually call the function webhook.remove_embeds()
 ```
 
 `.remove_file()` removes the given file
