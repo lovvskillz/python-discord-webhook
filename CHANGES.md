@@ -1,5 +1,11 @@
 # python-discord-webhook Changes
 
+## development
+
+### 🎉 Features
+- `set_timestamp()` accepts also a datetime object
+  - set timestamp as ISO 8601
+
 ## 2023-02-15 1.1.0
 
 ### 🛠 Breaking Changes

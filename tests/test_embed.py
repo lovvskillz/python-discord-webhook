@@ -35,12 +35,25 @@ def test__set_embed__url(embed):
     assert embed.url == embed_url
 
 
-def test__set_embed__timestamp(embed):
-    embed_timestamp = 1658504418.5660195
+@pytest.mark.parametrize(
+    'timestamp',
+    [
+        1679610926,
+        1679610926.0,
+        datetime.fromisoformat('2023-03-23T22:35:26'),
+        datetime.fromisoformat('2023-03-23T23:35:26+01:00'),
+    ],
+)
+def test__set_embed__timestamp(embed, timestamp):
+    compare_datetime = datetime.fromisoformat(
+        '2023-03-23T22:35:26'
+    )  # timestamp 1679610926
+    if isinstance(timestamp, datetime):
+        compare_datetime = timestamp
 
-    embed.set_timestamp(embed_timestamp)
+    embed.set_timestamp(timestamp)
 
-    assert embed.timestamp == str(datetime.utcfromtimestamp(embed_timestamp))
+    assert embed.timestamp == compare_datetime.isoformat()
 
 
 @pytest.mark.parametrize(
