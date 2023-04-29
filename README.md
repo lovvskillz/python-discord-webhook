@@ -17,6 +17,7 @@ pip install discord-webhook
 
 * [Basic Webhook](#basic-webhook)
 * [Create Multiple Instances / Use multiple URLs](#create-multiple-instances)
+* [Get Webhook by ID](#get-webhook-by-id)
 * [Manage Being Rate Limited](#manage-being-rate-limited)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
@@ -49,6 +50,17 @@ response1 = webhook1.execute()
 response2 = webhook2.execute()
 ```
 ![Image](img/multiple_urls.png "Multiple Urls Result")
+
+### Get Webhook by ID
+You can access a webhook that has already been sent by providing the ID.
+
+````python
+from discord_webhook import DiscordWebhook
+
+webhook = DiscordWebhook(url='your webhook url', id='your webhook message id')
+# now you could delete or edit the webhook
+# ...
+````
 
 ### Manage being Rate Limited
 
@@ -104,7 +116,7 @@ embed.set_thumbnail(url='your thumbnail url')
 # set footer
 embed.set_footer(text='Embed Footer Text', icon_url='URL of icon')
 
-# set timestamp (default is now)
+# set timestamp (default is now) accepted types are int, float and datetime
 embed.set_timestamp()
 
 # add fields to embed
@@ -310,25 +322,6 @@ webhook.set_proxies(proxies)
 response = webhook.execute()
 ```
 
-### Use CLI
-
-```
-usage: discord_webhook [-h] -u URL [URL ...] -c CONTENT [--username USERNAME]
-                       [--avatar_url AVATAR_URL]
-
-Trigger discord webhook(s).
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -u URL [URL ...], --url URL [URL ...]
-                        Webhook(s) url(s)
-  -c CONTENT, --content CONTENT
-                        Message content
-  --username USERNAME   override the default username of the webhook
-  --avatar_url AVATAR_URL
-                        override the default avatar of the webhook
-```
-
 ### Timeout
 
 ```python
@@ -376,6 +369,25 @@ async def main():
 
 
 asyncio.run(main())
+```
+
+### Use CLI
+
+```
+usage: discord_webhook [-h] -u URL [URL ...] -c CONTENT [--username USERNAME]
+                       [--avatar_url AVATAR_URL]
+
+Trigger discord webhook(s).
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u URL [URL ...], --url URL [URL ...]
+                        Webhook(s) url(s)
+  -c CONTENT, --content CONTENT
+                        Message content
+  --username USERNAME   override the default username of the webhook
+  --avatar_url AVATAR_URL
+                        override the default avatar of the webhook
 ```
 
 ## Development
