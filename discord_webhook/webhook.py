@@ -496,7 +496,11 @@ class DiscordWebhook:
         assert isinstance(
             self.url, str
         ), "Webhook URL needs to be set in order to edit the webhook."
-        url = f"{self.url}/messages/{self.id}"
+        if "?thread_id=" in self.url:
+            url = self.url.split("?thread_id=")[0]
+            url += f"/messages/{self.id}?thread_id={self.url.split('?thread_id=')[1]}"
+        else:
+            url = f"{self.url}/messages/{self.id}"
         if bool(self.files) is False:
             request = partial(
                 requests.patch,
@@ -541,7 +545,11 @@ class DiscordWebhook:
         assert isinstance(
             self.url, str
         ), "Webhook URL needs to be set in order to delete the webhook."
-        url = f"{self.url}/messages/{self.id}"
+        if "?thread_id=" in self.url:
+            url = self.url.split("?thread_id=")[0]
+            url += f"/messages/{self.id}?thread_id={self.url.split('?thread_id=')[1]}"
+        else:
+            url = f"{self.url}/messages/{self.id}"
         request = partial(
             requests.delete, url, proxies=self.proxies, timeout=self.timeout
         )

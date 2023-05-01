@@ -125,7 +125,11 @@ class AsyncDiscordWebhook(DiscordWebhook):
             self.url, str
         ), "Webhook URL needs to be set in order to edit the webhook."
         async with self.http_client as client:  # type: httpx.AsyncClient
-            url = f"{self.url}/messages/{self.id}"
+            if "?thread_id=" in self.url:
+                url = self.url.split("?thread_id=")[0]
+                url += f"/messages/{self.id}?thread_id={self.url.split('?thread_id=')[1]}"
+            else:
+                url = f"{self.url}/messages/{self.id}"
             if bool(self.files) is False:
                 patch_kwargs = {
                     'json': self.json,
@@ -162,7 +166,11 @@ class AsyncDiscordWebhook(DiscordWebhook):
         assert isinstance(
             self.url, str
         ), "Webhook URL needs to be set in order to delete the webhook."
-        url = f"{self.url}/messages/{self.id}"
+        if "?thread_id=" in self.url:
+            url = self.url.split("?thread_id=")[0]
+            url += f"/messages/{self.id}?thread_id={self.url.split('?thread_id=')[1]}"
+        else:
+            url = f"{self.url}/messages/{self.id}"
         async with self.http_client as client:  # type: httpx.AsyncClient
             response = await client.delete(url, timeout=self.timeout)
             if response.status_code in [200, 204]:
