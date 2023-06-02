@@ -32,7 +32,7 @@ discord_webhook = "discord_webhook.__main__:main"
 [tool.black]
 line-length = 88
 skip-string-normalization=true
-experimental-string-processing = true
+preview = true
 target-version = ["py310"]
 include = '\.pyi?$'
 exclude = '''
