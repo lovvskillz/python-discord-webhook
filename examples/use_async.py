@@ -4,8 +4,7 @@ from discord_webhook import AsyncDiscordWebhook
 
 
 async def send_webhook(message):
-    webhook = AsyncDiscordWebhook(url='your webhook url',
-                                  content=message)
+    webhook = AsyncDiscordWebhook(url='your webhook url', content=message)
     await webhook.execute()
 
 

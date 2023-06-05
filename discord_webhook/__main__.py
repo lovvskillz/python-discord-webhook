@@ -1,6 +1,6 @@
 """ Entry point to trigger webhook(s). """
-import sys
 import argparse
+import sys
 
 from discord_webhook import DiscordWebhook
 

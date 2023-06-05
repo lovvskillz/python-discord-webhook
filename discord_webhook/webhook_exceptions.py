@@ -3,9 +3,9 @@ from typing import Union
 
 class ColorNotInRangeException(Exception):
     """
-    A valid color must take an integer value between 0 and 16777216 inclusive
+    This Exception will be raised when a color is not in that range.
 
-    This Exception will be raised when a colour is not in that range.
+    A valid color must take an integer value between 0 and 16777216 inclusive
     """
 
     color: Union[str, int]

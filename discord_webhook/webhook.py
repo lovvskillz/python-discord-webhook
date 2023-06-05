@@ -18,18 +18,18 @@ class DiscordEmbed:
     Discord Embed
     """
 
-    title: Optional[str]
-    description: Optional[str]
-    url: Optional[str]
-    timestamp: Optional[str]
+    author: Optional[Dict[str, Optional[str]]]
     color: Optional[int]
+    description: Optional[str]
+    fields: List[Dict[str, Optional[Any]]]
     footer: Optional[Dict[str, Optional[str]]]
     image: Optional[Dict[str, Optional[Union[str, int]]]]
-    thumbnail: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
-    video: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
     provider: Optional[Dict[str, Any]]
-    author: Optional[Dict[str, Optional[str]]]
-    fields: List[Dict[str, Optional[Any]]]
+    thumbnail: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
+    timestamp: Optional[str]
+    title: Optional[str]
+    url: Optional[str]
+    video: Optional[Union[str, Dict[str, Optional[Union[str, int]]]]]
 
     def __init__(
         self,
@@ -40,20 +40,20 @@ class DiscordEmbed:
         """
         Init Discord Embed
         -----------
-        :keyword ``title:`` title of embed\n
-        :keyword ``description:`` description body of embed\n
-        :keyword ``url:`` add an url to make your embedded title a clickable
-        link\n
-        :keyword ``timestamp:`` timestamp of embed content\n
+        :keyword ``author:`` author information\n
         :keyword ``color:`` color code of the embed as int\n
+        :keyword ``description:`` description body of embed\n
+        :keyword ``fields:`` fields information
         :keyword ``footer:`` footer texts\n
         :keyword ``image:`` your image url here\n
+        :keyword ``provider:`` provider information\n
         :keyword ``thumbnail:`` your thumbnail url here\n
+        :keyword ``timestamp:`` timestamp of embed content\n
+        :keyword ``title:`` title of embed\n
+        :keyword ``url:`` add an url to make your embedded title a clickable
+        link\n
         :keyword ``video:``  to apply video with embedded, your video source
         url here\n
-        :keyword ``provider:`` provider information\n
-        :keyword ``author:`` author information\n
-        :keyword ``fields:`` fields information
         """
         self.title = title
         self.description = description
@@ -233,24 +233,24 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    url: str
-    id: Optional[str]
-    content: Optional[Union[str, bytes]]
-    username: Optional[str]
-    avatar_url: Optional[str]
-    tts: bool
-    attachments: Optional[List[Dict[str, Any]]]
-    files: Dict[str, Tuple[Optional[str], Union[bytes, str]]]
-    embeds: List[Dict[str, Any]]
-    proxies: Optional[Dict[str, str]]
     allowed_mentions: List[str]
-    timeout: Optional[float]
+    attachments: Optional[List[Dict[str, Any]]]
+    avatar_url: Optional[str]
+    components: Optional[list]
+    content: Optional[Union[str, bytes]]
+    embeds: List[Dict[str, Any]]
+    files: Dict[str, Tuple[Optional[str], Union[bytes, str]]]
+    id: Optional[str]
+    proxies: Optional[Dict[str, str]]
     rate_limit_retry: bool = False
+    timeout: Optional[float]
+    tts: bool
+    url: str
+    username: Optional[str]
 
     def __init__(
         self,
         url: str,
-        *,
         id: Optional[str] = None,
         content: Optional[str] = None,
         username: Optional[str] = None,
@@ -284,27 +284,27 @@ class DiscordWebhook:
         :keyword ``timeout:`` (optional) amount of seconds to wait for a
         response from Discord
         """
-        if embeds is None:
-            embeds = []
-        if files is None:
-            files = {}
         if allowed_mentions is None:
             allowed_mentions = []
         if attachments is None:
             attachments = []
-        self.url = url
-        self.id = id
-        self.content = content
-        self.username = username
-        self.avatar_url = avatar_url
-        self.tts = tts
-        self.attachments = attachments
-        self.files = files
-        self.embeds = embeds
-        self.proxies = proxies
+        if embeds is None:
+            embeds = []
+        if files is None:
+            files = {}
+
         self.allowed_mentions = allowed_mentions
-        self.timeout = timeout
+        self.attachments = attachments
+        self.avatar_url = avatar_url
+        self.content = content
+        self.files = files
+        self.id = id
+        self.proxies = proxies
         self.rate_limit_retry = rate_limit_retry
+        self.timeout = timeout
+        self.tts = tts
+        self.url = url
+        self.username = username
 
     def add_file(self, file: bytes, filename: str) -> None:
         """
