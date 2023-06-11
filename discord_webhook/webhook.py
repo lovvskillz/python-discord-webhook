@@ -297,6 +297,7 @@ class DiscordWebhook:
         self.attachments = attachments
         self.avatar_url = avatar_url
         self.content = content
+        self.embeds = embeds
         self.files = files
         self.id = id
         self.proxies = proxies
