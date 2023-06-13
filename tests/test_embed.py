@@ -36,17 +36,17 @@ def test__set_embed__url(embed):
 
 
 @pytest.mark.parametrize(
-    'timestamp',
+    "timestamp",
     [
         1679610926,
         1679610926.0,
-        datetime.fromisoformat('2023-03-23T22:35:26'),
-        datetime.fromisoformat('2023-03-23T23:35:26+01:00'),
+        datetime.fromisoformat("2023-03-23T22:35:26"),
+        datetime.fromisoformat("2023-03-23T23:35:26+01:00"),
     ],
 )
 def test__set_embed__timestamp(embed, timestamp):
     compare_datetime = datetime.fromisoformat(
-        '2023-03-23T22:35:26'
+        "2023-03-23T22:35:26"
     )  # timestamp 1679610926
     if isinstance(timestamp, datetime):
         compare_datetime = timestamp
@@ -57,7 +57,7 @@ def test__set_embed__timestamp(embed, timestamp):
 
 
 @pytest.mark.parametrize(
-    'color, output',
+    "color, output",
     [
         ("03b2f8", 242424),
         (333333, 333333),

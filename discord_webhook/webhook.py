@@ -307,6 +307,34 @@ class DiscordWebhook:
         self.url = url
         self.username = username
 
+    def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
+        """
+        Add an embedded rich content.
+        :param embed: embed object or dict
+        """
+        self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
+
+    def get_embeds(self) -> List[Dict[str, Any]]:
+        """
+        Get all embeds as a list.
+        :return: self.embeds
+        """
+        return self.embeds
+
+    def remove_embed(self, index: int) -> None:
+        """
+        Remove embedded rich content from `self.embeds`.
+        :param index: index of embed in `self.embeds`
+        """
+        self.embeds.pop(index)
+
+    def remove_embeds(self) -> None:
+        """
+        Remove all embeds.
+        :return: None
+        """
+        self.embeds = []
+
     def add_file(self, file: bytes, filename: str) -> None:
         """
         Add a file to the webhook.
@@ -316,44 +344,23 @@ class DiscordWebhook:
         """
         self.files[f"_{filename}"] = (filename, file)
 
-    def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
-        """
-        Add an embedded rich content.
-        :param embed: embed object or dict
-        """
-        self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
-
-    def remove_embed(self, index: int) -> None:
-        """
-        Remove embedded rich content from `self.embeds`.
-        :param index: index of embed in `self.embeds`
-        """
-        self.embeds.pop(index)
-
     def remove_file(self, filename: str) -> None:
         """
         Remove file by given `filename` if it exists.
         :param filename: filename
         """
-        self.files.pop(f'_{filename}', None)
+        self.files.pop(f"_{filename}", None)
         if self.attachments:
             index = next(
                 (
                     i
                     for i, item in enumerate(self.attachments)
-                    if item.get('filename') == filename
+                    if item.get("filename") == filename
                 ),
                 None,
             )
             if index is not None:
                 self.attachments.pop(index)
-
-    def remove_embeds(self) -> None:
-        """
-        Remove all embeds.
-        :return: None
-        """
-        self.embeds = []
 
     def remove_files(self, clear_attachments: bool = True) -> None:
         """
@@ -372,13 +379,6 @@ class DiscordWebhook:
         :return: None
         """
         self.attachments = []
-
-    def get_embeds(self) -> List[Dict[str, Any]]:
-        """
-        Get all embeds as a list.
-        :return: self.embeds
-        """
-        return self.embeds
 
     def set_proxies(self, proxies: Dict[str, str]) -> None:
         """
@@ -410,7 +410,7 @@ class DiscordWebhook:
         data = {
             key: value
             for key, value in self.__dict__.items()
-            if value and key not in ['url', 'files'] or key in ['embeds', 'attachments']
+            if value and key not in ["url", "files"] or key in ["embeds", "attachments"]
         }
         embeds_empty = not any(data["embeds"]) if "embeds" in data else True
         if embeds_empty and "content" not in data and bool(self.files) is False:
@@ -444,7 +444,7 @@ class DiscordWebhook:
         """
         while response.status_code == 429:
             errors = json.loads(response.content.decode("utf-8"))
-            if not response.headers.get('Via'):
+            if not response.headers.get("Via"):
                 raise HTTPException(errors)
             wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
             logger.error(f"Webhook rate limited: sleeping for {wh_sleep} seconds...")
@@ -473,16 +473,16 @@ class DiscordWebhook:
             logger.error(
                 "Webhook status code {status_code}: {content}".format(
                     status_code=response.status_code,
-                    content=response.content.decode('utf-8'),
+                    content=response.content.decode("utf-8"),
                 )
             )
         if remove_embeds:
             self.remove_embeds()
         self.remove_files(clear_attachments=False)
         response_content = json.loads(response.content.decode("utf-8"))
-        if webhook_id := response_content.get('id'):
+        if webhook_id := response_content.get("id"):
             self.id = webhook_id
-        if attachments := response_content.get('attachments'):
+        if attachments := response_content.get("attachments"):
             self.attachments = attachments
         return response
 
@@ -555,12 +555,12 @@ class DiscordWebhook:
         return response
 
     @classmethod
-    def create_batch(cls, urls: List[str], **kwargs) -> Tuple['DiscordWebhook', ...]:
+    def create_batch(cls, urls: List[str], **kwargs) -> Tuple["DiscordWebhook", ...]:
         """
         Create multiple instances of webhook.
         :param urls: list of webhook URLs.
         :return: tuple of webhook instances
         """
-        if 'url' in kwargs:
+        if "url" in kwargs:
             raise TypeError("'url' can't be used as a keyword argument.")
         return tuple([cls(url, **kwargs) for url in urls])
