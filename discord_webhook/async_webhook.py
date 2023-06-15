@@ -53,13 +53,13 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 response = await client.post(
                     self.url,
                     json=self.json,
-                    params={'wait': True},
+                    params={"wait": True},
                     timeout=self.timeout,
                 )
             else:
                 self.files["payload_json"] = (
                     None,
-                    json.dumps(self.json).encode('utf-8'),
+                    json.dumps(self.json).encode("utf-8"),
                 )
                 response = await client.post(
                     self.url, files=self.files, timeout=self.timeout
@@ -75,9 +75,9 @@ class AsyncDiscordWebhook(DiscordWebhook):
         """
         while response.status_code == 429:
             errors = response.json()
-            if not response.headers.get('Via'):
+            if not response.headers.get("Via"):
                 raise HTTPException(errors)
-            wh_sleep = (int(errors['retry_after']) / 1000) + 0.15
+            wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
             logger.error(
                 "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(
                     wh_sleep=wh_sleep
@@ -109,7 +109,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
         if remove_embeds:
             self.remove_embeds()
         self.remove_files(clear_attachments=False)
-        if webhook_id := json.loads(response.content.decode("utf-8")).get('id'):
+        if webhook_id := json.loads(response.content.decode("utf-8")).get("id"):
             self.id = webhook_id
         return response
 
@@ -132,13 +132,13 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 url = f"{self.url}/messages/{self.id}"
             if bool(self.files) is False:
                 patch_kwargs = {
-                    'json': self.json,
-                    'params': {'wait': True},
-                    'timeout': self.timeout,
+                    "json": self.json,
+                    "params": {"wait": True},
+                    "timeout": self.timeout,
                 }
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
-                patch_kwargs = {'files': self.files, 'timeout': self.timeout}
+                patch_kwargs = {"files": self.files, "timeout": self.timeout}
             request = partial(client.patch, url, **patch_kwargs)
             response = await request()
             if response.status_code in [200, 204]:
