@@ -4,7 +4,7 @@ import logging
 from contextlib import asynccontextmanager
 from functools import partial
 from http.client import HTTPException
-
+from typing import cast
 from . import DiscordWebhook
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
 
     @property
     @asynccontextmanager
-    async def http_client(self):
+    async def http_client(self) -> httpx.AsyncClient:
         """
         A property that returns a httpx.AsyncClient instance that is used for a 'with' statement.
         Example:
@@ -47,7 +47,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
         yield client
         await client.aclose()
 
-    async def api_post_request(self):
+    async def api_post_request(self) -> httpx.Response:
         async with self.http_client as client:  # type: httpx.AsyncClient
             if bool(self.files) is False:
                 response = await client.post(
@@ -64,9 +64,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 response = await client.post(
                     self.url, files=self.files, timeout=self.timeout
                 )
+
         return response
 
-    async def handle_rate_limit(self, response, request):
+    async def handle_rate_limit(self, response: httpx.Response, request) -> httpx.Response:
         """
         Handle the rate limit.
         :param response: Response
@@ -88,13 +89,13 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if response.status_code in [200, 204]:
                 return response
 
-    async def execute(self, remove_embeds=False):
+    async def execute(self, remove_embeds: bool = False) -> httpx.Response:
         """
         executes the Webhook
         :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
-        :return: Webhook response
+        :return: httpx.Response
         """
-        response = await self.api_post_request()
+        response: httpx.Response = await self.api_post_request()
         if response.status_code in [200, 204]:
             logger.debug("Webhook executed")
         elif response.status_code == 429 and self.rate_limit_retry:
@@ -111,9 +112,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
         self.remove_files(clear_attachments=False)
         if webhook_id := json.loads(response.content.decode("utf-8")).get("id"):
             self.id = webhook_id
-        return response
 
-    async def edit(self):
+        return cast(httpx.Response, response)  # type: httpx.Response
+
+    async def edit(self) -> httpx.Response:
         """
         Edit the given webhook.
         :return: webhook response
@@ -151,7 +153,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 )
             return response
 
-    async def delete(self):
+    async def delete(self) -> httpx.Response:
         """
         Delete the given webhook.
         :return: webhook response
