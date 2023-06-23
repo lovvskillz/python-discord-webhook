@@ -34,7 +34,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
 
     @property
     @asynccontextmanager
-    async def http_client(self):
+    async def http_client(self) -> "httpx.AsyncClient":
         """
         A property that returns a httpx.AsyncClient instance that is used for a 'with' statement.
         Example:
@@ -47,7 +47,11 @@ class AsyncDiscordWebhook(DiscordWebhook):
         yield client
         await client.aclose()
 
-    async def api_post_request(self):
+    async def api_post_request(self) -> "httpx.Response":
+        """
+        Post the JSON converted webhook data to the specified url.
+        :return:
+        """
         async with self.http_client as client:  # type: httpx.AsyncClient
             if bool(self.files) is False:
                 response = await client.post(
@@ -66,12 +70,12 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 )
         return response
 
-    async def handle_rate_limit(self, response, request):
+    async def handle_rate_limit(self, response, request) -> "httpx.Response":
         """
-        Handle the rate limit.
+        Handle the rate limit by resending the webhook until a successful response.
         :param response: Response
         :param request: request function
-        :return: Response
+        :return: Response of the sent webhook
         """
         while response.status_code == 429:
             errors = response.json()
@@ -88,11 +92,11 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if response.status_code in [200, 204]:
                 return response
 
-    async def execute(self, remove_embeds=False):
+    async def execute(self, remove_embeds=False) -> "httpx.Response":
         """
-        executes the Webhook
-        :param remove_embeds: if set to True, calls `self.remove_embeds()` to empty `self.embeds` after webhook is executed
-        :return: Webhook response
+        Execute the sending of the webhook with the given data.
+        :param bool remove_embeds: clear the stored embeds after webhook is executed
+        :return: Response of the sent webhook
         """
         response = await self.api_post_request()
         if response.status_code in [200, 204]:
@@ -113,10 +117,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
             self.id = webhook_id
         return response
 
-    async def edit(self):
+    async def edit(self) -> "httpx.Response":
         """
-        Edit the given webhook.
-        :return: webhook response
+        Edit an already sent webhook with updated data.
+        :return: Response of the sent webhook
         """
         assert isinstance(
             self.id, str
@@ -151,9 +155,9 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 )
             return response
 
-    async def delete(self):
+    async def delete(self) -> "httpx.Response":
         """
-        Delete the given webhook.
+        Delete the already sent webhook.
         :return: webhook response
         """
         assert isinstance(
