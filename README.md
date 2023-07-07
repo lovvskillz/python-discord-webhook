@@ -34,7 +34,7 @@ pip install discord-webhook
 ```python
 from discord_webhook import DiscordWebhook
 
-webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
+webhook = DiscordWebhook(url="your webhook url", content="Webhook Message")
 response = webhook.execute()
 ```
 
@@ -45,7 +45,7 @@ If you want to use multiple URLs you need to create multiple instances.
 from discord_webhook import DiscordWebhook
 
 # you can provide any kwargs except url
-webhook1, webhook2 = DiscordWebhook.create_batch(urls=['first url', 'second url'], content='Webhook Message')
+webhook1, webhook2 = DiscordWebhook.create_batch(urls=["first url", "second url"], content="Webhook Message")
 response1 = webhook1.execute()
 response2 = webhook2.execute()
 ```
@@ -57,7 +57,7 @@ You can access a webhook that has already been sent by providing the ID.
 ````python
 from discord_webhook import DiscordWebhook
 
-webhook = DiscordWebhook(url='your webhook url', id='your webhook message id')
+webhook = DiscordWebhook(url="your webhook url", id="your webhook message id")
 # now you could delete or edit the webhook
 # ...
 ````
@@ -70,8 +70,7 @@ from discord_webhook import DiscordWebhook
 # if rate_limit_retry is True then in the event that you are being rate 
 # limited by Discord your webhook will automatically be sent once the 
 # rate limit has been lifted
-webhook = DiscordWebhook(url='your webhook url', rate_limit_retry=True,
-                         content='Webhook Message')
+webhook = DiscordWebhook(url="your webhook url", rate_limit_retry=True, content="Webhook Message")
 response = webhook.execute()
 ```
 
@@ -82,11 +81,11 @@ response = webhook.execute()
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook = DiscordWebhook(url='your webhook url')
+webhook = DiscordWebhook(url="your webhook url")
 
 # create embed object for webhook
-# you can set the color as a decimal (color=242424) or hex (color='03b2f8') number
-embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color='03b2f8')
+# you can set the color as a decimal (color=242424) or hex (color="03b2f8") number
+embed = DiscordEmbed(title="Your Title", description="Lorem ipsum dolor sit", color="03b2f8")
 
 # add embed object to webhook
 webhook.add_embed(embed)
@@ -99,29 +98,29 @@ response = webhook.execute()
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook = DiscordWebhook(url='your webhook url')
+webhook = DiscordWebhook(url="your webhook url")
 
 # create embed object for webhook
-embed = DiscordEmbed(title='Your Title', description='Lorem ipsum dolor sit', color='03b2f8')
+embed = DiscordEmbed(title="Your Title", description="Lorem ipsum dolor sit", color="03b2f8")
 
 # set author
-embed.set_author(name='Author Name', url='author url', icon_url='author icon url')
+embed.set_author(name="Author Name", url="author url", icon_url="author icon url")
 
 # set image
-embed.set_image(url='your image url')
+embed.set_image(url="your image url")
 
 # set thumbnail
-embed.set_thumbnail(url='your thumbnail url')
+embed.set_thumbnail(url="your thumbnail url")
 
 # set footer
-embed.set_footer(text='Embed Footer Text', icon_url='URL of icon')
+embed.set_footer(text="Embed Footer Text", icon_url="URL of icon")
 
 # set timestamp (default is now) accepted types are int, float and datetime
 embed.set_timestamp()
 
 # add fields to embed
-embed.add_embed_field(name='Field 1', value='Lorem ipsum')
-embed.add_embed_field(name='Field 2', value='dolor sit')
+embed.add_embed_field(name="Field 1", value="Lorem ipsum")
+embed.add_embed_field(name="Field 2", value="dolor sit")
 
 # add embed object to webhook
 webhook.add_embed(embed)
@@ -136,16 +135,16 @@ This is another example with embedded content
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook = DiscordWebhook(url='your webhook url', username="New Webhook Username")
+webhook = DiscordWebhook(url="your webhook url", username="New Webhook Username")
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
-embed.set_author(name='Author Name', url='https://github.com/lovvskillz', icon_url='https://avatars0.githubusercontent.com/u/14542790')
-embed.set_footer(text='Embed Footer Text')
+embed = DiscordEmbed(title="Embed Title", description="Your Embed Description", color="03b2f8")
+embed.set_author(name="Author Name", url="https://github.com/lovvskillz", icon_url="https://avatars0.githubusercontent.com/u/14542790")
+embed.set_footer(text="Embed Footer Text")
 embed.set_timestamp()
-embed.add_embed_field(name='Field 1', value='Lorem ipsum')
-embed.add_embed_field(name='Field 2', value='dolor sit')
-embed.add_embed_field(name='Field 3', value='amet consetetur')
-embed.add_embed_field(name='Field 4', value='sadipscing elitr')
+embed.add_embed_field(name="Field 1", value="Lorem ipsum")
+embed.add_embed_field(name="Field 2", value="dolor sit")
+embed.add_embed_field(name="Field 3", value="amet consetetur")
+embed.add_embed_field(name="Field 4", value="sadipscing elitr")
 
 webhook.add_embed(embed)
 response = webhook.execute()
@@ -161,7 +160,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 webhook = DiscordWebhook(url="your webhook url", username="New Webhook Username")
 
 embed = DiscordEmbed(
-    title="Embed Title", description="Your Embed Description", color='03b2f8'
+    title="Embed Title", description="Your Embed Description", color="03b2f8"
 )
 embed.set_author(
     name="Author Name",
@@ -188,9 +187,9 @@ response = webhook.execute()
 from discord_webhook import DiscordWebhook
 from time import sleep
 
-webhook = DiscordWebhook(url='your webhook url', content='Webhook content before edit')
+webhook = DiscordWebhook(url="your webhook url", content="Webhook content before edit")
 webhook.execute()
-webhook.content = 'After Edit'
+webhook.content = "After Edit"
 sleep(10)
 webhook.edit()
 ```
@@ -201,7 +200,7 @@ webhook.edit()
 from discord_webhook import DiscordWebhook
 from time import sleep
 
-webhook = DiscordWebhook(url='your webhook url', content='Webhook Content')
+webhook = DiscordWebhook(url="your webhook url", content="Webhook Content")
 webhook.execute()
 sleep(10)
 webhook.delete()
@@ -212,13 +211,13 @@ webhook.delete()
 ```python
 from discord_webhook import DiscordWebhook
 
-webhook = DiscordWebhook(url='your webhook url', username="Webhook with files")
+webhook = DiscordWebhook(url="your webhook url", username="Webhook with files")
 
 # send two images
 with open("path/to/first/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example.jpg')
+    webhook.add_file(file=f.read(), filename="example.jpg")
 with open("path/to/second/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example2.jpg')
+    webhook.add_file(file=f.read(), filename="example2.jpg")
 
 response = webhook.execute()
 ```
@@ -230,13 +229,13 @@ You can use uploaded attachments in Embeds:
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook = DiscordWebhook(url='your webhook url')
+webhook = DiscordWebhook(url="your webhook url")
 
 with open("path/to/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example.jpg')
+    webhook.add_file(file=f.read(), filename="example.jpg")
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
-embed.set_thumbnail(url='attachment://example.jpg')
+embed = DiscordEmbed(title="Embed Title", description="Your Embed Description", color="03b2f8")
+embed.set_thumbnail(url="attachment://example.jpg")
 
 webhook.add_embed(embed)
 response = webhook.execute()
@@ -247,13 +246,13 @@ response = webhook.execute()
 ```python
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook = DiscordWebhook(url='your webhook url')
+webhook = DiscordWebhook(url="your webhook url")
 
 with open("path/to/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example.jpg')
+    webhook.add_file(file=f.read(), filename="example.jpg")
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
-embed.set_thumbnail(url='attachment://example.jpg')
+embed = DiscordEmbed(title="Embed Title", description="Your Embed Description", color="03b2f8")
+embed.set_thumbnail(url="attachment://example.jpg")
 
 webhook.add_embed(embed)
 response = webhook.execute(remove_embeds=True)
@@ -266,16 +265,16 @@ response = webhook.execute(remove_embeds=True)
 ```python
 from discord_webhook import DiscordWebhook
 
-webhook = DiscordWebhook(url='your webhook url', username="Webhook with files")
+webhook = DiscordWebhook(url="your webhook url", username="Webhook with files")
 
 # send two images
 with open("path/to/first/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example.jpg')
+    webhook.add_file(file=f.read(), filename="example.jpg")
 with open("path/to/second/image.jpg", "rb") as f:
-    webhook.add_file(file=f.read(), filename='example2.jpg')
-# remove 'example.jpg'
-webhook.remove_file('example.jpg')
-# only 'example2.jpg' is sent to the webhook
+    webhook.add_file(file=f.read(), filename="example2.jpg")
+# remove "example.jpg"
+webhook.remove_file("example.jpg")
+# only "example2.jpg" is sent to the webhook
 response = webhook.execute()
 ```
 
@@ -293,7 +292,7 @@ allowed_mentions = {
     "users": ["123", "124"]
 }
 
-webhook = DiscordWebhook(url='your webhook url', content=content, allowed_mentions=allowed_mentions)
+webhook = DiscordWebhook(url="your webhook url", content=content, allowed_mentions=allowed_mentions)
 response = webhook.execute()
 ```
 
@@ -303,10 +302,10 @@ response = webhook.execute()
 from discord_webhook import DiscordWebhook
 
 proxies = {
-  'http': 'http://10.10.1.10:3128',
-  'https': 'http://10.10.1.10:1080',
+  "http": "http://10.10.1.10:3128",
+  "https": "http://10.10.1.10:1080",
 }
-webhook = DiscordWebhook(url='your webhook url', content='Webhook Message', proxies=proxies)
+webhook = DiscordWebhook(url="your webhook url", content="Webhook Message", proxies=proxies)
 response = webhook.execute()
 ```
 or
@@ -314,10 +313,10 @@ or
 from discord_webhook import DiscordWebhook
 
 proxies = {
-  'http': 'http://10.10.1.10:3128',
-  'https': 'http://10.10.1.10:1080',
+  "http": "http://10.10.1.10:3128",
+  "https": "http://10.10.1.10:1080",
 }
-webhook = DiscordWebhook(url='your webhook url', content='Webhook Message')
+webhook = DiscordWebhook(url="your webhook url", content="Webhook Message")
 webhook.set_proxies(proxies)
 response = webhook.execute()
 ```
@@ -329,12 +328,12 @@ from requests.exceptions import Timeout
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 # We will set ridiculously low timeout threshold for testing purposes
-webhook = DiscordWebhook(url='your webhook url', timeout=0.1)
+webhook = DiscordWebhook(url="your webhook url", timeout=0.1)
 
 # You can also set timeout later using
 # webhook.timeout = 0.1
 
-embed = DiscordEmbed(title='Embed Title', description='Your Embed Description', color='03b2f8')
+embed = DiscordEmbed(title="Embed Title", description="Your Embed Description", color="03b2f8")
 
 webhook.add_embed(embed)
 
@@ -342,7 +341,7 @@ webhook.add_embed(embed)
 try:
     response = webhook.execute()
 except Timeout as err:
-    print(f'Oops! Connection to Discord timed out: {err}')
+    print(f"Oops! Connection to Discord timed out: {err}")
 ```
 
 ### Async support
@@ -357,14 +356,14 @@ from discord_webhook import AsyncDiscordWebhook
 
 
 async def send_webhook(message):
-    webhook = AsyncDiscordWebhook(url='your webhook url', content=message)
+    webhook = AsyncDiscordWebhook(url="your webhook url", content=message)
     await webhook.execute()
 
 
 async def main():
     await asyncio.gather(
-        send_webhook('Async webhook message 1'),
-        send_webhook('Async webhook message 2'),
+        send_webhook("Async webhook message 1"),
+        send_webhook("Async webhook message 2"),
     )  # sends both messages asynchronously
 
 
