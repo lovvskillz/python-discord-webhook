@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Union
 
 from . import constants
 from .webhook_exceptions import ComponentException
@@ -82,3 +82,55 @@ class DiscordComponentButton(BaseDiscordComponent):
             )
 
         super().__init__(**kwargs)
+
+
+class DiscordComponentActionRow:
+    """
+    Represent an action row that can be used in a message.
+    """
+
+    components: list
+    type: int = constants.DISCORD_COMPONENT_TYPE_ACTION_ROW
+
+    def __init__(
+        self,
+        components: Optional[List[Union[dict, BaseDiscordComponent]]] = None,
+        **kwargs,
+    ):
+        """
+        :keyword components: displayed components in an action row
+        """
+        if components is None:
+            components = []
+
+        self.components = components
+        self.type = constants.DISCORD_COMPONENT_TYPE_ACTION_ROW
+
+        super().__init__(**kwargs)
+
+    def add_component(self, component):
+        """
+        Add a component to the row
+        :param component: discord component instance
+        """
+        if isinstance(component, DiscordComponentActionRow):
+            raise ComponentException("An action row can't contain another action row.")
+        if (
+            isinstance(component, DiscordComponentButton)
+            and sum(
+                1
+                for comp in self.components
+                if comp.get("type") == constants.DISCORD_COMPONENT_TYPE_BUTTON
+            )
+            >= 5
+        ):
+            raise ComponentException("An Action Row can contain up to 5 buttons.")
+
+        if not isinstance(component, dict):
+            component = {
+                key: value
+                for key, value in component.__dict__.items()
+                if value is not None
+            }
+
+        self.components.append(component)
