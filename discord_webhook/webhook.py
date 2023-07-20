@@ -403,7 +403,7 @@ class DiscordWebhook:
             if not response.headers.get("Via"):
                 raise HTTPException(errors)
             wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
-            logger.error(f"Webhook rate limited: sleeping for {wh_sleep:.2f} seconds...")
+            logger.error(f"Webhook rate limited: sleeping for {wh_sleep} seconds...")
             time.sleep(wh_sleep)
             response = request()
             if response.status_code in [200, 204]:

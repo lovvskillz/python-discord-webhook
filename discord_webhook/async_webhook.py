@@ -81,10 +81,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
             errors = response.json()
             if not response.headers.get("Via"):
                 raise HTTPException(errors)
-            wh_sleep = float(errors["retry_after"]) + 0.15
+            wh_sleep = (int(errors["retry_after"]) / 1000) + 0.15
             logger.error(
                 "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(
-                    wh_sleep=round(wh_sleep,2)
+                    wh_sleep=wh_sleep
                 )
             )
             await asyncio.sleep(wh_sleep)
