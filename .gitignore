@@ -106,3 +106,6 @@ venv.bak/
 # PyCharm
 .idea
 .vscode/
+
+# Poetry
+poetry.lock
