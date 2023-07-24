@@ -2,9 +2,14 @@
 
 ## development
 
+## 2023-07-24 1.2.0
+
 ### 🎉 Features
 - `set_timestamp()` accepts also a datetime object
   - set timestamp as ISO 8601
+
+### 🩹 Fixes
+- fix rate limit retry
 
 ## 2023-02-15 1.1.0
 
