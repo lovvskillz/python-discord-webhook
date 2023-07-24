@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "discord-webhook"
-version = "1.1.0"
+version = "1.2.0"
 description = "Easily send Discord webhooks with Python"
 authors = ["lovvskillz <14542790+lovvskillz@users.noreply.github.com>"]
 license = "MIT"
