@@ -262,7 +262,7 @@ class DiscordWebhook:
         self.proxies = kwargs.get("proxies")
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
         self.timeout = kwargs.get("timeout")
-        self.tts = kwargs.get("timeout", False)
+        self.tts = kwargs.get("tts", False)
         self.url = url
         self.username = kwargs.get("username", False)
 

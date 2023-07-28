@@ -2,6 +2,11 @@
 
 ## development
 
+## 2023-07-29 1.2.1
+
+### 🩹 Fixes
+- `timeout` keyword has accidentally set `tts` as well
+
 ## 2023-07-24 1.2.0
 
 ### 🎉 Features
