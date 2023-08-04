@@ -57,7 +57,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 response = await client.post(
                     self.url,
                     json=self.json,
-                    params={"wait": True},
+                    params=self._query_params,
                     timeout=self.timeout,
                 )
             else:
@@ -66,7 +66,10 @@ class AsyncDiscordWebhook(DiscordWebhook):
                     json.dumps(self.json).encode("utf-8"),
                 )
                 response = await client.post(
-                    self.url, files=self.files, timeout=self.timeout
+                    self.url,
+                    files=self.files,
+                    params=self._query_params,
+                    timeout=self.timeout,
                 )
         return response
 

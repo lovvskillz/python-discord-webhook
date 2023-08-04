@@ -229,10 +229,13 @@ class DiscordWebhook:
     id: Optional[str]
     proxies: Optional[Dict[str, str]]
     rate_limit_retry: bool = False
+    thread_id: Optional[str]
+    thread_name: Optional[str]
     timeout: Optional[float]
-    tts: bool
+    tts: Optional[bool]
     url: str
     username: Optional[str]
+    wait: Optional[bool]
 
     def __init__(self, url: str, **kwargs) -> None:
         """
@@ -248,9 +251,12 @@ class DiscordWebhook:
         :keyword str id: webhook id
         :keyword dict proxies: proxies that should be used
         :keyword bool rate_limit_retry: whether the message should be sent again when being rate limited
+        :keyword str thread_id: send message to a thread specified by its thread id
+        :keyword str thread_name: name of thread to create
         :keyword int timeout: seconds to wait for a response from Discord
         :keyword bool tts: indicates if this is a TTS message
         :keyword str username: override the default username of the webhook
+        :keyword bool wait: waits for server confirmation of message send before response (defaults to True)
         """
         self.allowed_mentions = kwargs.get("allowed_mentions", [])
         self.attachments = kwargs.get("attachments", [])
@@ -261,10 +267,14 @@ class DiscordWebhook:
         self.id = kwargs.get("id")
         self.proxies = kwargs.get("proxies")
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
+        self.thread_id = kwargs.get("thread_id")
+        self.thread_name = kwargs.get("thread_name")
+        self.thread_name = kwargs.get("thread_name")
         self.timeout = kwargs.get("timeout")
         self.tts = kwargs.get("tts", False)
         self.url = url
         self.username = kwargs.get("username", False)
+        self.wait = kwargs.get("wait", True)
 
     def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
         """
@@ -374,12 +384,12 @@ class DiscordWebhook:
         Post the JSON converted webhook data to the specified url.
         :return: Response of the sent webhook
         """
-        if bool(self.files) is False:
+        if not self.files:
             return requests.post(
                 self.url,
                 json=self.json,
+                params=self._query_params,
                 proxies=self.proxies,
-                params={"wait": True},
                 timeout=self.timeout,
             )
 
@@ -387,6 +397,7 @@ class DiscordWebhook:
         return requests.post(
             self.url,
             files=self.files,
+            params=self._query_params,
             proxies=self.proxies,
             timeout=self.timeout,
         )
@@ -410,6 +421,19 @@ class DiscordWebhook:
             response = request()
             if response.status_code in [200, 204]:
                 return response
+
+    @property
+    def _query_params(self) -> dict:
+        """
+        Set query parameters for requests.
+        :return: Query parameters as dict
+        """
+        params = {}
+        if self.thread_id:
+            params["thread_id"] = self.thread_id
+        if self.wait:
+            params["wait"] = self.wait
+        return params
 
     def execute(self, remove_embeds: bool = False) -> "requests.Response":
         """
