@@ -5,7 +5,7 @@ repos:
     rev: 22.8.0
     hooks:
       - id: black
-        language_version: python3
+        language_version: python3.10
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.0.272
     hooks:
