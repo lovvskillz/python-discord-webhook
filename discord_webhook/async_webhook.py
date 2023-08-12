@@ -1,4 +1,4 @@
-import asyncio
+import anyio
 import json
 import logging
 from contextlib import asynccontextmanager
@@ -90,7 +90,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                     wh_sleep=round(wh_sleep, 2)
                 )
             )
-            await asyncio.sleep(wh_sleep)
+            await anyio.sleep(wh_sleep)
             response = await request()
             if response.status_code in [200, 204]:
                 return response
