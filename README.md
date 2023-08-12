@@ -362,8 +362,7 @@ import discord_webhook
 
 
 async def send_webhook(message: str):
-    url = os.getenv("TEST_WEBHOOK_URL")
-    webhook = discord_webhook.AsyncDiscordWebhook(url=url, content=message)
+    webhook = discord_webhook.AsyncDiscordWebhook(url="your webhook url", content=message)
     await webhook.execute()
 
 
@@ -383,6 +382,7 @@ async def asyncio_main():
 if __name__ == "__main__":
     trio.run(trio_main)
     asyncio.run(asyncio_main())
+
 
 ```
 
