@@ -349,25 +349,41 @@ In order to use the async version, you need to install the package using:
 ```
 pip install discord-webhook[async]
 ```
+python-discord-webhook supports both asyncio and [trio](https://trio.readthedocs.io/en/stable/) through the use of [anyio](https://anyio.readthedocs.io/en/3.x/)
+
 Example usage:
 ```python
 import asyncio
-from discord_webhook import AsyncDiscordWebhook
+import os
+
+import trio
+
+import discord_webhook
 
 
-async def send_webhook(message):
-    webhook = AsyncDiscordWebhook(url="your webhook url", content=message)
+async def send_webhook(message: str):
+    url = os.getenv("TEST_WEBHOOK_URL")
+    webhook = discord_webhook.AsyncDiscordWebhook(url=url, content=message)
     await webhook.execute()
 
 
-async def main():
+async def trio_main():
+    async with trio.open_nursery() as nursery:
+        nursery.start_soon(send_webhook, "Async webhook message 1")
+        nursery.start_soon(send_webhook, "Async webhook message 2")
+
+
+async def asyncio_main():
     await asyncio.gather(
         send_webhook("Async webhook message 1"),
         send_webhook("Async webhook message 2"),
     )  # sends both messages asynchronously
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    trio.run(trio_main)
+    asyncio.run(asyncio_main())
+
 ```
 
 ### Use CLI
