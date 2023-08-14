@@ -2,6 +2,8 @@
 
 ## development
 
+## 2023-08-14 1.3.0
+
 ### 🎉 Features
 - add support for threads
   - set `thread_id` or `thread_name` as kwargs in `AsyncDiscordWebhook` and `DiscordWebhook`

@@ -18,6 +18,7 @@ pip install discord-webhook
 * [Basic Webhook](#basic-webhook)
 * [Create Multiple Instances / Use multiple URLs](#create-multiple-instances)
 * [Get Webhook by ID](#get-webhook-by-id)
+* [Send Webhook to thread](#send-webhook-to-thread)
 * [Manage Being Rate Limited](#manage-being-rate-limited)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
@@ -61,6 +62,19 @@ webhook = DiscordWebhook(url="your webhook url", id="your webhook message id")
 # now you could delete or edit the webhook
 # ...
 ````
+### Send Webhook to thread
+You can send a message to an existing thread by setting `thread_id` or create a new thread in a forum channel by using a `thread_name`.
+```python
+from discord_webhook import DiscordWebhook
+
+# send to an existing thread
+webhook = DiscordWebhook(url="your webhook url", thread_id="the thread id")
+webhook.execute()
+
+# create a new thread in a forum channel
+webhook = DiscordWebhook(url="your webhook url", thread_name="some-thread-name")
+webhook.execute()
+```
 
 ### Manage being Rate Limited
 
