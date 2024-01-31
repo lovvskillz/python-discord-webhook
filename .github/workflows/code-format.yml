@@ -3,13 +3,18 @@ name: Code Format
 on: [push, pull_request]
 
 jobs:
-  ruff:
+  ruff-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: chartboost/ruff-action@v1
-  lint:
+        with:
+          version: 0.1.15
+  ruff-format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: psf/black@stable
+      - uses: chartboost/ruff-action@v1
+        with:
+          version: 0.1.15
+          args: format
