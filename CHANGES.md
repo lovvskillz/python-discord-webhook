@@ -2,6 +2,11 @@
 
 ## development
 
+## 2024-01-31 1.3.1
+
+### 🩹 Fixes
+- fix typing for allowed_mentions
+
 ## 2023-08-14 1.3.0
 
 ### 🎉 Features
