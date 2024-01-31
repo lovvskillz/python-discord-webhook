@@ -303,6 +303,7 @@ from discord_webhook import DiscordWebhook
 
 content = "@everyone say hello to our new friends <@123> and <@124>"
 allowed_mentions = {
+    "parse": ["everyone"],
     "users": ["123", "124"]
 }
 

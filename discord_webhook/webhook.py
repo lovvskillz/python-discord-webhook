@@ -219,7 +219,7 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    allowed_mentions: List[str]
+    allowed_mentions: Dict[str, List[str]]
     attachments: Optional[List[Dict[str, Any]]]
     avatar_url: Optional[str]
     components: Optional[list]
@@ -242,7 +242,7 @@ class DiscordWebhook:
         Init Webhook for Discord.
         ---------
         :param str url: your discord webhook url
-        :keyword list allowed_mentions: allowed mentions for the message
+        :keyword dict allowed_mentions: allowed mentions for the message
         :keyword dict attachments: attachments that should be included
         :keyword str avatar_url: override the default avatar of the webhook
         :keyword str content: the message contents
@@ -258,7 +258,7 @@ class DiscordWebhook:
         :keyword str username: override the default username of the webhook
         :keyword bool wait: waits for server confirmation of message send before response (defaults to True)
         """
-        self.allowed_mentions = kwargs.get("allowed_mentions", [])
+        self.allowed_mentions = kwargs.get("allowed_mentions", {})
         self.attachments = kwargs.get("attachments", [])
         self.avatar_url = kwargs.get("avatar_url")
         self.content = kwargs.get("content")
