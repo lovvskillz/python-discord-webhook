@@ -269,7 +269,6 @@ class DiscordWebhook:
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
         self.thread_id = kwargs.get("thread_id")
         self.thread_name = kwargs.get("thread_name")
-        self.thread_name = kwargs.get("thread_name")
         self.timeout = kwargs.get("timeout")
         self.tts = kwargs.get("tts", False)
         self.url = url
