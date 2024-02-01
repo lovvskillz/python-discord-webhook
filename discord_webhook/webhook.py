@@ -66,6 +66,26 @@ class DiscordEmbed:
         if timestamp := kwargs.get("timestamp"):
             self.set_timestamp(timestamp)
 
+    def __len__(self) -> int:
+        """Return the total length in characters of the embed
+
+        https://discord.com/developers/docs/resources/channel#embed-limits
+        Discord imposes a 6,000 character limit on embeds
+        """
+
+        total_length = 0
+
+        if self.fields:
+            for field, value in self.fields:
+                total_length += len(field) + len(value)
+
+        total_length += len(self.title or "")
+        total_length += len(self.description or "")
+        total_length += len(self.footer or "")
+        total_length += len(self.author or "")
+
+        return total_length
+
     def set_title(self, title: str) -> None:
         """
         Set the title of the embed.
