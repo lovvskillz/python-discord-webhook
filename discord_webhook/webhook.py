@@ -7,6 +7,7 @@ from http.client import HTTPException
 from typing import Any, Dict, List, Optional, Tuple, Union
 import requests
 
+from . import DiscordComponentActionRow
 from .webhook_exceptions import ColorNotInRangeException
 
 logger = logging.getLogger(__name__)
@@ -245,6 +246,7 @@ class DiscordWebhook:
         :keyword dict allowed_mentions: allowed mentions for the message
         :keyword dict attachments: attachments that should be included
         :keyword str avatar_url: override the default avatar of the webhook
+        :keyword list components: list of components
         :keyword str content: the message contents
         :keyword list embeds: list of embedded rich content
         :keyword dict files: to apply file(s) with message
@@ -261,6 +263,7 @@ class DiscordWebhook:
         self.allowed_mentions = kwargs.get("allowed_mentions", {})
         self.attachments = kwargs.get("attachments", [])
         self.avatar_url = kwargs.get("avatar_url")
+        self.components = kwargs.get("components", [])
         self.content = kwargs.get("content")
         self.embeds = kwargs.get("embeds", [])
         self.files = kwargs.get("files", {})
@@ -275,6 +278,19 @@ class DiscordWebhook:
         self.url = url
         self.username = kwargs.get("username", False)
         self.wait = kwargs.get("wait", True)
+
+    def add_component_row(
+        self, action_row: Union[DiscordComponentActionRow, Dict[str, Any]]
+    ) -> None:
+        """
+        Add a component row to the webhook.
+        :param action_row: action row instance
+        """
+        self.components.append(
+            action_row.__dict__
+            if isinstance(action_row, DiscordComponentActionRow)
+            else action_row
+        )
 
     def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
         """
