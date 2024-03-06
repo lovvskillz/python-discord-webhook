@@ -7,7 +7,7 @@ from http.client import HTTPException
 from typing import Any, Dict, List, Optional, Tuple, Union
 import requests
 
-from .webhook_exceptions import ColorNotInRangeException
+from .webhook_exceptions import ColorNotInRangeException, DiscordException
 
 logger = logging.getLogger(__name__)
 
@@ -448,7 +448,7 @@ class DiscordWebhook:
             response = self.handle_rate_limit(response, self.api_post_request)
             logger.debug("Webhook executed")
         else:
-            logger.error(
+            raise DiscordException(
                 "Webhook status code {status_code}: {content}".format(
                     status_code=response.status_code,
                     content=response.content.decode("utf-8"),
