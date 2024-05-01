@@ -6,6 +6,7 @@ from functools import partial
 from http.client import HTTPException
 
 from . import DiscordWebhook
+from .webhook_exceptions import DiscordException
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if not response.headers.get("Via"):
                 raise HTTPException(errors)
             wh_sleep = float(errors["retry_after"]) + 0.15
-            logger.error(
+            logger.warning(
                 "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(
                     wh_sleep=round(wh_sleep, 2)
                 )
@@ -107,7 +108,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
         elif response.status_code == 429 and self.rate_limit_retry:
             response = await self.handle_rate_limit(response, self.api_post_request)
         else:
-            logger.error(
+            raise DiscordException(
                 "Webhook status code {status_code}: {content}".format(
                     status_code=response.status_code,
                     content=response.content.decode("utf-8"),
@@ -150,7 +151,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 response = await self.handle_rate_limit(response, request)
                 logger.debug("Webhook edited")
             else:
-                logger.error(
+                raise DiscordException(
                     "Webhook status code {status_code}: {content}".format(
                         status_code=response.status_code,
                         content=response.content.decode("utf-8"),
@@ -175,7 +176,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if response.status_code in [200, 204]:
                 logger.debug("Webhook deleted")
             else:
-                logger.error(
+                raise DiscordException(
                     "Webhook status code {status_code}: {content}".format(
                         status_code=response.status_code,
                         content=response.content.decode("utf-8"),

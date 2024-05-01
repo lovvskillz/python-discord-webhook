@@ -17,6 +17,7 @@ class ColorNotInRangeException(Exception):
             )
         super().__init__(message)
 
+
 class DiscordException(Exception):
     """
     This Exception is throw as a generic error from discord's API.
@@ -24,4 +25,3 @@ class DiscordException(Exception):
 
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
-        

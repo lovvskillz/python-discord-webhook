@@ -376,7 +376,7 @@ class DiscordWebhook:
         }
         embeds_empty = not any(data["embeds"]) if "embeds" in data else True
         if embeds_empty and "content" not in data and bool(self.files) is False:
-            logger.error("webhook message is empty! set content or embed data")
+            raise DiscordException("webhook message is empty! set content or embed data")
         return data
 
     def api_post_request(self) -> "requests.Response":
@@ -414,8 +414,10 @@ class DiscordWebhook:
             if not response.headers.get("Via"):
                 raise HTTPException(errors)
             wh_sleep = float(errors["retry_after"]) + 0.15
-            logger.error(
-                f"Webhook rate limited: sleeping for {wh_sleep:.2f} seconds..."
+            logger.warning(
+                "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(
+                    wh_sleep=round(wh_sleep, 2)
+                )
             )
             time.sleep(wh_sleep)
             response = request()
@@ -501,7 +503,7 @@ class DiscordWebhook:
             response = self.handle_rate_limit(response, request)
             logger.debug("Webhook edited")
         else:
-            logger.error(
+            raise DiscordException(
                 "Webhook status code {status_code}: {content}".format(
                     status_code=response.status_code,
                     content=response.content.decode("utf-8"),
