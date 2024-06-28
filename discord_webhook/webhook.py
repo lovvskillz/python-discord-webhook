@@ -213,6 +213,22 @@ class DiscordEmbed:
         """
         return self.fields
 
+    def to_dict(self) -> Dict[str, Any]:
+        embed = {
+            "title": self.title,
+            "description": self.description,
+            "url": self.url,
+            "timestamp": self.timestamp,
+            "color": self.color,
+            "footer": self.footer,
+            "image": self.image,
+            "thumbnail": self.thumbnail,
+            "video": self.video,
+            "provider": self.provider,
+            "author": self.author,
+            "fields": self.fields,
+        }
+        return {k: v for k, v in embed.items() if v is not None}
 
 class DiscordWebhook:
     """
