@@ -43,7 +43,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
         It will automatically close the client when the context is exited.
         :return: httpx.AsyncClient
         """
-        client = httpx.AsyncClient(proxies=self.proxies)
+        client = httpx.AsyncClient(proxy=self.proxies)
         yield client
         await client.aclose()
 
