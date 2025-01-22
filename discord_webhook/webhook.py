@@ -126,7 +126,7 @@ class DiscordEmbed:
     def set_image(self, url: str, **kwargs: Union[str, int]) -> None:
         """
         Set the image that will be displayed in the embed.
-        :param str url: source url of image (only supports http(s) and attachments)
+        :param str url: source url of image (only supports http(s) and attachments). Local files must be added as a file to your webhook first, then be referenced as attachment://<image file name>
         :keyword str proxy_url: a proxied url of the image
         :keyword int height: height of image
         :keyword int width: width of image
