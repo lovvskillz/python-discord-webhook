@@ -482,7 +482,7 @@ class DiscordWebhook:
                 url,
                 json=self.json,
                 proxies=self.proxies,
-                params={"wait": True},
+                params=self._query_params,
                 timeout=self.timeout,
             )
         else:
@@ -492,6 +492,7 @@ class DiscordWebhook:
                 url,
                 files=self.files,
                 proxies=self.proxies,
+                params=self._query_params,
                 timeout=self.timeout,
             )
         response = request()
@@ -522,7 +523,11 @@ class DiscordWebhook:
         ), "Webhook URL needs to be set in order to delete the webhook."
         url = f"{self.url}/messages/{self.id}"
         request = partial(
-            requests.delete, url, proxies=self.proxies, timeout=self.timeout
+            requests.delete,
+            url,
+            proxies=self.proxies,
+            timeout=self.timeout,
+            params=self._query_params
         )
         response = request()
         if response.status_code in [200, 204]:
@@ -530,6 +535,13 @@ class DiscordWebhook:
         elif response.status_code == 429 and self.rate_limit_retry:
             response = self.handle_rate_limit(response, request)
             logger.debug("Webhook edited")
+        else:
+            logger.error(
+                "Webhook status code {status_code}: {content}".format(
+                    status_code=response.status_code,
+                    content=response.content.decode("utf-8"),
+                )
+            )
         return response
 
     @classmethod
