@@ -2,6 +2,16 @@
 
 ## development
 
+## 2025-03-04 1.4.0
+
+### 🎉 Features
+- `set_timestamp()` accepts also a string
+- add support for `flags`
+
+### 🩹 Fixes
+- CLI requires one webhook url
+- fix editing and deleting messages with a `thread_id`
+
 ## 2024-01-31 1.3.1
 
 ### 🩹 Fixes

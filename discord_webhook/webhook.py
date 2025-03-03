@@ -487,7 +487,7 @@ class DiscordWebhook:
                 url,
                 json=self.json,
                 proxies=self.proxies,
-                params={"wait": True},
+                params=self._query_params,
                 timeout=self.timeout,
             )
         else:
@@ -527,7 +527,11 @@ class DiscordWebhook:
         ), "Webhook URL needs to be set in order to delete the webhook."
         url = f"{self.url}/messages/{self.id}"
         request = partial(
-            requests.delete, url, proxies=self.proxies, timeout=self.timeout
+            requests.delete,
+            url,
+            proxies=self.proxies,
+            params=self._query_params,
+            timeout=self.timeout,
         )
         response = request()
         if response.status_code in [200, 204]:

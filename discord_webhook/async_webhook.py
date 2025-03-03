@@ -136,12 +136,16 @@ class AsyncDiscordWebhook(DiscordWebhook):
             if bool(self.files) is False:
                 patch_kwargs = {
                     "json": self.json,
-                    "params": {"wait": True},
+                    "params": self._query_params,
                     "timeout": self.timeout,
                 }
             else:
                 self.files["payload_json"] = (None, json.dumps(self.json))
-                patch_kwargs = {"files": self.files, "timeout": self.timeout}
+                patch_kwargs = {
+                    "files": self.files,
+                    "params": self._query_params,
+                    "timeout": self.timeout,
+                }
             request = partial(client.patch, url, **patch_kwargs)
             response = await request()
             if response.status_code in [200, 204]:
@@ -171,7 +175,9 @@ class AsyncDiscordWebhook(DiscordWebhook):
         ), "Webhook URL needs to be set in order to delete the webhook."
         url = f"{self.url}/messages/{self.id}"
         async with self.http_client as client:  # type: httpx.AsyncClient
-            response = await client.delete(url, timeout=self.timeout)
+            response = await client.delete(
+                url, params=self._query_params, timeout=self.timeout
+            )
             if response.status_code in [200, 204]:
                 logger.debug("Webhook deleted")
             else:
