@@ -18,7 +18,7 @@ pip install discord-webhook
 * [Basic Webhook](#basic-webhook)
 * [Create Multiple Instances / Use multiple URLs](#create-multiple-instances)
 * [Get Webhook by ID](#get-webhook-by-id)
-* [Send Webhook to thread](#send-webhook-to-thread)
+* [Send Webhook to a thread](#send-webhook-to-a-thread)
 * [Manage Being Rate Limited](#manage-being-rate-limited)
 * [Embedded Content](#webhook-with-embedded-content)
 * [Edit Webhook Message](#edit-webhook-messages)
@@ -26,6 +26,7 @@ pip install discord-webhook
 * [Send Files](#send-files)
 * [Remove Embeds and Files](#remove-embeds-and-files)
 * [Allowed Mentions](#allowed-mentions)
+* [Use Message Flags](#use-message-flags)
 * [Use Proxies](#use-proxies)
 * [Timeout](#timeout)
 * [Async Support](#async-support)
@@ -62,7 +63,7 @@ webhook = DiscordWebhook(url="your webhook url", id="your webhook message id")
 # now you could delete or edit the webhook
 # ...
 ````
-### Send Webhook to thread
+### Send Webhook to a thread
 You can send a message to an existing thread by setting `thread_id` or create a new thread in a forum channel by using a `thread_name`.
 ```python
 from discord_webhook import DiscordWebhook
@@ -294,7 +295,7 @@ response = webhook.execute()
 
 ### Allowed Mentions
 
-Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and for more explanation
+Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and for more explanation.
 
 This example would only ping user `123` and `124` but not everyone else.
 
@@ -308,6 +309,28 @@ allowed_mentions = {
 }
 
 webhook = DiscordWebhook(url="your webhook url", content=content, allowed_mentions=allowed_mentions)
+response = webhook.execute()
+```
+
+### Use Message Flags
+
+Flags can also be set for messages. Only two are currently supported.
+
+```python
+from discord_webhook import DiscordEmbed, DiscordWebhook
+from discord_webhook.constants import MessageFlags
+
+content = "Hi."
+
+# this message will not trigger push and desktop notifications
+webhook = DiscordWebhook(url="your webhook url", content=content, flags=MessageFlags.SUPPRESS_NOTIFICATIONS.value)
+response = webhook.execute()
+
+# do not include any embeds when serializing this message
+webhook = DiscordWebhook(url="your webhook url", content=content, flags=MessageFlags.SUPPRESS_EMBEDS.value)
+embed = DiscordEmbed(title="Your Title", description="Lorem ipsum dolor sit", color="03b2f8")
+webhook.add_embed(embed)
+# even if an embed has been added, it will not appear in the message.
 response = webhook.execute()
 ```
 

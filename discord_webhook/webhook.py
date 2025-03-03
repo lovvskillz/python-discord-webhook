@@ -252,6 +252,7 @@ class DiscordWebhook:
         :keyword str avatar_url: override the default avatar of the webhook
         :keyword str content: the message contents
         :keyword list embeds: list of embedded rich content
+        :keyword int flags: apply flags to the message
         :keyword dict files: to apply file(s) with message
         :keyword str id: webhook id
         :keyword dict proxies: proxies that should be used
@@ -268,12 +269,12 @@ class DiscordWebhook:
         self.avatar_url = kwargs.get("avatar_url")
         self.content = kwargs.get("content")
         self.embeds = kwargs.get("embeds", [])
+        self.flags = kwargs.get("flags")
         self.files = kwargs.get("files", {})
         self.id = kwargs.get("id")
         self.proxies = kwargs.get("proxies")
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
         self.thread_id = kwargs.get("thread_id")
-        self.thread_name = kwargs.get("thread_name")
         self.thread_name = kwargs.get("thread_name")
         self.timeout = kwargs.get("timeout")
         self.tts = kwargs.get("tts", False)
@@ -362,6 +363,13 @@ class DiscordWebhook:
         :param str content: content of the webhook
         """
         self.content = content
+
+    def set_flags(self, flags: int) -> None:
+        """
+        Set the flags of the webhook.
+        :param int flags: flags as integer
+        """
+        self.flags = flags
 
     @property
     def json(self) -> Dict[str, Any]:
