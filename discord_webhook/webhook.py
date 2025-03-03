@@ -1,7 +1,7 @@
 import json
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial
 from http.client import HTTPException
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -47,7 +47,7 @@ class DiscordEmbed:
         :keyword dict image: image that will be displayed in the embed
         :keyword dict provider: information about the provider
         :keyword dict thumbnail: thumbnail that will be displayed in the embed
-        :keyword str timestamp: timestamp that will be displayed in the embed
+        :keyword float, int, str, datetime timestamp: timestamp that will be displayed in the embed
         :keyword str title: title of embed
         :keyword str url: add an url to make your embedded title a clickable link
         :keyword dict video: video that will be displayed in the embed
@@ -88,18 +88,23 @@ class DiscordEmbed:
         self.url = url
 
     def set_timestamp(
-        self, timestamp: Optional[Union[float, int, datetime]] = None
+        self, timestamp: Optional[Union[float, int, str, datetime]] = None
     ) -> None:
         """
         Set timestamp of the embed content.
-        :param timestamp: timestamp of embed content
+        :param timestamp: optional timestamp of embed content
         """
         if timestamp is None:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now(timezone.utc)
         elif isinstance(timestamp, float) or isinstance(timestamp, int):
-            timestamp = datetime.utcfromtimestamp(timestamp)
+            timestamp = datetime.fromtimestamp(timestamp, timezone.utc).replace(
+                tzinfo=None
+            )
 
-        self.timestamp = timestamp.isoformat()
+        if not isinstance(timestamp, str):
+            timestamp = timestamp.isoformat()
+
+        self.timestamp = timestamp
 
     def set_color(self, color: Union[str, int]) -> None:
         """

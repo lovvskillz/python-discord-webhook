@@ -42,6 +42,7 @@ def test__set_embed__url(embed):
         1679610926.0,
         datetime.fromisoformat("2023-03-23T22:35:26"),
         datetime.fromisoformat("2023-03-23T23:35:26+01:00"),
+        "2023-03-23T22:35:26",
     ],
 )
 def test__set_embed__timestamp(embed, timestamp):
