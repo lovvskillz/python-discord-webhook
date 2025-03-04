@@ -111,7 +111,7 @@ class DiscordEmbed:
         Set the color of the embed.
         :param color: color code as decimal(int) or hex(string)
         """
-        self.color = int(color, 16) if isinstance(color, str) else color
+        self.color = int(color.lstrip("#"), 16) if isinstance(color, str) else color
         if self.color is not None and self.color not in range(16777216):
             raise ColorNotInRangeException(color)
 
