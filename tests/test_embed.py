@@ -60,6 +60,7 @@ def test__set_embed__timestamp(embed, timestamp):
 @pytest.mark.parametrize(
     "color, output",
     [
+        ("#03b2f8", 242424),
         ("03b2f8", 242424),
         (333333, 333333),
     ],
