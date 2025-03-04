@@ -2,6 +2,9 @@
 
 ## development
 
+### 🩹 Fixes
+- fix version constraint about request==2.32.0
+
 ## 2025-03-04 1.4.0
 
 ### 🎉 Features
