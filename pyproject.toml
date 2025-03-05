@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "discord-webhook"
-version = "1.4.0"
+version = "1.4.1"
 description = "Easily send Discord webhooks with Python"
 authors = ["lovvskillz <14542790+lovvskillz@users.noreply.github.com>"]
 license = "MIT"
@@ -12,7 +12,7 @@ keywords = ["discord", "webhook"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "2.32.0"
+requests = "^2.32.3"
 httpx = { version = "^0.28.1", optional = true }
 
 [tool.poetry.extras]
