@@ -2,6 +2,11 @@
 
 ## development
 
+## 2025-03-04 1.4.1
+
+### 🩹 Fixes
+- do not pin requests version to 2.32.0
+
 ## 2025-03-04 1.4.0
 
 ### 🎉 Features
