@@ -1,13 +1,17 @@
 import json
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from functools import partial
 from http.client import HTTPException
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
+
 import requests
 
-from .webhook_exceptions import ColorNotInRangeException
+from . import constants
+from .components import DiscordComponentActionRow
+from .poll import DiscordPoll
+from .webhook_exceptions import ColorNotInRangeException, ComponentException
 
 logger = logging.getLogger(__name__)
 
@@ -17,23 +21,23 @@ class DiscordEmbed:
     Discord Embed
     """
 
-    author: Optional[Dict[str, Optional[str]]]
-    color: Optional[int]
-    description: Optional[str]
-    fields: List[Dict[str, Optional[Any]]]
-    footer: Optional[Dict[str, Optional[str]]]
-    image: Optional[Dict[str, Optional[Union[str, int]]]]
-    provider: Optional[Dict[str, Any]]
-    thumbnail: Optional[Dict[str, Optional[Union[str, int]]]]
-    timestamp: Optional[str]
-    title: Optional[str]
-    url: Optional[str]
-    video: Optional[Dict[str, Optional[Union[str, int]]]]
+    author: dict[str, str | None] | None
+    color: int | None
+    description: str | None
+    fields: list[dict[str, Any | None]]
+    footer: dict[str, str | None] | None
+    image: dict[str, str | int | None] | None
+    provider: dict[str, Any] | None
+    thumbnail: dict[str, str | int | None] | None
+    timestamp: str | None
+    title: str | None
+    url: str | None
+    video: dict[str, str | int | None] | None
 
     def __init__(
         self,
-        title: Optional[str] = None,
-        description: Optional[str] = None,
+        title: str | None = None,
+        description: str | None = None,
         **kwargs: Any,
     ) -> None:
         """
@@ -88,25 +92,23 @@ class DiscordEmbed:
         self.url = url
 
     def set_timestamp(
-        self, timestamp: Optional[Union[float, int, str, datetime]] = None
+        self, timestamp: float | int | str | datetime | None = None
     ) -> None:
         """
         Set timestamp of the embed content.
         :param timestamp: optional timestamp of embed content
         """
         if timestamp is None:
-            timestamp = datetime.now(timezone.utc)
+            timestamp = datetime.now(UTC)
         elif isinstance(timestamp, float) or isinstance(timestamp, int):
-            timestamp = datetime.fromtimestamp(timestamp, timezone.utc).replace(
-                tzinfo=None
-            )
+            timestamp = datetime.fromtimestamp(timestamp, UTC).replace(tzinfo=None)
 
         if not isinstance(timestamp, str):
             timestamp = timestamp.isoformat()
 
         self.timestamp = timestamp
 
-    def set_color(self, color: Union[str, int]) -> None:
+    def set_color(self, color: str | int) -> None:
         """
         Set the color of the embed.
         :param color: color code as decimal(int) or hex(string)
@@ -128,7 +130,7 @@ class DiscordEmbed:
             "proxy_icon_url": kwargs.get("proxy_icon_url"),
         }
 
-    def set_image(self, url: str, **kwargs: Union[str, int]) -> None:
+    def set_image(self, url: str, **kwargs: str | int) -> None:
         """
         Set the image that will be displayed in the embed.
         :param str url: source url of image (only supports http(s) and attachments)
@@ -143,7 +145,7 @@ class DiscordEmbed:
             "width": kwargs.get("width"),
         }
 
-    def set_thumbnail(self, url: str, **kwargs: Union[str, int]) -> None:
+    def set_thumbnail(self, url: str, **kwargs: str | int) -> None:
         """
         Set the thumbnail that will be displayed in the embed.
         :param str url: source url of thumbnail (only supports http(s) and attachments)
@@ -158,7 +160,7 @@ class DiscordEmbed:
             "width": kwargs.get("width"),
         }
 
-    def set_video(self, **kwargs: Union[str, int]) -> None:
+    def set_video(self, **kwargs: str | int) -> None:
         """
         Set the video that will be displayed in the embed.
         :keyword str url: source url of video
@@ -211,7 +213,7 @@ class DiscordEmbed:
         """
         self.fields.pop(index)
 
-    def get_embed_fields(self) -> List[Dict[str, Optional[Any]]]:
+    def get_embed_fields(self) -> list[dict[str, Any | None]]:
         """
         Get all stored fields of the embed as a list.
         :return: fields of the embed
@@ -224,23 +226,24 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    allowed_mentions: Dict[str, List[str]]
-    attachments: Optional[List[Dict[str, Any]]]
-    avatar_url: Optional[str]
-    components: Optional[list]
-    content: Optional[Union[str, bytes]]
-    embeds: List[Dict[str, Any]]
-    files: Dict[str, Tuple[Optional[str], Union[bytes, str]]]
-    id: Optional[str]
-    proxies: Optional[Dict[str, str]]
+    allowed_mentions: dict[str, list[str]]
+    attachments: list[dict[str, Any]] | None
+    avatar_url: str | None
+    components: list | None
+    content: str | bytes | None
+    embeds: list[dict[str, Any]]
+    files: dict[str, tuple[str | None, bytes | str]]
+    id: str | None
+    proxies: dict[str, str] | None
     rate_limit_retry: bool = False
-    thread_id: Optional[str]
-    thread_name: Optional[str]
-    timeout: Optional[float]
-    tts: Optional[bool]
+    thread_id: str | None
+    thread_name: str | None
+    timeout: float | None
+    tts: bool | None
+    poll: dict | None
     url: str
-    username: Optional[str]
-    wait: Optional[bool]
+    username: str | None
+    wait: bool | None
 
     def __init__(self, url: str, **kwargs) -> None:
         """
@@ -250,11 +253,13 @@ class DiscordWebhook:
         :keyword dict allowed_mentions: allowed mentions for the message
         :keyword dict attachments: attachments that should be included
         :keyword str avatar_url: override the default avatar of the webhook
+        :keyword list components: list of action rows with components
         :keyword str content: the message contents
         :keyword list embeds: list of embedded rich content
         :keyword int flags: apply flags to the message
         :keyword dict files: to apply file(s) with message
         :keyword str id: webhook id
+        :keyword poll: poll that should be sent with the message
         :keyword dict proxies: proxies that should be used
         :keyword bool rate_limit_retry: whether the message should be sent again when being rate limited
         :keyword str thread_id: send message to a thread specified by its thread id
@@ -267,11 +272,13 @@ class DiscordWebhook:
         self.allowed_mentions = kwargs.get("allowed_mentions", {})
         self.attachments = kwargs.get("attachments", [])
         self.avatar_url = kwargs.get("avatar_url")
+        self.components = []
         self.content = kwargs.get("content")
         self.embeds = kwargs.get("embeds", [])
         self.flags = kwargs.get("flags")
         self.files = kwargs.get("files", {})
         self.id = kwargs.get("id")
+        self.poll = None
         self.proxies = kwargs.get("proxies")
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
         self.thread_id = kwargs.get("thread_id")
@@ -281,15 +288,70 @@ class DiscordWebhook:
         self.url = url
         self.username = kwargs.get("username", False)
         self.wait = kwargs.get("wait", True)
+        for action_row in kwargs.get("components", []):
+            self.add_component_row(action_row)
+        if poll := kwargs.get("poll"):
+            self.set_poll(poll)
 
-    def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
+    def set_poll(self, poll: DiscordPoll | dict[str, Any]) -> None:
+        """
+        Set the poll of the webhook.
+        :param poll: poll instance or dict
+        """
+        self.poll = poll.to_dict() if isinstance(poll, DiscordPoll) else poll
+
+    def remove_poll(self) -> None:
+        """
+        Remove the poll of the webhook.
+        """
+        self.poll = None
+
+    def add_component_row(
+        self, action_row: DiscordComponentActionRow | dict[str, Any]
+    ) -> None:
+        """
+        Add an action row with components to the webhook.
+        :param action_row: action row instance or dict
+        """
+        if len(self.components) >= constants.DISCORD_MAX_ACTION_ROWS:
+            raise ComponentException(
+                f"A message can contain up to {constants.DISCORD_MAX_ACTION_ROWS} action"
+                " rows."
+            )
+        self.components.append(
+            action_row.to_dict()
+            if isinstance(action_row, DiscordComponentActionRow)
+            else action_row
+        )
+
+    def get_component_rows(self) -> list[dict[str, Any]]:
+        """
+        Get all action rows as a list.
+        :return: action rows
+        """
+        return self.components
+
+    def remove_component_row(self, index: int) -> None:
+        """
+        Remove an action row from the already added action rows.
+        :param int index: index of the action row
+        """
+        self.components.pop(index)
+
+    def remove_component_rows(self) -> None:
+        """
+        Remove all action rows.
+        """
+        self.components = []
+
+    def add_embed(self, embed: DiscordEmbed | dict[str, Any]) -> None:
         """
         Add an embedded rich content.
         :param embed: embed object or dict
         """
         self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
-    def get_embeds(self) -> List[Dict[str, Any]]:
+    def get_embeds(self) -> list[dict[str, Any]]:
         """
         Get all embeds as a list.
         :return: embeds
@@ -350,7 +412,7 @@ class DiscordWebhook:
         """
         self.attachments = []
 
-    def set_proxies(self, proxies: Dict[str, str]) -> None:
+    def set_proxies(self, proxies: dict[str, str]) -> None:
         """
         Set proxies that should be used when sending the webhook.
         :param dict proxies: dict of proxies
@@ -372,7 +434,7 @@ class DiscordWebhook:
         self.flags = flags
 
     @property
-    def json(self) -> Dict[str, Any]:
+    def json(self) -> dict[str, Any]:
         """
         Convert data of the webhook to JSON.
         :return: webhook data as json
@@ -388,7 +450,12 @@ class DiscordWebhook:
             if value and key not in ["url", "files"] or key in ["embeds", "attachments"]
         }
         embeds_empty = not any(data["embeds"]) if "embeds" in data else True
-        if embeds_empty and "content" not in data and bool(self.files) is False:
+        if (
+            embeds_empty
+            and "content" not in data
+            and bool(self.files) is False
+            and not self.poll
+        ):
             logger.error("webhook message is empty! set content or embed data")
         return data
 
@@ -483,12 +550,12 @@ class DiscordWebhook:
         Edit an already sent webhook with updated data.
         :return: Response of the sent webhook
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to edit the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to edit the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to edit the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to edit the webhook."
+        )
         url = f"{self.url}/messages/{self.id}"
         if bool(self.files) is False:
             request = partial(
@@ -510,7 +577,7 @@ class DiscordWebhook:
             )
         response = request()
         if response.status_code in [200, 204]:
-            logger.debug("Webhook with id {id} edited".format(id=self.id))
+            logger.debug(f"Webhook with id {self.id} edited")
         elif response.status_code == 429 and self.rate_limit_retry:
             response = self.handle_rate_limit(response, request)
             logger.debug("Webhook edited")
@@ -528,12 +595,12 @@ class DiscordWebhook:
         Delete the already sent webhook.
         :return: webhook response
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to delete the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to delete the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to delete the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to delete the webhook."
+        )
         url = f"{self.url}/messages/{self.id}"
         request = partial(
             requests.delete,
@@ -551,7 +618,7 @@ class DiscordWebhook:
         return response
 
     @classmethod
-    def create_batch(cls, urls: List[str], **kwargs) -> Tuple["DiscordWebhook", ...]:
+    def create_batch(cls, urls: list[str], **kwargs) -> tuple["DiscordWebhook", ...]:
         """
         Create a webhook instance for each specified URL.
         :param list urls: webhook URLs to be used for the instances

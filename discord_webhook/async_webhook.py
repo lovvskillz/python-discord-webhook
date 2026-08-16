@@ -86,9 +86,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
                 raise HTTPException(errors)
             wh_sleep = float(errors["retry_after"]) + 0.15
             logger.error(
-                "Webhook rate limited: sleeping for {wh_sleep} seconds...".format(
-                    wh_sleep=round(wh_sleep, 2)
-                )
+                f"Webhook rate limited: sleeping for {round(wh_sleep, 2)} seconds..."
             )
             await asyncio.sleep(wh_sleep)
             response = await request()
@@ -126,12 +124,12 @@ class AsyncDiscordWebhook(DiscordWebhook):
         Edit an already sent webhook with updated data.
         :return: Response of the sent webhook
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to edit the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to edit the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to edit the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to edit the webhook."
+        )
         async with self.http_client as client:  # type: httpx.AsyncClient
             url = f"{self.url}/messages/{self.id}"
             if bool(self.files) is False:
@@ -150,7 +148,7 @@ class AsyncDiscordWebhook(DiscordWebhook):
             request = partial(client.patch, url, **patch_kwargs)
             response = await request()
             if response.status_code in [200, 204]:
-                logger.debug("Webhook with id {id} edited".format(id=self.id))
+                logger.debug(f"Webhook with id {self.id} edited")
             elif response.status_code == 429 and self.rate_limit_retry:
                 response = await self.handle_rate_limit(response, request)
                 logger.debug("Webhook edited")
@@ -168,12 +166,12 @@ class AsyncDiscordWebhook(DiscordWebhook):
         Delete the already sent webhook.
         :return: webhook response
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to delete the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to delete the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to delete the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to delete the webhook."
+        )
         url = f"{self.url}/messages/{self.id}"
         async with self.http_client as client:  # type: httpx.AsyncClient
             response = await client.delete(
