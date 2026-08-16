@@ -93,3 +93,20 @@ DISCORD_MAX_ACTION_ROWS = 5
 DISCORD_MAX_BUTTONS_PER_ACTION_ROW = 5
 # maximum amount of options a select menu can contain
 DISCORD_MAX_SELECT_OPTIONS = 25
+
+DISCORD_POLL_LAYOUT_TYPE_DEFAULT = 1
+
+DISCORD_POLL_LAYOUT_TYPES = [
+    DISCORD_POLL_LAYOUT_TYPE_DEFAULT,
+]
+
+# maximum amount of answers a poll can contain
+DISCORD_POLL_MAX_ANSWERS = 10
+# maximum amount of characters of a poll question
+DISCORD_POLL_MAX_QUESTION_LENGTH = 300
+# maximum amount of characters of a poll answer
+DISCORD_POLL_MAX_ANSWER_LENGTH = 55
+# hours a poll is open for if no duration is provided
+DISCORD_POLL_DEFAULT_DURATION = 24
+# maximum amount of hours a poll can be open for (32 days)
+DISCORD_POLL_MAX_DURATION = 768

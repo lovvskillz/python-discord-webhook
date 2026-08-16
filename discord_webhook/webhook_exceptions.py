@@ -24,3 +24,11 @@ class ComponentException(Exception):
     """
 
     pass
+
+
+class PollException(Exception):
+    """
+    This Exception will be raised for polls.
+    """
+
+    pass

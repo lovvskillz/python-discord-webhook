@@ -293,6 +293,48 @@ webhook.remove_file("example.jpg")
 response = webhook.execute()
 ```
 
+### Send a Poll
+
+A poll can contain up to 10 answers and is open for 24 hours by default.
+The `duration` is set in hours and can be up to 768 (32 days).
+
+```python
+from discord_webhook import (
+    DiscordComponentEmoji,
+    DiscordPoll,
+    DiscordPollAnswer,
+    DiscordWebhook,
+)
+
+# a simple poll with two answers
+poll = DiscordPoll(question="Your favourite color?", answers=["Red", "Blue"])
+
+webhook = DiscordWebhook(url="your webhook url", poll=poll)
+response = webhook.execute()
+```
+
+Answers can also use emojis and be added afterwards:
+
+```python
+poll = DiscordPoll(
+    question="Which languages do you use?",
+    answers=[
+        DiscordPollAnswer(text="Python", emoji=DiscordComponentEmoji(name="🐍")),
+        DiscordPollAnswer(text="Rust", emoji=DiscordComponentEmoji(name="🦀")),
+    ],
+    allow_multiselect=True,
+    duration=72,
+)
+poll.add_answer("Something else")
+
+webhook = DiscordWebhook(url="your webhook url")
+webhook.set_poll(poll)
+response = webhook.execute()
+```
+
+Use `webhook.remove_poll()` to remove an already set poll and
+`poll.get_answers()` / `poll.remove_answer(index)` to manage the answers.
+
 ### Add Components
 
 Components like buttons and select menus are always wrapped in an action row.

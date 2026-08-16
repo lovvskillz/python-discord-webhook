@@ -9,6 +9,7 @@ import requests
 
 from . import constants
 from .components import DiscordComponentActionRow
+from .poll import DiscordPoll
 from .webhook_exceptions import ColorNotInRangeException, ComponentException
 
 logger = logging.getLogger(__name__)
@@ -240,6 +241,7 @@ class DiscordWebhook:
     thread_name: Optional[str]
     timeout: Optional[float]
     tts: Optional[bool]
+    poll: Optional[dict]
     url: str
     username: Optional[str]
     wait: Optional[bool]
@@ -258,6 +260,7 @@ class DiscordWebhook:
         :keyword int flags: apply flags to the message
         :keyword dict files: to apply file(s) with message
         :keyword str id: webhook id
+        :keyword poll: poll that should be sent with the message
         :keyword dict proxies: proxies that should be used
         :keyword bool rate_limit_retry: whether the message should be sent again when being rate limited
         :keyword str thread_id: send message to a thread specified by its thread id
@@ -276,6 +279,7 @@ class DiscordWebhook:
         self.flags = kwargs.get("flags")
         self.files = kwargs.get("files", {})
         self.id = kwargs.get("id")
+        self.poll = None
         self.proxies = kwargs.get("proxies")
         self.rate_limit_retry = kwargs.get("rate_limit_retry", False)
         self.thread_id = kwargs.get("thread_id")
@@ -287,6 +291,21 @@ class DiscordWebhook:
         self.wait = kwargs.get("wait", True)
         for action_row in kwargs.get("components", []):
             self.add_component_row(action_row)
+        if poll := kwargs.get("poll"):
+            self.set_poll(poll)
+
+    def set_poll(self, poll: Union[DiscordPoll, Dict[str, Any]]) -> None:
+        """
+        Set the poll of the webhook.
+        :param poll: poll instance or dict
+        """
+        self.poll = poll.to_dict() if isinstance(poll, DiscordPoll) else poll
+
+    def remove_poll(self) -> None:
+        """
+        Remove the poll of the webhook.
+        """
+        self.poll = None
 
     def add_component_row(
         self, action_row: Union[DiscordComponentActionRow, Dict[str, Any]]
@@ -432,7 +451,12 @@ class DiscordWebhook:
             if value and key not in ["url", "files"] or key in ["embeds", "attachments"]
         }
         embeds_empty = not any(data["embeds"]) if "embeds" in data else True
-        if embeds_empty and "content" not in data and bool(self.files) is False:
+        if (
+            embeds_empty
+            and "content" not in data
+            and bool(self.files) is False
+            and not self.poll
+        ):
             logger.error("webhook message is empty! set content or embed data")
         return data
 

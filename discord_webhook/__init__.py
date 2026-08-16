@@ -10,6 +10,9 @@ __all__ = [
     "DiscordComponentTextInput",
     "DiscordComponentUserSelect",
     "DiscordEmbed",
+    "DiscordPoll",
+    "DiscordPollAnswer",
+    "DiscordPollMedia",
     "DiscordSelectOption",
     "DiscordWebhook",
 ]
@@ -27,5 +30,6 @@ from .components import (  # isort:skip
     DiscordComponentUserSelect,
     DiscordSelectOption,
 )
+from .poll import DiscordPoll, DiscordPollAnswer, DiscordPollMedia  # isort:skip
 from .webhook import DiscordEmbed, DiscordWebhook  # isort:skip
 from .async_webhook import AsyncDiscordWebhook  # isort:skip
