@@ -550,12 +550,12 @@ class DiscordWebhook:
         Edit an already sent webhook with updated data.
         :return: Response of the sent webhook
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to edit the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to edit the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to edit the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to edit the webhook."
+        )
         url = f"{self.url}/messages/{self.id}"
         if bool(self.files) is False:
             request = partial(
@@ -595,12 +595,12 @@ class DiscordWebhook:
         Delete the already sent webhook.
         :return: webhook response
         """
-        assert isinstance(
-            self.id, str
-        ), "Webhook ID needs to be set in order to delete the webhook."
-        assert isinstance(
-            self.url, str
-        ), "Webhook URL needs to be set in order to delete the webhook."
+        assert isinstance(self.id, str), (
+            "Webhook ID needs to be set in order to delete the webhook."
+        )
+        assert isinstance(self.url, str), (
+            "Webhook URL needs to be set in order to delete the webhook."
+        )
         url = f"{self.url}/messages/{self.id}"
         request = partial(
             requests.delete,

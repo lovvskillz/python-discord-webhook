@@ -1,4 +1,5 @@
-""" Entry point to trigger webhook(s). """
+"""Entry point to trigger webhook(s)."""
+
 import argparse
 import sys
 
