@@ -40,6 +40,8 @@ webhook = DiscordWebhook(url="your webhook url", content="Webhook Message")
 response = webhook.execute()
 ```
 
+![Image](img/basic_webhook.png "Basic Example Result")
+
 ### Create multiple instances
 If you want to use multiple URLs you need to create multiple instances.
 
@@ -88,8 +90,6 @@ from discord_webhook import DiscordWebhook
 webhook = DiscordWebhook(url="your webhook url", rate_limit_retry=True, content="Webhook Message")
 response = webhook.execute()
 ```
-
-![Image](img/basic_webhook.png "Basic Example Result")
 
 ### Webhook with Embedded Content
 
