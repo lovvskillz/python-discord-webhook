@@ -18,17 +18,14 @@ jobs:
         python-version: ["3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Run image
-      uses: abatilo/actions-poetry@v2.0.0
-      with:
-        poetry-version: '1.2.0'
+      run: uv python install ${{ matrix.python-version }}
     - name: Install Dependencies
-      run: poetry install
+      run: uv sync --all-extras --dev
     - name: Run Tests
-      run: |
-        poetry run pytest
+      run: uv run pytest

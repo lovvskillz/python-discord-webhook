@@ -563,20 +563,20 @@ optional arguments:
 ## Development
 
 ### Dev Setup
-This project uses [Poetry](https://python-poetry.org/docs/) for dependency management and packaging.
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management and packaging.
 
-Install Poetry and add Poetry to [Path](https://python-poetry.org/docs/#installation).
+Install uv:
 
 **Debian / Ubuntu / Mac**
 
-`curl -sSL https://install.python-poetry.org | python3 -`
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
 
 **Windows**
 
-open powershell and run: `(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -`
+open powershell and run: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
-Install dependencies: `poetry install`
+Install dependencies: `uv sync --all-extras --dev`
 
-Install the defined pre-commit hooks: `poetry run pre-commit install`
+Install the defined pre-commit hooks: `uv run pre-commit install`
 
-Activate the virtualenv: `poetry shell`
+Run a command in the virtualenv: `uv run pytest`
