@@ -293,6 +293,97 @@ webhook.remove_file("example.jpg")
 response = webhook.execute()
 ```
 
+### Add Components
+
+Components like buttons and select menus are always wrapped in an action row.
+A message can contain up to 5 action rows, an action row can contain up to 5 buttons
+*or* a single select menu.
+
+Note that Discord only renders interactive components for webhooks that are owned by an
+application. Link buttons work with every webhook.
+
+```python
+from discord_webhook import (
+    DiscordComponentActionRow,
+    DiscordComponentButton,
+    DiscordComponentEmoji,
+    DiscordComponentStringSelect,
+    DiscordSelectOption,
+    DiscordWebhook,
+    constants,
+)
+
+webhook = DiscordWebhook(url="your webhook url", content="Webhook Message")
+
+# a row with two buttons
+buttons = DiscordComponentActionRow(
+    components=[
+        DiscordComponentButton(
+            style=constants.DISCORD_COMPONENT_BUTTON_STYLE_LINK,
+            label="Documentation",
+            url="https://github.com/lovvskillz/python-discord-webhook",
+        ),
+        DiscordComponentButton(
+            style=constants.DISCORD_COMPONENT_BUTTON_STYLE_DANGER,
+            custom_id="delete_message",
+            label="Delete",
+            emoji=DiscordComponentEmoji(name="🗑️"),
+        ),
+    ]
+)
+webhook.add_component_row(buttons)
+
+# a select menu needs its own action row
+select = DiscordComponentStringSelect(
+    custom_id="favourite_color",
+    placeholder="Choose your favourite color",
+    options=[
+        DiscordSelectOption(label="Red", value="red", description="like a tomato"),
+        DiscordSelectOption(label="Blue", value="blue", default=True),
+    ],
+)
+webhook.add_component_row(DiscordComponentActionRow(components=[select]))
+
+response = webhook.execute()
+```
+
+These components are available:
+
+| Class                                | Description                                          |
+|--------------------------------------|------------------------------------------------------|
+| `DiscordComponentActionRow`          | container for other components                       |
+| `DiscordComponentButton`             | button (styles 1 - 5)                                |
+| `DiscordComponentStringSelect`       | select menu with your own options                    |
+| `DiscordComponentUserSelect`         | select menu with users                               |
+| `DiscordComponentRoleSelect`         | select menu with roles                               |
+| `DiscordComponentMentionableSelect`  | select menu with users and roles                     |
+| `DiscordComponentChannelSelect`      | select menu with channels                            |
+| `DiscordComponentTextInput`          | text input (modals only)                             |
+| `DiscordSelectOption`                | option of a `DiscordComponentStringSelect`           |
+| `DiscordComponentEmoji`              | emoji for buttons and select options                 |
+
+The select menus that are populated by Discord accept default values:
+
+```python
+from discord_webhook import DiscordComponentChannelSelect, constants
+
+channel_select = DiscordComponentChannelSelect(
+    custom_id="channel",
+    placeholder="Choose a channel",
+    channel_types=[constants.DISCORD_CHANNEL_TYPE_GUILD_TEXT],
+    max_values=3,
+)
+channel_select.add_default_value(123456789)
+```
+
+Already added action rows can be inspected and removed again:
+
+```python
+webhook.get_component_rows()
+webhook.remove_component_row(0)
+webhook.remove_component_rows()
+```
+
 ### Allowed Mentions
 
 Look into the [Discord Docs](https://discord.com/developers/docs/resources/channel#allowed-mentions-object) for examples and for more explanation.

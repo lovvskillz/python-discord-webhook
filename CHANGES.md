@@ -2,6 +2,9 @@
 
 ## development
 
+### 🎉 Features
+- add support for message components (action rows, buttons, select menus, text inputs)
+
 ## 2025-03-04 1.4.1
 
 ### 🩹 Fixes

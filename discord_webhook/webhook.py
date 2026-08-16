@@ -7,7 +7,9 @@ from http.client import HTTPException
 from typing import Any, Dict, List, Optional, Tuple, Union
 import requests
 
-from .webhook_exceptions import ColorNotInRangeException
+from . import constants
+from .components import DiscordComponentActionRow
+from .webhook_exceptions import ColorNotInRangeException, ComponentException
 
 logger = logging.getLogger(__name__)
 
@@ -250,6 +252,7 @@ class DiscordWebhook:
         :keyword dict allowed_mentions: allowed mentions for the message
         :keyword dict attachments: attachments that should be included
         :keyword str avatar_url: override the default avatar of the webhook
+        :keyword list components: list of action rows with components
         :keyword str content: the message contents
         :keyword list embeds: list of embedded rich content
         :keyword int flags: apply flags to the message
@@ -267,6 +270,7 @@ class DiscordWebhook:
         self.allowed_mentions = kwargs.get("allowed_mentions", {})
         self.attachments = kwargs.get("attachments", [])
         self.avatar_url = kwargs.get("avatar_url")
+        self.components = []
         self.content = kwargs.get("content")
         self.embeds = kwargs.get("embeds", [])
         self.flags = kwargs.get("flags")
@@ -281,6 +285,46 @@ class DiscordWebhook:
         self.url = url
         self.username = kwargs.get("username", False)
         self.wait = kwargs.get("wait", True)
+        for action_row in kwargs.get("components", []):
+            self.add_component_row(action_row)
+
+    def add_component_row(
+        self, action_row: Union[DiscordComponentActionRow, Dict[str, Any]]
+    ) -> None:
+        """
+        Add an action row with components to the webhook.
+        :param action_row: action row instance or dict
+        """
+        if len(self.components) >= constants.DISCORD_MAX_ACTION_ROWS:
+            raise ComponentException(
+                f"A message can contain up to {constants.DISCORD_MAX_ACTION_ROWS} action"
+                " rows."
+            )
+        self.components.append(
+            action_row.to_dict()
+            if isinstance(action_row, DiscordComponentActionRow)
+            else action_row
+        )
+
+    def get_component_rows(self) -> List[Dict[str, Any]]:
+        """
+        Get all action rows as a list.
+        :return: action rows
+        """
+        return self.components
+
+    def remove_component_row(self, index: int) -> None:
+        """
+        Remove an action row from the already added action rows.
+        :param int index: index of the action row
+        """
+        self.components.pop(index)
+
+    def remove_component_rows(self) -> None:
+        """
+        Remove all action rows.
+        """
+        self.components = []
 
     def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
         """

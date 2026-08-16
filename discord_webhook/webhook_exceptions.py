@@ -16,3 +16,11 @@ class ColorNotInRangeException(Exception):
                 " (HEXADECIMAL)."
             )
         super().__init__(message)
+
+
+class ComponentException(Exception):
+    """
+    This Exception will be raised for components.
+    """
+
+    pass
