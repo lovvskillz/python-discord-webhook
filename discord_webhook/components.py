@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from . import constants
 from .utils import check_max_length, is_int, to_dict
@@ -10,14 +10,14 @@ class DiscordComponentEmoji:
     Represent a partial emoji that can be used in components.
     """
 
-    animated: Optional[bool]
-    id: Optional[str]
-    name: Optional[str]
+    animated: bool | None
+    id: str | None
+    name: str | None
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        id: Optional[str] = None,
+        name: str | None = None,
+        id: str | None = None,
         animated: bool = False,
     ) -> None:
         """
@@ -32,7 +32,7 @@ class DiscordComponentEmoji:
         self.id = id
         self.animated = animated
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the emoji to a dict.
         :return: emoji as dict
@@ -61,7 +61,7 @@ class BaseDiscordComponent:
         if self.custom_id and len(self.custom_id) > 100:
             raise ComponentException("custom_id can be a maximum of 100 characters.")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the component to a dict.
         :return: component as dict
@@ -79,12 +79,12 @@ class DiscordComponentButton(BaseDiscordComponent):
     Represent a button that can be used in a message.
     """
 
-    disabled: Optional[bool]
-    emoji: Optional[Union[dict, DiscordComponentEmoji]]
-    label: Optional[str]
+    disabled: bool | None
+    emoji: dict | DiscordComponentEmoji | None
+    label: str | None
     style: int
     type: int
-    url: Optional[str]
+    url: str | None
 
     def __init__(
         self, style: int = constants.DISCORD_COMPONENT_BUTTON_STYLE_PRIMARY, **kwargs
@@ -135,9 +135,9 @@ class DiscordSelectOption:
     Represent an option of a string select menu.
     """
 
-    default: Optional[bool]
-    description: Optional[str]
-    emoji: Optional[Union[dict, DiscordComponentEmoji]]
+    default: bool | None
+    description: str | None
+    emoji: dict | DiscordComponentEmoji | None
     label: str
     value: str
 
@@ -159,7 +159,7 @@ class DiscordSelectOption:
         check_max_length(self.value, 100, "value", ComponentException)
         check_max_length(self.description, 100, "description", ComponentException)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the option to a dict.
         :return: option as dict
@@ -176,10 +176,10 @@ class BaseDiscordComponentSelect(BaseDiscordComponent):
     A base class for the different select menus.
     """
 
-    disabled: Optional[bool]
-    max_values: Optional[int]
-    min_values: Optional[int]
-    placeholder: Optional[str]
+    disabled: bool | None
+    max_values: int | None
+    min_values: int | None
+    placeholder: str | None
 
     def __init__(self, custom_id: str, **kwargs) -> None:
         """
@@ -215,12 +215,12 @@ class DiscordComponentStringSelect(BaseDiscordComponentSelect):
     Represent a select menu with developer-defined options.
     """
 
-    options: List[Union[dict, DiscordSelectOption]]
+    options: list[dict | DiscordSelectOption]
 
     def __init__(
         self,
         custom_id: str,
-        options: Optional[List[Union[dict, DiscordSelectOption]]] = None,
+        options: list[dict | DiscordSelectOption] | None = None,
         **kwargs,
     ) -> None:
         """
@@ -235,7 +235,7 @@ class DiscordComponentStringSelect(BaseDiscordComponentSelect):
         for option in options or []:
             self.add_option(option)
 
-    def add_option(self, option: Union[dict, DiscordSelectOption]) -> None:
+    def add_option(self, option: dict | DiscordSelectOption) -> None:
         """
         Add an option to the select menu.
         :param option: option instance or dict
@@ -253,7 +253,7 @@ class BaseDiscordComponentAutoPopulatedSelect(BaseDiscordComponentSelect):
     A base class for select menus that are populated by Discord itself.
     """
 
-    default_values: List[Dict[str, str]]
+    default_values: list[dict[str, str]]
 
     #: value of the ``type`` field of a default value entry
     default_value_type: str = ""
@@ -271,7 +271,7 @@ class BaseDiscordComponentAutoPopulatedSelect(BaseDiscordComponentSelect):
             self.add_default_value(default_value)
 
     def add_default_value(
-        self, value: Union[str, int, Dict[str, str]], value_type: Optional[str] = None
+        self, value: str | int | dict[str, str], value_type: str | None = None
     ) -> None:
         """
         Add a default value to the select menu.
@@ -331,11 +331,11 @@ class DiscordComponentChannelSelect(BaseDiscordComponentAutoPopulatedSelect):
     Represent a select menu for channels.
     """
 
-    channel_types: List[int]
+    channel_types: list[int]
     default_value_type = "channel"
 
     def __init__(
-        self, custom_id: str, channel_types: Optional[List[int]] = None, **kwargs
+        self, custom_id: str, channel_types: list[int] | None = None, **kwargs
     ) -> None:
         """
         :param str custom_id: developer-defined identifier for the select menu
@@ -358,12 +358,12 @@ class DiscordComponentTextInput(BaseDiscordComponent):
     Represent a text input that can be used in a modal.
     """
 
-    max_length: Optional[int]
-    min_length: Optional[int]
-    placeholder: Optional[str]
-    required: Optional[bool]
+    max_length: int | None
+    min_length: int | None
+    placeholder: str | None
+    required: bool | None
     style: int
-    value: Optional[str]
+    value: str | None
 
     def __init__(
         self,
@@ -419,7 +419,7 @@ class DiscordComponentActionRow(BaseDiscordComponent):
 
     def __init__(
         self,
-        components: Optional[List[Union[dict, BaseDiscordComponent]]] = None,
+        components: list[dict | BaseDiscordComponent] | None = None,
         **kwargs,
     ):
         """
@@ -433,14 +433,14 @@ class DiscordComponentActionRow(BaseDiscordComponent):
         for component in components or []:
             self.add_component(component)
 
-    def _component_types(self) -> List[Optional[int]]:
+    def _component_types(self) -> list[int | None]:
         """
         Get the types of all already added components.
         :return: list of component types
         """
         return [component.get("type") for component in self.components]
 
-    def add_component(self, component: Union[dict, BaseDiscordComponent]) -> None:
+    def add_component(self, component: dict | BaseDiscordComponent) -> None:
         """
         Add a component to the row
         :param component: discord component instance
@@ -477,7 +477,7 @@ class DiscordComponentActionRow(BaseDiscordComponent):
 
         self.components.append(component)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the action row and its components to a dict.
         :return: action row as dict

@@ -1,10 +1,11 @@
 import json
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from functools import partial
 from http.client import HTTPException
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
+
 import requests
 
 from . import constants
@@ -20,23 +21,23 @@ class DiscordEmbed:
     Discord Embed
     """
 
-    author: Optional[Dict[str, Optional[str]]]
-    color: Optional[int]
-    description: Optional[str]
-    fields: List[Dict[str, Optional[Any]]]
-    footer: Optional[Dict[str, Optional[str]]]
-    image: Optional[Dict[str, Optional[Union[str, int]]]]
-    provider: Optional[Dict[str, Any]]
-    thumbnail: Optional[Dict[str, Optional[Union[str, int]]]]
-    timestamp: Optional[str]
-    title: Optional[str]
-    url: Optional[str]
-    video: Optional[Dict[str, Optional[Union[str, int]]]]
+    author: dict[str, str | None] | None
+    color: int | None
+    description: str | None
+    fields: list[dict[str, Any | None]]
+    footer: dict[str, str | None] | None
+    image: dict[str, str | int | None] | None
+    provider: dict[str, Any] | None
+    thumbnail: dict[str, str | int | None] | None
+    timestamp: str | None
+    title: str | None
+    url: str | None
+    video: dict[str, str | int | None] | None
 
     def __init__(
         self,
-        title: Optional[str] = None,
-        description: Optional[str] = None,
+        title: str | None = None,
+        description: str | None = None,
         **kwargs: Any,
     ) -> None:
         """
@@ -91,25 +92,23 @@ class DiscordEmbed:
         self.url = url
 
     def set_timestamp(
-        self, timestamp: Optional[Union[float, int, str, datetime]] = None
+        self, timestamp: float | int | str | datetime | None = None
     ) -> None:
         """
         Set timestamp of the embed content.
         :param timestamp: optional timestamp of embed content
         """
         if timestamp is None:
-            timestamp = datetime.now(timezone.utc)
+            timestamp = datetime.now(UTC)
         elif isinstance(timestamp, float) or isinstance(timestamp, int):
-            timestamp = datetime.fromtimestamp(timestamp, timezone.utc).replace(
-                tzinfo=None
-            )
+            timestamp = datetime.fromtimestamp(timestamp, UTC).replace(tzinfo=None)
 
         if not isinstance(timestamp, str):
             timestamp = timestamp.isoformat()
 
         self.timestamp = timestamp
 
-    def set_color(self, color: Union[str, int]) -> None:
+    def set_color(self, color: str | int) -> None:
         """
         Set the color of the embed.
         :param color: color code as decimal(int) or hex(string)
@@ -131,7 +130,7 @@ class DiscordEmbed:
             "proxy_icon_url": kwargs.get("proxy_icon_url"),
         }
 
-    def set_image(self, url: str, **kwargs: Union[str, int]) -> None:
+    def set_image(self, url: str, **kwargs: str | int) -> None:
         """
         Set the image that will be displayed in the embed.
         :param str url: source url of image (only supports http(s) and attachments)
@@ -146,7 +145,7 @@ class DiscordEmbed:
             "width": kwargs.get("width"),
         }
 
-    def set_thumbnail(self, url: str, **kwargs: Union[str, int]) -> None:
+    def set_thumbnail(self, url: str, **kwargs: str | int) -> None:
         """
         Set the thumbnail that will be displayed in the embed.
         :param str url: source url of thumbnail (only supports http(s) and attachments)
@@ -161,7 +160,7 @@ class DiscordEmbed:
             "width": kwargs.get("width"),
         }
 
-    def set_video(self, **kwargs: Union[str, int]) -> None:
+    def set_video(self, **kwargs: str | int) -> None:
         """
         Set the video that will be displayed in the embed.
         :keyword str url: source url of video
@@ -214,7 +213,7 @@ class DiscordEmbed:
         """
         self.fields.pop(index)
 
-    def get_embed_fields(self) -> List[Dict[str, Optional[Any]]]:
+    def get_embed_fields(self) -> list[dict[str, Any | None]]:
         """
         Get all stored fields of the embed as a list.
         :return: fields of the embed
@@ -227,24 +226,24 @@ class DiscordWebhook:
     Webhook for Discord
     """
 
-    allowed_mentions: Dict[str, List[str]]
-    attachments: Optional[List[Dict[str, Any]]]
-    avatar_url: Optional[str]
-    components: Optional[list]
-    content: Optional[Union[str, bytes]]
-    embeds: List[Dict[str, Any]]
-    files: Dict[str, Tuple[Optional[str], Union[bytes, str]]]
-    id: Optional[str]
-    proxies: Optional[Dict[str, str]]
+    allowed_mentions: dict[str, list[str]]
+    attachments: list[dict[str, Any]] | None
+    avatar_url: str | None
+    components: list | None
+    content: str | bytes | None
+    embeds: list[dict[str, Any]]
+    files: dict[str, tuple[str | None, bytes | str]]
+    id: str | None
+    proxies: dict[str, str] | None
     rate_limit_retry: bool = False
-    thread_id: Optional[str]
-    thread_name: Optional[str]
-    timeout: Optional[float]
-    tts: Optional[bool]
-    poll: Optional[dict]
+    thread_id: str | None
+    thread_name: str | None
+    timeout: float | None
+    tts: bool | None
+    poll: dict | None
     url: str
-    username: Optional[str]
-    wait: Optional[bool]
+    username: str | None
+    wait: bool | None
 
     def __init__(self, url: str, **kwargs) -> None:
         """
@@ -294,7 +293,7 @@ class DiscordWebhook:
         if poll := kwargs.get("poll"):
             self.set_poll(poll)
 
-    def set_poll(self, poll: Union[DiscordPoll, Dict[str, Any]]) -> None:
+    def set_poll(self, poll: DiscordPoll | dict[str, Any]) -> None:
         """
         Set the poll of the webhook.
         :param poll: poll instance or dict
@@ -308,7 +307,7 @@ class DiscordWebhook:
         self.poll = None
 
     def add_component_row(
-        self, action_row: Union[DiscordComponentActionRow, Dict[str, Any]]
+        self, action_row: DiscordComponentActionRow | dict[str, Any]
     ) -> None:
         """
         Add an action row with components to the webhook.
@@ -325,7 +324,7 @@ class DiscordWebhook:
             else action_row
         )
 
-    def get_component_rows(self) -> List[Dict[str, Any]]:
+    def get_component_rows(self) -> list[dict[str, Any]]:
         """
         Get all action rows as a list.
         :return: action rows
@@ -345,14 +344,14 @@ class DiscordWebhook:
         """
         self.components = []
 
-    def add_embed(self, embed: Union[DiscordEmbed, Dict[str, Any]]) -> None:
+    def add_embed(self, embed: DiscordEmbed | dict[str, Any]) -> None:
         """
         Add an embedded rich content.
         :param embed: embed object or dict
         """
         self.embeds.append(embed.__dict__ if isinstance(embed, DiscordEmbed) else embed)
 
-    def get_embeds(self) -> List[Dict[str, Any]]:
+    def get_embeds(self) -> list[dict[str, Any]]:
         """
         Get all embeds as a list.
         :return: embeds
@@ -413,7 +412,7 @@ class DiscordWebhook:
         """
         self.attachments = []
 
-    def set_proxies(self, proxies: Dict[str, str]) -> None:
+    def set_proxies(self, proxies: dict[str, str]) -> None:
         """
         Set proxies that should be used when sending the webhook.
         :param dict proxies: dict of proxies
@@ -435,7 +434,7 @@ class DiscordWebhook:
         self.flags = flags
 
     @property
-    def json(self) -> Dict[str, Any]:
+    def json(self) -> dict[str, Any]:
         """
         Convert data of the webhook to JSON.
         :return: webhook data as json
@@ -577,7 +576,7 @@ class DiscordWebhook:
             )
         response = request()
         if response.status_code in [200, 204]:
-            logger.debug("Webhook with id {id} edited".format(id=self.id))
+            logger.debug(f"Webhook with id {self.id} edited")
         elif response.status_code == 429 and self.rate_limit_retry:
             response = self.handle_rate_limit(response, request)
             logger.debug("Webhook edited")
@@ -618,7 +617,7 @@ class DiscordWebhook:
         return response
 
     @classmethod
-    def create_batch(cls, urls: List[str], **kwargs) -> Tuple["DiscordWebhook", ...]:
+    def create_batch(cls, urls: list[str], **kwargs) -> tuple["DiscordWebhook", ...]:
         """
         Create a webhook instance for each specified URL.
         :param list urls: webhook URLs to be used for the instances

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from . import constants
 from .components import DiscordComponentEmoji
@@ -11,13 +11,13 @@ class DiscordPollMedia:
     Represent the common object that is used by the question and the answers of a poll.
     """
 
-    emoji: Optional[Union[dict, DiscordComponentEmoji]]
-    text: Optional[str]
+    emoji: dict | DiscordComponentEmoji | None
+    text: str | None
 
     def __init__(
         self,
-        text: Optional[str] = None,
-        emoji: Optional[Union[dict, DiscordComponentEmoji]] = None,
+        text: str | None = None,
+        emoji: dict | DiscordComponentEmoji | None = None,
         max_text_length: int = constants.DISCORD_POLL_MAX_QUESTION_LENGTH,
     ) -> None:
         """
@@ -33,7 +33,7 @@ class DiscordPollMedia:
 
         check_max_length(self.text, max_text_length, "text", PollException)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the media object to a dict.
         :return: media object as dict
@@ -52,8 +52,8 @@ class DiscordPollAnswer(DiscordPollMedia):
 
     def __init__(
         self,
-        text: Optional[str] = None,
-        emoji: Optional[Union[dict, DiscordComponentEmoji]] = None,
+        text: str | None = None,
+        emoji: dict | DiscordComponentEmoji | None = None,
     ) -> None:
         """
         :param str text: text of the answer
@@ -65,7 +65,7 @@ class DiscordPollAnswer(DiscordPollMedia):
             max_text_length=constants.DISCORD_POLL_MAX_ANSWER_LENGTH,
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the answer to a dict.
         :return: answer as dict
@@ -79,15 +79,15 @@ class DiscordPoll:
     """
 
     allow_multiselect: bool
-    answers: List[Union[dict, DiscordPollAnswer]]
+    answers: list[dict | DiscordPollAnswer]
     duration: int
     layout_type: int
-    question: Union[dict, DiscordPollMedia, str]
+    question: dict | DiscordPollMedia | str
 
     def __init__(
         self,
-        question: Union[dict, DiscordPollMedia, str],
-        answers: Optional[List[Union[dict, DiscordPollAnswer, str]]] = None,
+        question: dict | DiscordPollMedia | str,
+        answers: list[dict | DiscordPollAnswer | str] | None = None,
         **kwargs,
     ) -> None:
         """
@@ -121,7 +121,7 @@ class DiscordPoll:
         for answer in answers or []:
             self.add_answer(answer)
 
-    def add_answer(self, answer: Union[dict, DiscordPollAnswer, str]) -> None:
+    def add_answer(self, answer: dict | DiscordPollAnswer | str) -> None:
         """
         Add an answer to the poll.
         :param answer: answer instance, dict or the text of the answer
@@ -141,14 +141,14 @@ class DiscordPoll:
         """
         self.answers.pop(index)
 
-    def get_answers(self) -> List[Union[dict, DiscordPollAnswer]]:
+    def get_answers(self) -> list[dict | DiscordPollAnswer]:
         """
         Get all answers of the poll as a list.
         :return: answers of the poll
         """
         return self.answers
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """
         Convert the poll to a dict.
         :return: poll as dict

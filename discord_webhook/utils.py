@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any
 
 
 def to_dict(value: Any) -> Any:
@@ -26,7 +26,7 @@ def is_int(value: Any) -> bool:
 
 
 def check_max_length(
-    value: Any, max_length: int, name: str, exception: Type[Exception]
+    value: Any, max_length: int, name: str, exception: type[Exception]
 ) -> None:
     """
     Raise the given exception if the value exceeds the maximum length.

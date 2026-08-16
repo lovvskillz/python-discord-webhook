@@ -1,6 +1,3 @@
-from typing import Union
-
-
 class ColorNotInRangeException(Exception):
     """
     This Exception will be raised when a color is not in that range.
@@ -8,7 +5,7 @@ class ColorNotInRangeException(Exception):
     A valid color must take an integer value between 0 and 16777216 inclusive
     """
 
-    def __init__(self, color: Union[str, int], message=None) -> None:
+    def __init__(self, color: str | int, message=None) -> None:
         if not message:
             message = (
                 f"{color!r} is not in valid range of colors. The valid ranges of colors"

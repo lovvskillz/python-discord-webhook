@@ -41,8 +41,7 @@ line-length = 88
 exclude = ["*.md"]
 
 [tool.ruff.lint]
-# ruff's implicit default ruleset widened in newer versions; keep the previous scope
-select = ["E", "F"]
+select = ["E", "F", "UP"]
 ignore = ["E501"]
 
 [build-system]
